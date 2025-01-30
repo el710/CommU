@@ -42,7 +42,26 @@ In a smaller group, people are more free
 
 ## Technical tasks (TT)
 
-### 1. Link menegment
+### 1. Interface
+1.1 Site
+1.1.1 Main page
+- logo
+- log in/up/out -> user cabinet
+- settings
+- geo location/timezone
+- terms - conditions - laws - rules
+- about
+--
+- list of deals/projecs
+- list of event for today
+--
+- menu of projects/contacts
+  
+>
+1.2 Telegram
+
+
+### 2. Link menegment
     - Base of contacts (User class)
     - "deal" cooperation only (no promises)
     - business communities
@@ -60,29 +79,29 @@ In a smaller group, people are more free
          - common and local
        - rules - "how to do"
 
-### 2. Dial menegment
+### 3. Dial menegment
     - Base of dials
     - control time, credit/debet of dial with Bases
     - base of process makets (reglaments, typical solves, technologies)
 
-### 3. Time menegment
-   1.1 Planing ( S.M.A.R.T.)
+### 4. Time menegment
+4.1 Planing ( S.M.A.R.T.)
     - calendar of events (event - part of deal with someone else)
     - daily event list
-      - TG_bot model
-     - dials events
-     - nondial events
+    - TG_bot model
+    - dials events
+    - nondial events
     - bases for week days
     - location referance
     - route & navigation
-   1.2 Control
+4.2 Control
     - alarms
     - combination plans between people
 
-### 4. Source menegment
-    - money menegment
+### 5. Source menegment
+   - money menegment
      - simple accounting with contacts
      - monetary system (e-bank) in time units: min., hour, (exchange 1 hour = xxx $)
-    - staff menegment
+   - staff menegment
      - stock in/out
      - synchronize buys/exchange/throw out

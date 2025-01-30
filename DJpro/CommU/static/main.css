@@ -1,0 +1,113 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+
+.screen {
+    min-height: 200px;
+}
+
+
+.titlebar {
+    display: grid;
+    grid-template-columns: 15% auto 15%;
+    background-color: cornflowerblue;
+}
+
+
+.icontitle {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+
+    min-height: 40px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-style: normal;
+    font-size: large;
+    color: cyan;
+
+    align-items: center;
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+}
+
+.icon {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.logotext {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+
+.menutitle {
+
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+
+    text-align: right;
+    padding: 16px;
+    padding-bottom: 0px;
+}
+
+.logtitle {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+
+    text-align: center;
+    justify-content: center;
+
+    padding-top: 13px;
+    padding-bottom: 0px;
+}
+
+
+.middle {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+
+    text-align: center;
+    justify-content: space-around;
+    justify-items: center;
+}
+
+.bottom {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.location {
+    background-color: black;
+    text-align: center;
+    color: cyan;
+}
+
+.footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+
+    background: black;
+
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.footitem {
+    color: cyan;
+    font-style: normal;
+    font-weight: 200;
+
+    line-height: 13px;
+    text-align: center;
+}
+
+.link {
+    font-weight: bold;
+}

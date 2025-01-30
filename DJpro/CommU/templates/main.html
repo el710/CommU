@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CommU</title>
+
+    <link rel="icon" type="icon"  href="{% static 'favicon.ico' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
+</head>
+<body>
+    <div class="screen">
+        <div class="top">
+
+            <div class="titlebar">
+                <div class="icontitle">
+                    <img class="icon"  src="{% static 'CommU.png' %}" height="32" > 
+                    <div class="logotext">CommU</div>
+                    <div class="user">Guest</div>
+                </div>
+                <div class="menutitle link">
+                    [application list]
+                </div>
+                <div class="logtitle">
+                    <form type="submit">
+                        <button>Log in</button>
+                    </form>            
+                </div>
+            </div>
+
+        </div>
+
+        <div class="middle">
+            
+            <div class="leftmenu">
+                Projects
+
+            </div>
+
+            <div class="workfield">
+                Work Field
+            </div>
+            
+            <div class="rightmenu">
+                Today events
+
+            </div>
+
+        </div>
+        
+        <div class="bottom">
+            <div class="location">
+                [geo location]
+            </div>
+            
+            <div class="footer">
+                <div class="footitem">
+                    (c) 2024
+                </div>
+                <div class="footitem link">
+                    About
+                </div>
+            </div>
+        
+        </div>        
+    
+    </div>
+
+</body>
+</html>

@@ -17,6 +17,12 @@ def main():
         ) from exc
     execute_from_command_line(sys.argv)
 
+    if len(sys.argv) > 1:
+        print(sys.argv)
+        execute_from_command_line(sys.argv)
+    else:
+        args = ['manage.py', 'runserver']
+        execute_from_command_line(args)
 
 if __name__ == '__main__':
     main()
