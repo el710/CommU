@@ -18,16 +18,16 @@
             <div class="titlebar">
                 <div class="icontitle">
                     <img class="icon"  src="{% static 'CommU.png' %}" height="32" > 
-                    <div class="logotext">CommU</div>
-                    <div class="user">Guest</div>
+                    <div class="logotext link "><a href="">CommU</a></div>
+
                 </div>
                 <div class="menutitle link">
                     [application list]
                 </div>
                 <div class="logtitle">
-                    <form type="submit">
-                        <button>Log in</button>
-                    </form>            
+                    <div class="user">Guest </div>
+                    <a href="reg/" class="regbutton">Log in</a>
+
                 </div>
             </div>
 
@@ -36,7 +36,13 @@
         <div class="middle">
             
             <div class="leftmenu">
-                Projects
+                Projects:
+                <ul>
+                    <li>Health - day lifemode</li>
+                    <li>EuroSpar - grocery's provision</li>
+                    <li>Yandex - taxi driver</li>
+                    <li>GoncharClub - kids course</li>
+                </ul>
 
             </div>
 
@@ -45,8 +51,13 @@
             </div>
             
             <div class="rightmenu">
-                Today events
-
+                Today events:
+                <ul>
+                    <li>05:00 AM:  raise up [Health] </li>
+                    <li>11:00 AM Sunday: lesson [GoncharClub] {till: 13:00}
+                    </li>
+                    <li>13:30 PM Sunday: lesson [IT-TOP] {till: 14:30}</li>
+                </ul>
             </div>
 
         </div>
