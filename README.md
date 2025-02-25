@@ -3,20 +3,20 @@
        Protect the Flame of Prometheus from the darkness of ignorance.*
 
 ## Prolog
-The needs to unite humans in one community passed test of time with unsatisfaction results:
+The needs to unite humans in one community passed test of time with main results:
 
-- Centralized management model can be effective only for the small groups, where all the processes are obvious for everyone.
-- Common managment model also has group size limit. 
+- Humans never change
+- Centralized management model and Common managment model can be effective only for the small groups, where all the processes are obvious for everyone.
+
 ```
 Large group can't be managed effectively
 ```
 **Main problem:
 The composition of Homo representatives will never change. This is the basis of nature's genetics.
 Mankind will always represent a mixture of individuals of different levels of consciousness from Buddha to Hitler.
-And only proportion will play a role.
 None level of civilization will change this!**
 
-Here is the solve:
+Here is the one vision of solve:
 An effective unification model is the coexistence of multiple business groups of people.
 And it is much better if the groups are smaller and the number of groups is larger.
 In a smaller group, people are more free
@@ -26,7 +26,7 @@ In a smaller group, people are more free
 
 **Main task: Make helpfull tools to manage men own daily bussiness, community bussiness, mankind bussiness & projects - "DEAL conception":**
 - there are no just 'events' - there are paces in businesses (exemple: go to shop -> make order, go to cinema -> buy movie session, park walking -> health project step)
-- "castomer", "hired worker", "partner" models (business partner, idea partner, life parther...)
+- "customer", "hired worker", "partner" models (business partner, idea partner, life parther...)
 - help to manage tasks and resourses,
 - help to cooperate in solving problems,
 - C.R.U.D. patterns of solvings
@@ -49,7 +49,7 @@ In a smaller group, people are more free
 - log in/up/out -> user cabinet
 - settings
 - geo location/timezone
-- terms - conditions - laws - rules
+- terms - laws - rules
 - about
 --
 - list of deals/projecs
@@ -65,19 +65,19 @@ In a smaller group, people are more free
     - Base of contacts (User class)
     - "deal" cooperation only (no promises)
     - business communities
-     - <partner> - <hired worker> - <castomer> deals (no any cheif/king/president/general e.t.c.)
-     - online mandat (for residencial / functionality ...) on/off by realtime votes of funcional members
-     - membership in business (mandat) by:
-       - invitation
-       - accepting the laws
+     -- <partner> - <hired worker> - <customer> deals (no any cheif/king/president/general e.t.c.)
+     -- online mandat (for residencial / functionality ...) on/off by realtime votes of funcional members
+     -- membership in business (mandat) by:
+       ---- invitation
+       ---- accepting the laws
               - access by passing through the Test as anonimous: 
                 there are questions with answers of candidat.
                 answers should correspond to laws & worldviews.
                 Confirm by func memebers
                 Question & answers - is a passport of member
-       - laws - set of tabus (Don't ...)
+       ---- laws - set of tabus (Don't ...)
          - common and local
-       - rules - "how to do"
+       ---- rules - "how to do"
 
 ### 3. Dial menegment
     - Base of dials
@@ -90,7 +90,8 @@ In a smaller group, people are more free
     - daily event list
     - TG_bot model
     - dials events
-    - nondial events
+
+    - no dealer events
     - bases for week days
     - location referance
     - route & navigation

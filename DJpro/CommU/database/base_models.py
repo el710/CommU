@@ -1,3 +1,6 @@
+"""
+    Copyright (c) 2024 Kim Oleg <theel710@gmail.com>
+"""
 
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Date, Time
 from sqlalchemy.orm import DeclarativeBase

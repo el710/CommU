@@ -4,15 +4,14 @@
 1. We **DO NOT** force anyone to follow the laws that we follow.
 ```
 Author: Kim Oleg
-Based on: "On May 28, 2012, in Moscow on Chertanovskaya Street, a native of Kyrgyzstan,
-outraged by the journalist’s statement about the Prophet Muhammad, attacked him, armed with scissors."
+Based on: Nobody wants to live by laws it does not accept
 Goal: Every person should be free from pressure or restrictions from others.
 ```
 >
 2. We **DO NOT** threat to do any actions that lead to physical harm or death of any person.
 ```
 Author: Kim Oleg
-Based on: "On April 27, 2016, a judge of the Moscow City Court found that 'M' was found guilty of inciting a person to suicide by means of threats."
+Based on: Nobody wants to be threatened
 Goal: Every person should be free from pressure or restrictions from others.
 ```
 >
@@ -20,14 +19,14 @@ Goal: Every person should be free from pressure or restrictions from others.
 If there are no threats of physical harm or death for us from that person.
 ```
 Author: Kim Oleg
-Based on: "There's not a day that goes by without someone killing someone else."
+Based on: No one wants to get any harm from another. But to stay free you need to protect yourself from attacks.
 Goal: Every person should be free from pressure or restrictions from others.
 ```
 >
 4. We **DO NOT** any actions that lead to unfreedom of any person
 ```
 Author: Kim Oleg
-Based on: "At the end of the 1930s. on false accusations of sabotage, Sergei Pavlovich Korolev was arrested, sentenced to 10 years of imprisonment in strict regime forced labor camps and sent to Kolyma."
+Based on: A person who does not accept the laws of the community is free to live outside the community
 Goal: Every person should be free from pressure or restrictions from others.
 ```
 >
@@ -48,7 +47,7 @@ Goal: Every person should be free from pressure or restrictions from others.
 7. We **DO NOT** extend the guilty and responsibility of a particular person to the communities to which that person belongs.
 ```
 Author: Kim Oleg
-Based on: There is no common guilt
+Based on: For Human there is no common guilt
 Goal: A person should only be responsible for its own actions
 ```
 >

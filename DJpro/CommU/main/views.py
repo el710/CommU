@@ -3,16 +3,46 @@ from .djforms import RegForm
 
 # Create your views here.
 
+import logging
+
 def show_title(request):
     """
         This function shows main title Web page
         with template - main.html
     """
-
     return render(request, 'main.html')
 
+
+def show_about(request):
+    """
+        This function shows about page
+        with template - about.html
+    """
+    return render(request, 'about.html')
+
+def show_terms(request):
+    """
+        This function shows terms page
+        with template - terms.html
+    """
+    return render(request, 'terms.html')
+
+def show_laws(request):
+    """
+        This function shows laws page
+        with template - laws.html
+    """
+    return render(request, 'terms.html')
+
+def show_rules(request):
+    """
+        This function shows rules page
+        with template - rules.html
+    """
+    return render(request, 'rules.html')
+
 def registration(request):
-    print(f"\next_post(): ...")
+    logging.info(f"\nregistration(): ...")
     def_context = {}
 
 

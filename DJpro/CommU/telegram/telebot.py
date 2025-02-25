@@ -29,16 +29,15 @@ from aiogram.filters.callback_data import CallbackData
 
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+from aiogram import F
+
 import asyncio
 import queue
 import json
 
 import logging
 
-if __name__ == "__main__":
-    from id_bot import tel_token
-else:
-    from .id_bot import tel_token
+from .id_commu_bot import tel_token
 
 from data.telegramuser import TelegramUser    
 
@@ -113,38 +112,24 @@ _main_queue = None
     Handler for commands... </comm>
 """
 
-# # @dp.message_handler(commands=['start'])
-# @dp.message(commands=['start'])
-# async def get_command(message):
-#     """
-#         Login new user
-#     """
-#     t_user = TelegramUser.get_user(message)
-#     if not t_user.login:
-#         await message.answer(f"Hello {t_user.username}! Nice to see you", reply_markup=out_main_keyboard)
-#         # print("get_command(): call activate...")
-#         await t_user.activate()
-#     else:
-#         await message.answer(f"use menu...", reply_markup=out_main_keyboard)
-
-# """
-#     Main menu
-# """
-# @dp.message_handler(text=text_button_sched)
-# async def show_schedule(message):
-#     """
-#         Show user's schedule  in keyboard style
-#     """
-#     t_user = TelegramUser.get_user(message)
-#     if t_user.login:
-#         await t_user.read_event()
-#         if t_user.schedule:
-#             schedule_menu = await init_schedule_keyboard(t_user.schedule)
-#             await message.answer(f"Сегодня:", reply_markup=schedule_menu)
-#         else:
-#             await message.answer(f"Сегодня событий не найдено:", reply_markup=out_main_keyboard)
-#     else:
-#         await message.answer(f"try /start...")
+"""
+    Main menu
+"""
+@dp.message(F.text==text_button_sched)
+async def show_schedule(message):
+    """
+        Show user's schedule  in keyboard style
+    """
+    t_user = TelegramUser.get_user(message)
+    if t_user.login:
+        await t_user.read_event()
+        if t_user.schedule:
+            schedule_menu = await init_schedule_keyboard(t_user.schedule)
+            await message.answer(f"Сегодня:", reply_markup=schedule_menu)
+        else:
+            await message.answer(f"Сегодня событий не найдено:", reply_markup=out_main_keyboard)
+    else:
+        await message.answer(f"try /start...")
 
 
 # """
@@ -316,26 +301,42 @@ _main_queue = None
         
 #     await call.answer()
 
-
+# @dp.message_handler(commands=['start'])
 @dp.message(CommandStart())
 async def command_start_handler(message: Message) -> None:
     """
     This handler receives messages with `/start` command
     """
+    """
+        Login new user
+    """
+    user_id = message.from_user.id
+    logging.info(f"command_start_handler(): user: {user_id}")
+    
+    t_user = TelegramUser.get_user(message)
+    
+    if not t_user.login:
+        await message.answer(f"Hello {t_user.firstname} {t_user.lastname}! Nice to see you", reply_markup=out_main_keyboard)
+        await t_user.activate()
+    else:
+        await message.answer(f"use menu...", reply_markup=out_main_keyboard)    
+
+    # await message.answer(f"Hello, {message.from_user.full_name}!")
+
+
+@dp.message()
+async def all_message(message: Message):
+   """
+        handler for unexpected messages
+   """
     # Most event objects have aliases for API methods that can be called in events' context
     # For example if you want to answer to incoming message you can use `message.answer(...)` alias
     # and the target chat will be passed to :ref:`aiogram.methods.send_message.SendMessage`
     # method automatically or call API method directly via
     # Bot instance: `bot.send_message(chat_id=message.chat.id, ...)`
-    await message.answer(f"Hello, {message.from_user.full_name}!")
 
-
-# @dp.message()
-# async def all_message(message: types.Message):
-#    """
-#         handler for unexpected messages
-#    """
-# #    await get_command(message)
+   await command_start_handler(message)
+#    await message.answer(f"Hello, {message.from_user.full_name}! Use '/start' command...")
 
 
 async def botloop():
@@ -347,6 +348,10 @@ async def botloop():
     while True:
         # await dp.start_polling() ## 2.0
         await dp.start_polling(bot)
+        # dp.run_polling(bot)
+
+        logging.info("start_polling has ended...")
+
         asyncio.sleep(0.1)
 
 def telebot_start(*args):

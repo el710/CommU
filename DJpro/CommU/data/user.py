@@ -1,30 +1,30 @@
 """
     Copyright (c) 2024 Kim Oleg <theel710@gmail.com>
 """
-import queue
-from queue import Empty
-import time
-
 
 class UUser():
     def __init__(self):
+        self.commu_id = None
+        self.nickname = None
+        self.password = None
+        self.email = None
+
         self.firstname = None
         self.lastname = None
-        self.username = None
-        self.language = None
-        self.is_human = None
-
-    def set_human_state(self, is_human):
-        if is_human != None: self.is_human = bool(is_human)
-
-
-class IOUser(UUser):
-    users = []
+        self.language = 'en'
+        
+class ClientUser(UUser):
+    users = [] ## login + tokens
 
     def __init__(self):
         super().__init__()
         self.login = False ## is user login/logout
 
+    def is_login(self):
+        return self.login
     
-    def user_log(self):
-        pass
+    def log_in(self):
+        self.login = True
+
+    def log_out(self):
+        self.login = False    

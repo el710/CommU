@@ -1,3 +1,7 @@
+"""
+    Copyright (c) 2025 Kim Oleg <theel710@gmail.com>
+"""
+
 import logging
 
 from database.db import read_users_events

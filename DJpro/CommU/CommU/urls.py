@@ -1,4 +1,9 @@
 """
+    Copyright (c) 2025 Kim Oleg <theel710@gmail.com>
+"""
+
+
+"""
 URL configuration for CommU project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -17,11 +22,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from main.views import (show_title, registration)
+from main.views import (show_title, show_about, show_terms, show_laws, show_rules, registration)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', show_title),
+    path('about/', show_about),
+    path('terms/', show_terms),
+    path('basic_laws/', show_laws),
+    path('rules/', show_rules),
     path('reg/', registration)
+    
 
 ]

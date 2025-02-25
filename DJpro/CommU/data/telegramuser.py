@@ -2,15 +2,17 @@
     Copyright (c) 2024 Kim Oleg <theel710@gmail.com>
 """
 import logging
-import queue
+
 from queue import Empty
 import time
-from .user import IOUser
+
+from aiogram.types import Message
+
+from .user import ClientUser
 from .data import *
 
-telegram_keys = ["first_name", "last_name", "username", "language_code", "is_bot", "id"]
 
-class TelegramUser(IOUser):
+class TelegramUser(ClientUser):
     """
         Telegram client 
         - class's list of users
@@ -19,20 +21,18 @@ class TelegramUser(IOUser):
         - object's user schedule - list of today's events
 
     """
-    __users_list = []
     __in_queue = None
     __out_queue = None
 
     def __init__(self, user_data):
         super().__init__()
-        self.firstname = user_data[telegram_keys[0]]
-        self.lastname = user_data[telegram_keys[1]]
-        self.username = user_data[telegram_keys[2]]
-        self.language = user_data[telegram_keys[3]]
-        self.set_human_state(not user_data[telegram_keys[4]])
-        
-        self.telegram_id = user_data[telegram_keys[5]]
+        self.telegram_id = user_data['telegram_id']
+        self.telegram_username = user_data['telegram_username']
 
+        self.firstname = user_data['first_name']
+        self.lastname = user_data['last_name']
+        self.language = user_data['language']
+       
         self.schedule = []
         self.event_new_req = {}
         self.event_get_req = {}
@@ -44,11 +44,12 @@ class TelegramUser(IOUser):
             Make dict of user identification data
         """
         return {"telegram_id": self.telegram_id, 
+                "username": self.telegram_username, 
+   
+
                 "firstname": self.firstname, 
                 "lastname": self.lastname,
-                "username": self.username, 
                 "language": self.language,
-                "is_human": self.is_human
                 }
  
 
@@ -60,37 +61,39 @@ class TelegramUser(IOUser):
         TelegramUser.__out_queue = out_queue
 
     
-    def parse_TG_message(bot_message):
+    def parse_TG_message(message: Message):
         """
             Make user data from telegram message
         """
-        user_data = {}
-        for key, value in bot_message:
-            if isinstance(value, dict):
-                for i in telegram_keys:
-                    if user_data.get(i) == None:
-                        user_data[i] = value.get(i)
+        user_data = {'telegram_id': message.from_user.id,
+                     'telegram_username': message.from_user.username,
+                     'first_name': message.from_user.first_name,
+                     'last_name': message.from_user.last_name,
+                     'language': message.from_user.language_code
+                     }
+
         return user_data       
 
-    def find_user(user_id):
+    def find_user(telegram_user_id):
         for item in TelegramUser.users:
-            if item[telegram_keys[5]] == user_id:
-                return item["address"]
+            if item.telegram_id == telegram_user_id:
+                return item
         return None
-
-    def get_user(bot_message):
+        
+    def get_user(message: Message):
         """
             Find user in list or make new one
             return: user
         """
-        user_data = TelegramUser.parse_TG_message(bot_message)
-        
-        for item in TelegramUser.users:
-            if item["id"] == user_data[telegram_keys[5]]:
-                return item["address"]
-        
+        user_data = TelegramUser.parse_TG_message(message)
+
+        ## looking in list from ClientUser class
+        for item in TelegramUser.users: 
+            if item.telegram_id== user_data["telegram_id"]:
+                return item
+             
         new_user = TelegramUser(user_data)
-        TelegramUser.users.append({"id": user_data[telegram_keys[5]], "address": new_user})
+        TelegramUser.users.append(new_user)
 
         return new_user
     
