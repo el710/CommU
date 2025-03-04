@@ -78,7 +78,8 @@ if __name__ == '__main__':
     args = ['manage.py', 'runserver']
     execute_from_command_line(args)
 
-    input("wait...\n")
+    # input("wait...\n")
+
 
 
     logging.info("exit CommU")

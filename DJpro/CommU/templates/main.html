@@ -12,76 +12,98 @@
     <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
 </head>
 <body>
-    <div class="screen">
-        <div class="top">
 
-            <div class="titlebar">
-                <div class="icontitle">
-                    <img class="icon"  src="{% static 'CommU.png' %}" height="32" > 
-                    <div class="logotext link "><a href="">CommU</a></div>
-
-                </div>
-                <div class="menutitle link">
-                    [application list]
-                </div>
-                <div class="logtitle">
-                    <div class="user">Guest </div>
-                    <a href="reg/" class="regbutton">Log in</a>
-
-                </div>
-            </div>
-
+    <div class="top-bar"> <!-- Верхняя полоса -->
+        <div class="logo">
+            <img class="icon"  src="{% static 'CommU.png' %}" alt="Icon"> 
+            
+            <span><div class="logotext"><a href="">CommU</a></div></span>
         </div>
-
-        <div class="middle">
-            
-            <div class="leftmenu">
-                Projects:
-                <ul class="project_list">
-                    <li class="project_item"><a href="#">Health - day lifemode</a></li>
-                    <li class="project_item"><a href="#">EuroSpar - grocery's provision</a></li>
-                    <li class="project_item"><a href="#">Yandex - taxi driver</a></li>
-                    <li class="project_item"><a href="#">GoncharClub - kids course</a></li>
-                </ul>
-
-            </div>
-
-            <div class="workfield">
-                Work Field
-            </div>
-            
-            <div class="rightmenu">
-                Today events:
-                <ul>
-                    <li>05:00 AM:  raise up [Health] </li>
-                    <li>11:00 AM Sunday: lesson [GoncharClub] {till: 13:00}
-                    </li>
-                    <li>13:30 PM Sunday: lesson [IT-TOP] {till: 14:30}</li>
-                </ul>
-            </div>
-
+        <div class="menutitle links">
+            <a href="#">[application list]</a>
         </div>
-        
-        <div class="bottom">
-            <div class="location">
-                [geo location] [Zone date & time]
-            </div>
-            
-            <div class="footer">
-                <div class="footitem">
-                    (c) 2024
-                </div>
-                <div class="footitem link">
-                    <a href="about/">About</a>
-                    <a href="terms/">Terms</a>
-                    <a href="">Contacts</a>
-
-                </div>
-            </div>
-        
-        </div>        
-    
+        <div class="auth-buttons">
+            <a href="#">Log In</a>
+            <a href="reg/">Sign Up</a>
+        </div>
     </div>
 
+    <div class="main-content"> <!-- Средняя часть -->
+        <div class="left-sidebar sidebar">
+            Projects:
+            <ul class="project_list">
+                <li class="project_item"><a href="#">Health - day lifemode</a></li>
+                <li class="project_item"><a href="#">EuroSpar - grocery's provision</a></li>
+                <li class="project_item"><a href="#">Yandex - taxi driver</a></li>
+                <li class="project_item"><a href="#">GoncharClub - kids course</a></li>
+                <li class="project_item"><a href="#">Health - day lifemode</a></li>
+                <li class="project_item"><a href="#">EuroSpar - grocery's provision</a></li>
+                <li class="project_item"><a href="#">Yandex - taxi driver</a></li>
+                <li class="project_item"><a href="#">GoncharClub - kids course</a></li>
+            </ul>
+        </div>
+        <div class="center-content">
+            <h2>Основной контент</h2>
+            <p>Здесь будет изменяемый контент.</p>
+        </div>
+        <div class="right-sidebar sidebar">
+            Today events:
+            <ul>
+                <li>05:00 AM:  raise up [Health] </li>
+                <li>11:00 AM Sunday: lesson [GoncharClub] {till: 13:00}
+                </li>
+                <li>13:30 PM Sunday: lesson [IT-TOP] {till: 14:30}</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="bottom">
+        <div class="bottom-bar"> <!-- Первая нижняя полоса -->
+            <div id="geoposition"></div>
+            <div id="datetime"></div>
+        </div>
+
+        <div class="footer-bar"> <!-- Самая нижняя полоса -->
+            <div class="copyright">&copy; 2024 CommU</div>
+            <div class="links">
+                <a href="about/">About</a>
+                <a href="terms/">Terms</a>
+                <a href="#">Contacts</a>
+            </div>
+        </div>
+    </div>
+            
+
+    <script>
+        // Скрипт для отображения текущей даты, времени, часового пояса
+        function updateDateTime() {
+            const options = { 
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', 
+                hour: '2-digit', minute: '2-digit', second: '2-digit', 
+                timeZoneName: 'short' 
+            };
+            const now = new Date().toLocaleString('en-EN', options);
+            document.getElementById('datetime').innerHTML = now;
+        }
+
+        // Для получения геопозиции
+        function updateGeoPosition(){
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    document.getElementById('geoposition').innerHTML = ` Geoposition: ${lat.toFixed(2)}, ${lon.toFixed(2)}`;
+                });
+            }
+        }
+                   
+
+        // Обновление времени каждую секунду
+        setInterval(updateDateTime, 1000);
+        //setInterval(updateGeoPosition, 60000);
+        updateDateTime();
+        updateGeoPosition();
+    </script>
+    
 </body>
 </html>

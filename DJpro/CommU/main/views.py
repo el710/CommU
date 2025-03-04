@@ -32,7 +32,7 @@ def show_laws(request):
         This function shows laws page
         with template - laws.html
     """
-    return render(request, 'terms.html')
+    return render(request, 'laws.html')
 
 def show_rules(request):
     """
