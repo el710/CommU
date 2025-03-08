@@ -5,7 +5,7 @@
     Data types to describe bussines
 """
 
-from uevent import *
+from .uevent import *
 from slugify import slugify
 import json
 

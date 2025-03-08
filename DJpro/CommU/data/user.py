@@ -2,12 +2,12 @@
     Copyright (c) 2024 Kim Oleg <theel710@gmail.com>
 """
 
-from uproject import UProject
+from .uproject import UProject
 
 class UUser():
-    def __init__(self):
+    def __init__(self, nickname):
         self.commu_id = None
-        self.nickname = None
+        self.nickname = nickname
         self.password = None
         self.email = None
 
@@ -15,6 +15,9 @@ class UUser():
         self.lastname = None
         self.language = 'en'
 
+        ## list of all user's life partners - phone book
+        self.partners = [] 
+        ## list of all user's projects, include 'life' as default 
         self.projects = [UProject("Life", self.nickname), ]
         
 class ClientUser(UUser):
@@ -35,5 +38,5 @@ class ClientUser(UUser):
 
 if __name__ == "__main__":
 
-    user = UUser()
+    user = UUser("test")
     print(user.projects[0])

@@ -23,6 +23,9 @@ from telegram.telebot import telebot_start
 from database.base_dispatcher import start_base_dispatcher
 
 
+from data.user import UUser
+
+
 def run_thread_agent(target_function, *args, add_link=False):
     """
         Function runs <func> as daemon thread.
@@ -68,6 +71,11 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO,
                         format="%(levelname)s: | %(module)s     %(message)s") ##, filename="log.log")
     
+
+    # print("Testing UUser staff...\n")
+    # default_user = UUser("default")
+
+
     # start thread with telegram bot
     # telegram_link = run_thread_agent(telebot_start, add_link=True)
     # logging.info(f"got telegram bot link {telegram_link}")
