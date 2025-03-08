@@ -25,12 +25,12 @@ In a smaller group, people are more free
 *Now the Time for information technologies!!!*
 
 **Main task: Make helpfull tools to manage men own daily bussiness, community bussiness, mankind bussiness & projects - "DEAL conception":**
-- there are no just 'events' - there are paces in businesses (exemple: go to shop -> make order, go to cinema -> buy movie session, park walking -> health project step)
+- there are no just 'events' - there are paces in businesses (exemple: go to shop -> make order, ...; go to cinema -> buy movie session, ...; park walking -> health project step, ...)
 - "customer", "hired worker", "partner" models (business partner, idea partner, life parther...)
 - help to manage tasks and resourses,
 - help to cooperate in solving problems,
 - C.R.U.D. patterns of solvings
-- give understanding, that only human itself can solve his problems right ways,
+- give understanding, that nobody but only human itself can solve his problems in right ways,
 - give understanding, that only human itself must choice & set the rules,
 
 
@@ -42,14 +42,12 @@ In a smaller group, people are more free
 
 ## Technical tasks (TT)
 
+all user data must be scrambled
+
 ### 1. Interface
 1.1 Site
-1.1.1 Main page
-- logo
 - log in/up/out -> user cabinet
 - settings
-- geo location/timezone
-- terms - laws - rules
 - about
 --
 - list of deals/projecs
@@ -65,14 +63,14 @@ In a smaller group, people are more free
     - Base of contacts (User class)
     - "deal" cooperation only (no promises)
     - business communities
-     -- <partner> - <hired worker> - <customer> deals (no any cheif/king/president/general e.t.c.)
+     -- <partner> - <hired worker> - <customer> deals (no any cheif or general e.t.c.)
      -- online mandat (for residencial / functionality ...) on/off by realtime votes of funcional members
-     -- membership in business (mandat) by:
+     -- membership in project (mandat) by:
        ---- invitation
        ---- accepting the laws
               - access by passing through the Test as anonimous: 
                 there are questions with answers of candidat.
-                answers should correspond to laws & worldviews.
+                answers should correspond to laws.
                 Confirm by func memebers
                 Question & answers - is a passport of member
        ---- laws - set of tabus (Don't ...)
@@ -106,3 +104,14 @@ In a smaller group, people are more free
    - staff menegment
      - stock in/out
      - synchronize buys/exchange/throw out
+
+
+Release:
+### 1. Interface
+1.1 Site
+1.1.1 Main page
+- geo location/timezone
+
+### 2. Dial menegment
+- default user's project - Life
+  

@@ -76,7 +76,7 @@ class UContract():
 
 class UProject():
     """
-        Class of user data about its deals in some project
+        Class of user's  projects store
         Here are its deals where user is:
         - partner
         - customer
@@ -85,9 +85,10 @@ class UProject():
             - partners
             - customers
             - hired workers
-        in particulal project
+        in every project
 
         User can have many CommUProject() objects
+        but there are always default project - life project
     """
 
     def __init__(self, project_name, user_id):
@@ -136,7 +137,7 @@ if __name__ == "__main__":
     import os
     os.system('cls')
 
-    print("Testing class CommUProject()...\n")
+    print("Testing class Comm UProject()...\n")
 
     user = "Me"
     user_project = UProject("Daily health schedule", user)
