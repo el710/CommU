@@ -1,8 +1,13 @@
 {% extends "index.html" %}
-
+{% load static %}
 
     {% block user %}
-       <p> {{local_user}} [<a href="logout/"> log out </a>] </p>
+       {{local_user}}
+      
+       <div class="logo">
+           <a href="logout/"><img src="{% static 'logout.png' %}" alt="log out"></a> 
+       </div>
+       
     {% endblock %}
 
 

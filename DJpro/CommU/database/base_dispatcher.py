@@ -9,7 +9,7 @@ from queue import Empty
 
 from  telegram.bot_api import TMessage, get_user_events
 
-from data.data import CreateUser, CreateEvent
+from upack.data import CreateUser, CreateEvent
 from database.db import (create_base_user, read_base_user,
                          create_base_event, update_base_event, 
                          delete_base_event)

@@ -1,1 +1,0 @@
-{"name": "wake up", "description": "open your eyes, stand up and sing", "goal": "active state", "event": {"start_moment": "*", "end_moment": "*", "repeat": "*", "notification": "*"}}
