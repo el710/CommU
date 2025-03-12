@@ -27,3 +27,6 @@ class RegForm(forms.Form):
     '''
         this template Django will try to find in ***.html
     '''
+
+class TaskForm(forms.Form):
+    new_task = forms.CharField(label="New point", max_length=100)

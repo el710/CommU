@@ -39,7 +39,7 @@ import logging
 
 from .id_commu_bot import tel_token
 
-from CommU.telegram.telegramuser import TelegramUser    
+from .telegramuser import TelegramUser    
 
 
 text_button_sched = "Расписание"

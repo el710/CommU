@@ -3,7 +3,7 @@ body {
     font-family: Arial, sans-serif;
 }
 
-/* Верхняя полоса */
+/* Верхняя полоса  */
 .top-bar {
     display: flex;
     justify-content: space-between;
@@ -16,16 +16,19 @@ body {
 .top-bar .logo {
     display: flex;
     align-items: center;
+
 }
 
+/*
 .top-bar .logo img {
-    width: 30px;
-    height: 30px;
-    margin-right: 10px;
-}
+    width: 15px;
+    height: 15px;
 
-.top-bar .logo span {
+}
+*/
+.top-bar .logo logotext {
     font-size: 18px;
+
 }
 
 .top-bar .links {
@@ -48,10 +51,13 @@ body {
     font-size: 18px;
 }
 
+
 /* Средняя часть */
+
 .main-content {
     display: flex;
-    margin: 20px;
+    margin: 0px;
+
 }
 
 .main-content .left-sidebar,
@@ -59,6 +65,7 @@ body {
     width: 20%;
     padding: 10px;
     background-color: #f4f4f4;
+
 }
 
 .main-content .center-content {
@@ -94,7 +101,6 @@ body {
 .bottom-bar,
 .footer-bar {
     display: flex;
-    /*justify-content: center;*/
     justify-content: space-around;
     align-items: center;
     padding: 10px 0;

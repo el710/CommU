@@ -1,39 +1,25 @@
+{% extends "index.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-    {% block meta %}
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">        
-    {% endblock %}
 
-    {% block link_rel %}
-        <link rel="stylesheet" href="{% static 'registration.css' %}">
-    {% endblock %}
-    
-    <title>{{title}}</title>
 
-</head>
-<body>
+{% block relation-css%}
+    <link rel="stylesheet" href="{% static 'registration.css' %}">
+{%endblock%}
 
-    {% block sys_title%}
-        <div class="header">
-            <img class="photo" src="{% static 'CommU.png' %}" alt="***" ><br>
-            <p class="title">
-                CommU Authorization
-            </p>
-        </div>   
-    {%endblock%}
-    
-    {% block input_data %}
-        <div class="context">
-            <form method="post" >
-                {% csrf_token %}
-                <div>
-                    <label for="id_name">Username</label>                                      
-                    <input type="text" name="username" maxlength="100" id="id_name"> <!-- 'required' means we can't pass it-->
-                </div>
+{% block application %}
+    <div class="menutitle links">
+        Authorization
+    </div>
+{% endblock %}
+
+{% block input_data %}
+    <div class="context">
+        <form method="post" >
+            {% csrf_token %}
+            <div>
+                <label for="id_name">Username</label>                                      
+                <input type="text" name="username" maxlength="100" id="id_name"> <!-- 'required' means we can't pass it-->
+            </div>
 <!--
                     <div class="warning">
                         {{ passstate }}
@@ -55,13 +41,10 @@
                     <button class="button" type="submit">Enter</button>
                 </form>
             </div>     
-        {% endblock%}
+{% endblock%}
 
 <!--
     <hr>
     <div class="context">{{ form }}</div> 
 
 -->
-
-</body>
-</html>

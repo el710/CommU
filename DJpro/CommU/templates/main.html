@@ -1,34 +1,87 @@
 {% extends "index.html" %}
 {% load static %}
 
-    {% block user %}
-       {{local_user}}
-      
-       <div class="logo">
-           <a href="logout/"><img src="{% static 'logout.png' %}" alt="log out"></a> 
-       </div>
+{% block style %}
+    <style>
+        .input-container {
+            display: flex;
+            justify-content: center;
+            margin: 5px;
+            text-align: center;
+        /*
+        border: 2px solid #ccc; 
+        */
+        }
+
+        .search-label {
+            margin: 10px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 14px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            width: 700px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #4CAF50;
+        }
+
+        .exit-bar {
+            height: 20px;
+            display: flex;
+            justify-items: center;
+            justify-content: space-around;
+        }
+        .exit-bar img{
+            height: 25px;
+            margin-left: 10px;
+        }
+
+
+
+    </style>
+{% endblock %}
+
+{% block application %}
+    <div class="menutitle links">
+        <a href="#">[my projects] [my bank] [donate me] [my store (needs, exchange)] [my services]  !new offer !new message</a>
+    </div>
+{% endblock %}
+
+{% block user %}
+    <div class="exit-bar">   
+        <div> {{local_user}} </div>
+
+        <a href="logout/"><img src="{% static 'logout.png' %}" alt="log out"></a> 
+    </div>
        
-    {% endblock %}
+{% endblock %}
 
+{% block theme %}
+    <div class="input-container">
+        <form method="post" >
+            {% csrf_token %}
+            <label class="search-label" for="new_idea">New point</label>
+            <input type="text" name="new_task" placeholder="Type name of skill, contract or project ..." id="new_idea">
+        </form>
+    </div>
 
-    {% block theme %}
     <div class="main-content"> <!-- Средняя часть -->
         <div class="left-sidebar sidebar">
             Projects:
             <ul class="project_list">
-                <li class="project_item"><a href="#">Health - day lifemode</a></li>
-                <li class="project_item"><a href="#">EuroSpar - grocery's provision</a></li>
-                <li class="project_item"><a href="#">Yandex - taxi driver</a></li>
-                <li class="project_item"><a href="#">GoncharClub - kids course</a></li>
-                <li class="project_item"><a href="#">Health - day lifemode</a></li>
-                <li class="project_item"><a href="#">EuroSpar - grocery's provision</a></li>
-                <li class="project_item"><a href="#">Yandex - taxi driver</a></li>
-                <li class="project_item"><a href="#">GoncharClub - kids course</a></li>
+                <li class="project_item"><a href="#">Life</a></li>
+
             </ul>
         </div>
         <div class="center-content">
-            <h2>Основной контент</h2>
-            <p>Здесь будет изменяемый контент.</p>
+            <h2>New task:</h2>
+            <p> {{ task }}</p>
         </div>
         <div class="right-sidebar sidebar">
             Today events:
@@ -40,4 +93,4 @@
             </ul>
         </div>
     </div>
-    {% endblock %}
+{% endblock %}

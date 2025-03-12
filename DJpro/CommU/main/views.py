@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .djforms import RegForm
+from .djforms import (RegForm, TaskForm)
 
 # Create your views here.
 
@@ -21,15 +21,50 @@ def show_title(request):
         This function shows main title Web page
         with template
     """
+    def_context = {}
+    logging.info(f"\nshow_title(): user {local_user}")
+
     if local_user != None:
-
-        def_context = {
-            "local_user": local_user
-        }
-
+        def_context.update({"local_user": local_user})
+        
+        logging.info(f"\nshow_title(main): method {request.method} ")
+        if request.method == "POST":
+            form = TaskForm(request.POST)
+            logging.info(f"\nshow_title(main): POST {form.is_valid()} ")
+            logging.info(f'\nshow_title(main): {form.cleaned_data}')
+            if form.is_valid():
+                task = form.cleaned_data['new_task']
+                def_context.update({"task": task})
+           
         return render(request, 'main.html', context=def_context)
     else:
-        return render(request, 'index.html')
+        if request.method == 'POST':
+            form = RegForm(request.POST)
+            
+            logging.info(f"\nshow_title(index): POST {form.is_valid()} ")
+            logging.info(f'\nshow_title(index): {form.cleaned_data}')
+
+            if form.is_valid(): ## is_valid also makes cleaned_data
+                name = form.cleaned_data['username']
+            # password = request.POST.get("user_password")
+            # repassword = request.POST.get("user_repassword")
+            # email = form.cleaned_data['email']
+
+            # print(f"ext_post(): POST: {name} {email} {password} {repassword} ")
+            
+            # if password == repassword:
+                local_user = name
+                return redirect('/') 
+            # else:
+            #     def_context.update({'passstate': "... passwords is not equal. Try again."})
+
+        else:
+            form = RegForm()  ## form is a html-template that django try to find in html page by name
+            ## print(f"\next_post(): render {form}")
+    
+        def_context.update({'form': form})
+        return render(request, 'index.html', context=def_context )
+        
 
 
 def show_about(request):

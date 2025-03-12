@@ -32,7 +32,7 @@ urlpatterns = [
     path('terms/', show_terms),
     path('basic_laws/', show_laws),
     path('rules/', show_rules),
-    path('reg/', registration)
+    ##path('reg/', registration)
     
 
 ]
