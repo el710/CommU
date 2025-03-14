@@ -85,7 +85,7 @@
         <form method="post" >
             {% csrf_token %}
             <label class="search-label" for="new_idea">New point</label>
-            <input type="text" name="new_task" placeholder="Type name of skill, contract or project ..." id="new_idea">
+            <input type="text" name="new_task" placeholder="Type name of skill, project or dealer..." id="new_idea">
         </form>
     </div>
 {% endblock %}
@@ -101,6 +101,7 @@
     <div class="bottom">
         <div class="bottom-bar"> <!-- Первая нижняя полоса -->
             <div id="geoposition"></div>
+            <div id="geosocium"></div>
             <div id="datetime"></div>
         </div>
 
@@ -132,7 +133,8 @@
                 navigator.geolocation.getCurrentPosition(function(position) {
                     const lat = position.coords.latitude;
                     const lon = position.coords.longitude;
-                    document.getElementById('geoposition').innerHTML = ` Geoposition: ${lat.toFixed(2)}, ${lon.toFixed(2)}`;
+                    document.getElementById('geoposition').innerHTML = ` Geo position: ${lat.toFixed(2)}, ${lon.toFixed(2)}`;
+                    document.getElementById('geosocium').innerHTML = ` Geo socium: Humanity`;
                 });
             }
         }

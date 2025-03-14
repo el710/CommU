@@ -24,7 +24,6 @@ class UEvent():
 
     notification: str
 
-
     def dict(self):
         return {
             "start_moment": "*",

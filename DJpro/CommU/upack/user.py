@@ -1,8 +1,10 @@
 """
     Copyright (c) 2024 Kim Oleg <theel710@gmail.com>
 """
-
-from .uproject import UProject
+try:
+    from .uproject import UProject
+except:
+    from uproject import UProject
 
 class UUser():
     def __init__(self, nickname):
@@ -35,6 +37,7 @@ class ClientUser(UUser):
 
     def log_out(self):
         self.login = False    
+
 
 if __name__ == "__main__":
 
