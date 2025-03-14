@@ -3,7 +3,7 @@
 '''
 from django import forms
 
-class RegForm(forms.Form):
+class SignUpForm(forms.Form):
     '''
         get from html forms data by "name":
 

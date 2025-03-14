@@ -22,17 +22,19 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from main.views import (logout, show_title, show_about, show_terms, show_laws, show_rules, registration)
+from main.views import (show_title, show_about, show_terms, show_laws, show_rules,
+                        signup, logout)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', show_title),
-    path('logout/',logout),
     path('about/', show_about),
     path('terms/', show_terms),
     path('basic_laws/', show_laws),
     path('rules/', show_rules),
-    ##path('reg/', registration)
-    
+
+    path('signup/', signup),
+    path('logout/',logout),
+        
 
 ]

@@ -2,48 +2,19 @@
 {% load static %}
 
 {% block style %}
+    {{ block.super }}
     <style>
-        .input-container {
-            display: flex;
-            justify-content: center;
-            margin: 5px;
-            text-align: center;
-        /*
-        border: 2px solid #ccc; 
-        */
-        }
-
-        .search-label {
-            margin: 10px;
-        }
-
-        input[type="text"] {
-            padding: 10px;
-            font-size: 14px;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-            width: 700px;
-            outline: none;
-            transition: border-color 0.3s ease;
-        }
-
-        input[type="text"]:focus {
-            border-color: #4CAF50;
-        }
-
         .exit-bar {
             height: 20px;
             display: flex;
             justify-items: center;
             justify-content: space-around;
         }
+    
         .exit-bar img{
             height: 25px;
             margin-left: 10px;
         }
-
-
-
     </style>
 {% endblock %}
 
@@ -63,13 +34,7 @@
 {% endblock %}
 
 {% block theme %}
-    <div class="input-container">
-        <form method="post" >
-            {% csrf_token %}
-            <label class="search-label" for="new_idea">New point</label>
-            <input type="text" name="new_task" placeholder="Type name of skill, contract or project ..." id="new_idea">
-        </form>
-    </div>
+   {{block.super}}
 
     <div class="main-content"> <!-- Средняя часть -->
         <div class="left-sidebar sidebar">
@@ -93,4 +58,8 @@
             </ul>
         </div>
     </div>
+
 {% endblock %}
+
+{% block perform %}
+{%endblock%}

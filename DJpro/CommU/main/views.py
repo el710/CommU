@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .djforms import (RegForm, TaskForm)
+from .djforms import (SignUpForm, TaskForm)
 
 # Create your views here.
 
@@ -8,26 +8,35 @@ import logging
 
 local_user = None
 
-def logout(request):
-    global local_user
-
-    local_user = None
-    return redirect('/')
-    # return render(request, 'index.html')
-
 def show_title(request):
     global local_user
     """
         This function shows main title Web page
-        with template
     """
     def_context = {}
     logging.info(f"\nshow_title(): user {local_user}")
+    logging.info(f"\nshow_title(): method {request.method} ")
 
-    if local_user != None:
+    if local_user == None:
+        if request.method == "POST":
+            form = TaskForm(request.POST)
+            if form.is_valid():
+                message = form.cleaned_data['new_task']
+                ## TODO: find skill or dealer
+                task = f"try to find public skills, projects, dealers as '{message}'..."
+
+            else:
+                task = "I did't understand. Try one more time..."
+            def_context.update({"task": task})
+        else:
+            def_context.update({'form': TaskForm()})
+
+        return render(request, 'index.html', context=def_context)
+    else:
         def_context.update({"local_user": local_user})
         
-        logging.info(f"\nshow_title(main): method {request.method} ")
+        
+        
         if request.method == "POST":
             form = TaskForm(request.POST)
             logging.info(f"\nshow_title(main): POST {form.is_valid()} ")
@@ -37,34 +46,6 @@ def show_title(request):
                 def_context.update({"task": task})
            
         return render(request, 'main.html', context=def_context)
-    else:
-        if request.method == 'POST':
-            form = RegForm(request.POST)
-            
-            logging.info(f"\nshow_title(index): POST {form.is_valid()} ")
-            logging.info(f'\nshow_title(index): {form.cleaned_data}')
-
-            if form.is_valid(): ## is_valid also makes cleaned_data
-                name = form.cleaned_data['username']
-            # password = request.POST.get("user_password")
-            # repassword = request.POST.get("user_repassword")
-            # email = form.cleaned_data['email']
-
-            # print(f"ext_post(): POST: {name} {email} {password} {repassword} ")
-            
-            # if password == repassword:
-                local_user = name
-                return redirect('/') 
-            # else:
-            #     def_context.update({'passstate': "... passwords is not equal. Try again."})
-
-        else:
-            form = RegForm()  ## form is a html-template that django try to find in html page by name
-            ## print(f"\next_post(): render {form}")
-    
-        def_context.update({'form': form})
-        return render(request, 'index.html', context=def_context )
-        
 
 
 def show_about(request):
@@ -95,18 +76,19 @@ def show_rules(request):
     """
     return render(request, 'rules.html')
 
-def registration(request):
+
+
+def signup(request):
     global local_user
-
-    logging.info(f"\nregistration(): ...")
-    def_context = {}
-
+    """
+        This function shows signup Web page
+    """
+    logging.info(f"\nsignup(): method {request.method} ")
     if request.method == 'POST':
-        form = RegForm(request.POST)
-       
-        logging.info(f"\next_post(): POST {form.is_valid()} ")
-    
-        logging.info(f'\next_post(): {form.cleaned_data}')
+        form = SignUpForm(request.POST)
+            
+        logging.info(f"\nsignup(): valid POST {form.is_valid()} ")
+        logging.info(f'\nsignup(): {form.cleaned_data}')
 
         if form.is_valid(): ## is_valid also makes cleaned_data
             name = form.cleaned_data['username']
@@ -123,11 +105,19 @@ def registration(request):
             #     def_context.update({'passstate': "... passwords is not equal. Try again."})
 
     else:
-        form = RegForm()  ## form is a html-template that django try to find in html page by name
-        ## print(f"\next_post(): render {form}")
-    
-    def_context.update({'form': form})
-    return render(request, 'regform.html', context=def_context )
+        form = SignUpForm()  ## form is a html-template that django try to find in html page by name
+        
+    def_context = {'form': form}
+    return render(request, 'signup.html', context=def_context )
+
+
+def logout(request):
+    global local_user
+
+    local_user = None
+    return redirect('/')
+    # return render(request, 'index.html')        
+            
 
 def get_post_request(request):
     ## first enter to page
