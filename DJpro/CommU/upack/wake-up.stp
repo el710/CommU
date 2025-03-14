@@ -1,0 +1,1 @@
+{"name": "wake up", "description": "open eye", "resources": null, "goal": "active", "event": {"start_moment": "*", "end_moment": "*", "repeat": "*", "notification": "*"}}

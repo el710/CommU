@@ -110,6 +110,35 @@ def signup(request):
     def_context = {'form': form}
     return render(request, 'signup.html', context=def_context )
 
+def login(request):
+    global local_user
+    """
+        This function shows login Web page
+    """
+    logging.info(f"\nlogin(): method {request.method} ")
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+            
+        logging.info(f"\nsignup(): valid POST {form.is_valid()} ")
+        logging.info(f'\nsignup(): {form.cleaned_data}')
+
+        if form.is_valid(): ## is_valid also makes cleaned_data
+            name = form.cleaned_data['username']
+            # password = request.POST.get("user_password")
+
+            # print(f"ext_post(): POST: {name} {email} {password} ")
+            
+            # if password == repassword:
+            local_user = name
+            return redirect('/') 
+            # else:
+            #     def_context.update({'passstate': "... passwords is not equal. Try again."})
+
+    else:
+        form = SignUpForm()  ## form is a html-template that django try to find in html page by name
+        
+    def_context = {'form': form}
+    return render(request, 'login.html', context=def_context )
 
 def logout(request):
     global local_user

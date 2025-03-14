@@ -23,7 +23,7 @@ from django.contrib import admin
 from django.urls import path
 
 from main.views import (show_title, show_about, show_terms, show_laws, show_rules,
-                        signup, logout)
+                        signup, login, logout)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,6 +34,7 @@ urlpatterns = [
     path('rules/', show_rules),
 
     path('signup/', signup),
+    path('login/', login),
     path('logout/',logout),
         
 
