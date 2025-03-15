@@ -92,7 +92,30 @@
 
 {% block perform %}
     <div>
-        {{task}}
+        {% if task != None%}
+            <p>trying to find public skills, projects, dealers as '{{task}}'...</p>
+            <br>
+
+            <ul>
+                {% if project != None %}
+                    <li>
+                        there is a project template: <a href="projects/">{{project}}</a> 
+                    </li>
+                {% else %}
+                    <li>there is no such project templates as '{{ task }}'</il>
+                {% endif %}
+                </ul>
+            <ul>
+            {% if skill != None %}
+                <li>
+                    there is a skill: <a href="skills/">{{skill}}</a> 
+                </li>
+            {% else %}
+                <li>there is no such skill as '{{ task }}'</il>
+            {% endif %}
+            </ul>
+
+        {% endif %}
     </div>
 {%endblock%}
 
@@ -134,7 +157,7 @@
                     const lat = position.coords.latitude;
                     const lon = position.coords.longitude;
                     document.getElementById('geoposition').innerHTML = ` Geo position: ${lat.toFixed(2)}, ${lon.toFixed(2)}`;
-                    document.getElementById('geosocium').innerHTML = ` Geo socium: Humanity`;
+                    document.getElementById('geosocium').innerHTML = ` Geo socium: Nizhny Novgorod city`;
                 });
             }
         }

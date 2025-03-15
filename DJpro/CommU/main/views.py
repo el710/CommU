@@ -1,10 +1,16 @@
 from django.shortcuts import render, redirect
 from .djforms import (SignUpForm, TaskForm)
 
+from django.contrib.staticfiles import finders
+
 # Create your views here.
 
-import logging
 
+from upack.uproject import USkill, UProject
+
+
+import logging
+import os
 
 local_user = None
 
@@ -21,12 +27,28 @@ def show_title(request):
         if request.method == "POST":
             form = TaskForm(request.POST)
             if form.is_valid():
-                message = form.cleaned_data['new_task']
-                ## TODO: find skill or dealer
-                task = f"try to find public skills, projects, dealers as '{message}'..."
+                task = form.cleaned_data['new_task']
+                ## TODO: find templates
+                
+                skill = USkill(task)
+                _path = finders.find(skill.get_file_name())
+    
+                if skill.load_template(_path):
+                    def_context.update({"skill": task})
+                    logging.info(f"show_title(): has found skill {task}")
+                else:
+                    def_context.update({"skill": None})
+
+                project = UProject(task, local_user)
+                _path = finders.find(project.get_file_name())
+                if project.load_template(_path):
+                    def_context.update({"project": task})
+                else:
+                    def_context.update({"project": None})
 
             else:
-                task = "I did't understand. Try one more time..."
+                task = None
+
             def_context.update({"task": task})
         else:
             def_context.update({'form': TaskForm()})

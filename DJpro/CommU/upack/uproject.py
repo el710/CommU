@@ -13,6 +13,7 @@ except:
 from slugify import slugify
 import json
 
+import os
 import logging
 
 class UObject():
@@ -55,33 +56,49 @@ class UObject():
 
         return _name
 
-    def save_as_template(self):
+    def save_as_template(self, over:bool=False):
         """
             Save structure of object as dictionary template
         """
         temp = self.__dict__
 
         if isinstance(self, USkill):
-            temp["event"] = None
+            temp["event"] = temp["event"].__dict__
         
         _name = self.get_file_name()
+
+        if not over:
+            """IF file exists """
+            if os.path.isfile(_name):
+                return False
         
         with open(_name, mode='w', encoding='utf-8') as file:
-            file.write(json.dumps(temp)) 
+            file.write(json.dumps(temp)) ## write dict as string
+        
+        return True
 
 
-    def load_template(self):
+    def load_template(self, path=None):
         """
             Load template of object
         """
-        _name = self.get_file_name()
+        if path == None:
+            _name = self.get_file_name()
+        else:
+            _name = path
 
+        logging.info(f"load_template(): trying to find template {_name}")
+        
         try:
             with open(_name, mode='r', encoding='utf-8') as file:
-                data = json.loads(file.read())
+                data = json.loads(file.read()) ## make dict from string
+
                 self.set(**data)
+            logging.info(f"load_template(): has found template {_name}")
+
             return True
-        except:
+        except Exception as exc:
+            logging.info(f"load_template(): can't open template {_name} {exc}")
             return False
 
 
