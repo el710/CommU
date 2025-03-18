@@ -56,7 +56,7 @@ class UObject():
 
         return _name
 
-    def save_as_template(self, over:bool=False):
+    def save_as_template(self, over:bool=False, path=None):
         """
             Save structure of object as dictionary template
         """
@@ -65,7 +65,7 @@ class UObject():
         if isinstance(self, USkill):
             temp["event"] = temp["event"].__dict__
         
-        _name = self.get_file_name()
+        _name = os.path.join(path, self.get_file_name())
 
         if not over:
             """IF file exists """

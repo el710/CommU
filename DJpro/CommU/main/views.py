@@ -3,16 +3,21 @@ from .djforms import (SignUpForm, TaskForm)
 
 from django.contrib.staticfiles import finders
 
+
 # Create your views here.
 
 
 from upack.uproject import USkill, UProject
+from upack.user import UUser
 
 
 import logging
 import os
 
+""" Operating Data"""
 local_user = None
+public_dealers = []
+
 
 def show_title(request):
     global local_user
@@ -45,6 +50,20 @@ def show_title(request):
                     def_context.update({"project": task})
                 else:
                     def_context.update({"project": None})
+
+                user_dealers_list = []
+                if local_user != None:
+                    if isinstance(local_user, UUser):
+                        user_dealers_list.append(local_user.partners)
+                
+                if len(public_dealers):
+                    user_dealers_list.append(public_dealers)
+                
+                if len(user_dealers_list):
+                    def_context.update({"dealers": user_dealers_list})
+                else: 
+                    def_context.update({"dealers": None})
+                
 
             else:
                 task = None

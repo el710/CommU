@@ -84,7 +84,7 @@
     <div class="input-container">
         <form method="post" >
             {% csrf_token %}
-            <label class="search-label" for="new_idea">New point</label>
+            <label class="search-label" for="new_idea">Query: </label>
             <input type="text" name="new_task" placeholder="Type name of skill, project or dealer..." id="new_idea">
         </form>
     </div>
@@ -104,16 +104,26 @@
                 {% else %}
                     <li>there is no such project templates as '{{ task }}'</il>
                 {% endif %}
-                </ul>
+            </ul>
             <ul>
             {% if skill != None %}
-                <li>
-                    there is a skill: <a href="skills/">{{skill}}</a> 
-                </li>
+                there is a skill:
+                <li> <a href="skills/">{{skill}}</a> </li>
             {% else %}
                 <li>there is no such skill as '{{ task }}'</il>
             {% endif %}
             </ul>
+
+            <ul>
+                {% if dealers != None %}
+                    there are dealers:
+                    {% for item in dealers %}
+                        <li> <a href="dealers/">{{item}}</a>  </li>
+                    {% endfor%}
+                {% else %}
+                    <li>there is no such dealers as '{{ task }}'</il>
+                {% endif %}
+            </ul>            
 
         {% endif %}
     </div>
