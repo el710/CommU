@@ -24,68 +24,57 @@ def show_title(request):
     """
         This function shows main title Web page
     """
-    def_context = {}
+    
     logging.info(f"\nshow_title(): user {local_user}")
     logging.info(f"\nshow_title(): method {request.method} ")
 
-    if local_user == None:
-        if request.method == "POST":
-            form = TaskForm(request.POST)
-            if form.is_valid():
-                task = form.cleaned_data['new_task']
-                ## TODO: find templates
+    def_context = {"local_user": local_user}
+
+    if request.method == "POST":
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            task = form.cleaned_data['new_task']
+            ## TODO: find templates
                 
-                skill = USkill(task)
-                _path = finders.find(skill.get_file_name())
+            skill = USkill(task)
+            _path = finders.find(skill.get_file_name())
     
-                if skill.load_template(_path):
-                    def_context.update({"skill": task})
-                    logging.info(f"show_title(): has found skill {task}")
-                else:
-                    def_context.update({"skill": None})
-
-                project = UProject(task, local_user)
-                _path = finders.find(project.get_file_name())
-                if project.load_template(_path):
-                    def_context.update({"project": task})
-                else:
-                    def_context.update({"project": None})
-
-                user_dealers_list = []
-                if local_user != None:
-                    if isinstance(local_user, UUser):
-                        user_dealers_list.append(local_user.partners)
-                
-                if len(public_dealers):
-                    user_dealers_list.append(public_dealers)
-                
-                if len(user_dealers_list):
-                    def_context.update({"dealers": user_dealers_list})
-                else: 
-                    def_context.update({"dealers": None})
-                
-
+            if skill.load_template(_path):
+                def_context.update({"skill": task})
+                logging.info(f"show_title(): has found skill {task}")
             else:
-                task = None
+                def_context.update({"skill": None})
 
-            def_context.update({"task": task})
+            project = UProject(task, local_user)
+            _path = finders.find(project.get_file_name())
+            if project.load_template(_path):
+                def_context.update({"project": task})
+            else:
+                def_context.update({"project": None})
+
+            user_dealers_list = []
+            if local_user != None:
+                if isinstance(local_user, UUser):
+                    user_dealers_list.append(local_user.partners)
+                
+            if len(public_dealers):
+                user_dealers_list.append(public_dealers)
+                
+            if len(user_dealers_list):
+                def_context.update({"dealers": user_dealers_list})
+            else: 
+                def_context.update({"dealers": None})
+                
         else:
-            def_context.update({'form': TaskForm()})
+            task = None
 
+        def_context.update({"task": task})
+    else:
+        def_context.update({'form': TaskForm()})
+    
+    if local_user == None:
         return render(request, 'index.html', context=def_context)
     else:
-        def_context.update({"local_user": local_user})
-        
-        
-        
-        if request.method == "POST":
-            form = TaskForm(request.POST)
-            logging.info(f"\nshow_title(main): POST {form.is_valid()} ")
-            logging.info(f'\nshow_title(main): {form.cleaned_data}')
-            if form.is_valid():
-                task = form.cleaned_data['new_task']
-                def_context.update({"task": task})
-           
         return render(request, 'main.html', context=def_context)
 
 

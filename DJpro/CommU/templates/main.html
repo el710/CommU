@@ -35,18 +35,24 @@
 
 {% block theme %}
    {{block.super}}
+{% endblock %}
 
+
+    
+{% block perform %}
     <div class="main-content"> <!-- Средняя часть -->
         <div class="left-sidebar sidebar">
             Projects:
             <ul class="project_list">
                 <li class="project_item"><a href="#">Life</a></li>
-
+        
             </ul>
         </div>
+
         <div class="center-content">
-            <p> {{ task }}</p>
+            {{block.super}}
         </div>
+    
         <div class="right-sidebar sidebar">
             Today agenda:
             <ul>
@@ -57,8 +63,5 @@
             </ul>
         </div>
     </div>
-
-{% endblock %}
-
-{% block perform %}
 {%endblock%}
+    

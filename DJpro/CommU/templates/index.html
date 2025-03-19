@@ -50,6 +50,23 @@
         input[type="text"]:focus {
             border-color: #4CAF50;
         }
+
+        .welcome-work{
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .choice-win{        
+            justify-content: left;
+            margin: 5px; /*outfit*/
+            padding: 10px;
+            width: 50%;
+
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            
+            
+        }
     </style>        
 {% endblock %}        
 
@@ -91,45 +108,51 @@
 {% endblock %}
 
 {% block perform %}
-    <div>
-        {% if task != None%}
-            <p>trying to find public skills, projects, dealers as '{{task}}'...</p>
-            <br>
-
-            <ul>
-                {% if project != None %}
-                    <li>
-                        there is a project template: <a href="projects/">{{project}}</a> 
-                    </li>
-                {% else %}
-                    <li>there is no such project templates as '{{ task }}'</il>
-                {% endif %}
-            </ul>
-            <ul>
-            {% if skill != None %}
-                there is a skill:
-                <li> <a href="skills/">{{skill}}</a> </li>
-            {% else %}
-                <li>there is no such skill as '{{ task }}'</il>
-            {% endif %}
-            </ul>
-
-            <ul>
-                {% if dealers != None %}
-                    there are dealers:
-                    {% for item in dealers %}
-                        <li> <a href="dealers/">{{item}}</a>  </li>
-                    {% endfor%}
-                {% else %}
-                    <li>there is no such dealers as '{{ task }}'</il>
-                {% endif %}
-            </ul>            
-
+    <div class="welcome-work">
+        {% if task != None %}
+            <div class="choice-win">
+                <p>find out public skills, projects, dealers as <b>'{{task}}'</b>...</p>
+                <ul>
+                    {% if project != None %}
+                        <li>
+                            there is a project templates: <a href="projects/">{{project}}</a> 
+                        </li>
+                    {% else %}
+                        <li>there is no such project templates as '{{ task }}'</il>
+                    {% endif %}
+                
+                    {% if skill != None %}
+                        <li>there is a skill:</li>
+                        <ul>
+                            <li> <a href="skills/">{{skill}}</a> </li>
+                        </ul>
+                    {% else %}
+                        <li>there is no such skill as '{{ task }}'</il>
+                    {% endif %}
+                
+                    {% if dealers != None %}
+                        <li>there are dealers:</li>
+                        <ul>
+                            {% for item in dealers %}
+                                <li> <a href="dealers/">{{item}}</a>  </li>
+                            {% endfor%}
+                        </ul>
+                    {% else %}
+                        <li>there is no such dealers as '{{ task }}'</il>
+                    {% endif %}
+                </ul>            
+            </div>
+            <div class="choice-win">
+                Make <b>'{{task}}'</b> as:
+                <ul>    
+                    <li><button>new skill</button></li>
+                    <br>
+                    <li><button>new project</button></li>
+                </ul>
+            </div>
         {% endif %}
     </div>
 {%endblock%}
-
-
 
     <div class="bottom">
         <div class="bottom-bar"> <!-- Первая нижняя полоса -->
