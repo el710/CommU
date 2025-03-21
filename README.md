@@ -4,9 +4,8 @@
 
 ## Prolog
 The needs to unite humans in one community passed test of time with main results:
-
 - Humans never change
-- Centralized management model and Common managment model can be effective only for the small groups, where all the processes are obvious for everyone.
+- Any life management model can be effective only for the small groups, where all the processes are obvious for everyone.
 
 ```
 Large group can't be managed effectively
@@ -30,8 +29,8 @@ In a smaller group, people are more free
 - help to manage tasks and resourses,
 - help to cooperate in solving problems,
 - C.R.U.D. patterns of solvings
-- give understanding, that nobody but only human itself can solve his problems in right ways,
-- give understanding, that only human itself must choice & set the rules,
+- give an understanding, that nobody but only human itself can solve his problems in right ways,
+- give an understanding, that only human itself must choice & set the rules,
 
 
 *"All I want to say is that: they don't really care about us..."*
@@ -41,22 +40,37 @@ In a smaller group, people are more free
 *John Lennon*
 
 ## Technical tasks (TT)
+### 1. Interface
+1.1 Web Site
+- geo location
+- geo socium
+- date, time, timezone
+- about
+- rules
+- contacts
+- sign up/ log in/ log out
+  
+1.1.1 Welcome page
+- query for public skills, projects, dealers
+- lists of public skills, projects, dealers for reading only
+- 
+1.1.2 User's page
+- query for public skills, projects, dealers
+- tree of user's active projects - contracts - paces
+- user's today agenda (schedule)
+- lists of public skills, projects, dealers for getting
 
-all user data must be scrambled
+1.2 Telegramm
+
+### 2. Dial menegment
+- default user's project - Life
+
+---
+TODO:
+- all user data must be scrambled
 
 ### 1. Interface
-1.1 Site
-- log in/up/out -> user cabinet
-- settings
-- about
---
-- list of deals/projecs
-- list of event for today
---
-- menu of projects/contacts
-  
->
-1.2 Telegram
+    - settings
 
 
 ### 2. Link menegment
@@ -78,7 +92,7 @@ all user data must be scrambled
        ---- rules - "how to do"
 
 ### 3. Dial menegment
-    - Base of dials
+    - Base of skills/projects templates
     - control time, credit/debet of dial with Bases
     - base of process makets (reglaments, typical solves, technologies)
 
@@ -86,7 +100,6 @@ all user data must be scrambled
 4.1 Planing ( S.M.A.R.T.)
     - calendar of events (event - part of deal with someone else)
     - daily event list
-    - TG_bot model
     - dials events
 
     - no dealer events
@@ -104,14 +117,3 @@ all user data must be scrambled
    - staff menegment
      - stock in/out
      - synchronize buys/exchange/throw out
-
-
-Release:
-### 1. Interface
-1.1 Site
-1.1.1 Main page
-- geo location/timezone
-
-### 2. Dial menegment
-- default user's project - Life
-  

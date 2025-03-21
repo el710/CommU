@@ -17,6 +17,10 @@ import os
 import logging
 
 class UObject():
+
+    def __init__(self, author):
+        self.author = author
+
     def info(self):
         if isinstance(self, USkill):
             pred = "Skill"
@@ -38,6 +42,14 @@ class UObject():
         """
         for key, value in kwargs.items():
             setattr(self, key, value)
+    
+    def set_public(self, author):
+        self.public = True
+        self.author = author
+    
+    def set_personal(self, author):
+        self.public = False
+        self.author = author
 
     def get_file_name(self):
         """
@@ -65,7 +77,10 @@ class UObject():
         if isinstance(self, USkill):
             temp["event"] = temp["event"].__dict__
         
-        _name = os.path.join(path, self.get_file_name())
+        if path: 
+            _name = os.path.join(path, self.get_file_name())
+        else:
+            _name = self.get_file_name()
 
         if not over:
             """IF file exists """
@@ -108,7 +123,9 @@ class USkill(UObject):
         The person do it by itself
     """
 
-    def __init__(self, name:str, goal:str = None, description:str = None, resources:str = None):
+    def __init__(self, owner_id, name:str, goal:str = None, description:str = None, resources:str = None):
+        super().__init__(owner_id)
+        
         self.name = name ## "wake up"
 
         """resources"""
@@ -127,14 +144,16 @@ class USkill(UObject):
         self.duration = None
         
         self.state = "template" ## "offer" -> "deal" -> "done"
-        
+
+        self.public = False
 
 class UContract(UObject):
     """
         Deal structure with other dealer
     """
-    def __init__(self, owner_id, owner_type:str="partner", dealer_id = None):
-        self.owner_id = owner_id
+    def __init__(self, owner_id, owner_type:str="partner", dealer_id=None):
+        super().__init__(owner_id)
+        
 
         if dealer_id == None:
             self.dealer_id = owner_id
@@ -156,6 +175,8 @@ class UContract(UObject):
         """deals history"""
         self.history = []
 
+        self.public = False
+
 
 
 class UProject(UObject):
@@ -175,17 +196,18 @@ class UProject(UObject):
         but there are always default project - life project
     """
 
-    def __init__(self, project_name, user_id):
+    def __init__(self, owner_id, project_name):
         """ 
             initialisation project with:
             - project_name
             - user_id
             other attributes are None
         """
+        super().__init__(owner_id)
         self.name = project_name
         self.target = "The point of project is: ..."
         self.project_laws = {} ## 'Do not" laws
-        self.user_id = user_id
+        
 
 
         """Lists of user contracts"""
@@ -197,6 +219,8 @@ class UProject(UObject):
         self.partners = None
         self.customers = None
         self.workers = None
+
+        self.public = False
 
     def add_(self):
         """
@@ -219,7 +243,7 @@ if __name__ == "__main__":
     print("Testing class Comm UProject()...\n")
 
     user = "Me"
-    user_project = UProject("Daily health mode", user)
+    user_project = UProject(user, "Daily health mode")
     print(user_project)
 
     user_contract = UContract(user)
@@ -227,22 +251,22 @@ if __name__ == "__main__":
 
     
     
-    def termmake():
+    def termmake(user):
         print("Terminal maker of skills\n")
         name = input("Input name of skill: ")
             
-        new_skill = USkill(name)
+        new_skill = USkill(user, name)
         new_skill.description = input(f"Describe skill '{new_skill.name}' in simple words: ")
         new_skill.goal = input(f"What goal(result) of skill '{new_skill.name}': ")
         new_skill.event = UEvent()
 
         return new_skill
 
-    new_skill = termmake()
+    new_skill = termmake(user)
     print(new_skill)
 
     new_skill.save_as_template()
-    load_skill = USkill(new_skill.name)
+    load_skill = USkill("anyone", new_skill.name)
 
     if load_skill.load_template():
         print(load_skill)

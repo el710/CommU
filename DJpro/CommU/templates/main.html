@@ -1,6 +1,7 @@
 {% extends "index.html" %}
 {% load static %}
 
+
 {% block style %}
     {{ block.super }}
     <style>
@@ -37,31 +38,51 @@
    {{block.super}}
 {% endblock %}
 
-
     
 {% block perform %}
-    <div class="main-content"> <!-- Средняя часть -->
+    <div class="workplace">
         <div class="left-sidebar sidebar">
-            Projects:
-            <ul class="project_list">
-                <li class="project_item"><a href="#">Life</a></li>
-        
-            </ul>
+            {% block public-list %}
+            {{block.super}}
+            {%endblock%} <!-- public-list -->            
         </div>
 
         <div class="center-content">
-            {{block.super}}
-        </div>
-    
+            <div class="center-top">
+                {% block search-result %}
+                    {{ block.super }}
+                {%endblock%} <!-- search-result-->
+            </div> <!-- center-top-->
+            <div class="center-bottom">
+                {% block user-project-list %}
+                Projects:
+                <ul class="project_list">
+                    <li class="project_item"><a href="#">Life</a></li>
+                </ul>
+                {%endblock%}
+
+
+            </div> <!-- center-bottom -->
+        </div> <!-- center-content -->
+
         <div class="right-sidebar sidebar">
-            Today agenda:
-            <ul>
-                <li>05:00 AM:  raise up [Health] </li>
-                <li>11:00 AM Sunday: lesson [GoncharClub] {till: 13:00}
-                </li>
-                <li>13:30 PM Sunday: lesson [IT-TOP] {till: 14:30}</li>
-            </ul>
-        </div>
-    </div>
-{%endblock%}
-    
+            <div class="right-top">
+                {% block make %}
+                    {{ block.super }}
+                {%endblock%}
+            </div> <!-- right-top -->
+
+            <div class="right-bottom">
+                {% block agenda %}
+                    Today agenda:
+                    <ul>
+                        <li>05:00 AM:  raise up [Health] </li>
+                        <li>11:00 AM Sunday: lesson [GoncharClub] {till: 13:00} </li>
+                        <li>13:30 PM Sunday: lesson [IT-TOP] {till: 14:30}</li>
+                    </ul>                
+                {%endblock%} <!-- agenda-->
+            </div> <!-- right-bottom -->
+
+        </div> <!-- right-sidebar -->
+    </div> <!-- workplace -->
+{%endblock%} <!-- perform -->

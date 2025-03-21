@@ -16,21 +16,21 @@
     <link rel="icon" type="icon"  href="{% static 'favicon.ico' %}">
     {% endblock %}
 
-    {% block relation-css%}
-        <link rel="stylesheet" type="text/css" href="{% static 'main.css' %}">
-    {%endblock%}
+    
+   
+    <link rel="stylesheet" href="{% static 'main.css' %}">
+    
 </head>
 
 {% block style %}
     <style>
+
         .input-container {
             display: flex;
             justify-content: center;
             margin: 5px;
             text-align: center;
-    /*
-    border: 2px solid #ccc; 
-    */
+            /* border: 2px solid #ccc;  */
         }
 
         .search-label {
@@ -38,7 +38,7 @@
         }
 
         input[type="text"] {
-            padding: 10px;
+            padding: 5px;
             font-size: 14px;
             border: 2px solid #ccc;
             border-radius: 5px;
@@ -46,27 +46,125 @@
             outline: none;
             transition: border-color 0.3s ease;
         }
-
+        
         input[type="text"]:focus {
             border-color: #4CAF50;
         }
-
-        .welcome-work{
+    
+        .workplace {
             display: flex;
             justify-content: space-around;
-        }
-
-        .choice-win{        
-            justify-content: left;
-            margin: 5px; /*outfit*/
-            padding: 10px;
-            width: 50%;
-
+            margin: 5px;
+            
+            /*
             border: 2px solid #ccc;
             border-radius: 5px;
+            */
+        }
+
+        .left-sidebar {
+            background-color: #f4f4f4;
+            text-align: left;
             
+            width: 25%;
+            /*
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            */
+        }
+
+        .right-sidebar {
+            /*background-color: #f4f4f4;*/
+            text-align: left;
+
+            width: 25%;
+            /*
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            */
+        }
+
+        .ul {
+            list-style-type: circle;
+            padding: 0;
+        }
+        
+        .ul li {
+            margin-bottom: 10px;
+        }
+
+        .ul li a {
+            text-decoration: none;
+            color: #333;
+            font-size: 18px;
+        }        
+
+
+        .center-content {
+            /*
+            display: flex;
+            flex-direction: column;
+           /*justify-content: left;
+            align-items: ;
+            */
+
+            width: 50%;
+            /* background-color: cyan; */
+            padding: 0;
+
+            /*
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            */
             
         }
+
+        .center-top {
+            /* background-color: #e9e9e9; */
+            
+            justify-content: left;
+           /* margin: 5px; /*outfit*/
+           /* padding: 10px; */
+           /* width: 50%; */
+
+            /*
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            */
+        }
+
+        .center-bottom {
+            justify-content: left;
+            text-align: left;
+            /*
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            */
+        }
+
+        .right-top {
+            /*background-color: #e9e9e9;*/
+            
+            justify-content: left;
+            text-align: left;
+
+            /*
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            */
+        }
+
+        .right-bottom {
+    
+            justify-content: left;
+            text-align: left;
+
+            /*
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            */
+        }
+
     </style>        
 {% endblock %}        
 
@@ -105,54 +203,87 @@
             <input type="text" name="new_task" placeholder="Type name of skill, project or dealer..." id="new_idea">
         </form>
     </div>
+    <div>
+
+        Public: <a href="">skills</a> / <a href="">projects</a> / <a href="">dealers</a>
+
+    </div>
 {% endblock %}
 
 {% block perform %}
-    <div class="welcome-work">
-        {% if task != None %}
-            <div class="choice-win">
-                <p>find out public skills, projects, dealers as <b>'{{task}}'</b>...</p>
+    <div class="workplace">
+        <div class="left-sidebar">
+            {% block public-list %}
                 <ul>
-                    {% if project != None %}
-                        <li>
-                            there is a project templates: <a href="projects/">{{project}}</a> 
-                        </li>
-                    {% else %}
-                        <li>there is no such project templates as '{{ task }}'</il>
-                    {% endif %}
-                
-                    {% if skill != None %}
-                        <li>there is a skill:</li>
-                        <ul>
-                            <li> <a href="skills/">{{skill}}</a> </li>
-                        </ul>
-                    {% else %}
-                        <li>there is no such skill as '{{ task }}'</il>
-                    {% endif %}
-                
-                    {% if dealers != None %}
-                        <li>there are dealers:</li>
-                        <ul>
-                            {% for item in dealers %}
-                                <li> <a href="dealers/">{{item}}</a>  </li>
-                            {% endfor%}
-                        </ul>
-                    {% else %}
-                        <li>there is no such dealers as '{{ task }}'</il>
-                    {% endif %}
-                </ul>            
-            </div>
-            <div class="choice-win">
-                Make <b>'{{task}}'</b> as:
-                <ul>    
-                    <li><button>new skill</button></li>
-                    <br>
-                    <li><button>new project</button></li>
+                    <li>public skills</li>
+                    <li>public projects</li>
+                    <li>public dealers</li>
                 </ul>
-            </div>
-        {% endif %}
-    </div>
-{%endblock%}
+            {%endblock%}
+        </div>
+
+        <div class="center-content">
+            <div class="center-top">
+                {% block search-result %}
+                    {% if task != None %}
+                        <p>find out public skills, projects, dealers as <b>'{{task}}'</b>...</p>
+                        <ul> <!-- list of templates-->
+                            {% if project != None %}
+                                <li>there are project templates:</li>
+                                <ul>
+                                    <li>  <a href="projects/">{{project}}</a>  </li>
+                                </ul>
+                            {% endif %}
+
+                            {% if skill != None %}
+                                <li>there are skills:</li>
+                                <ul>
+                                    <li> <a href="skills/">{{skill}}</a> </li>
+                                </ul>
+                            {% endif %}
+                    
+                            {% if dealers != None %}
+                                <li>there are dealers:</li>
+                                <ul>
+                                    {% for item in dealers %}
+                                        <li> <a href="dealers/">{{item}}</a>  </li>
+                                    {% endfor%}
+                                </ul>
+                            {% endif %}
+                        </ul>  <!-- list of templates-->
+                    {% endif %} <!-- task -->
+                {%endblock%} <!-- search-result-->
+            </div> <!-- center-top-->
+            <div class="center-bottom">
+                {% block user-project-list %}
+                    Find out what skils & projects are...
+                {%endblock%} <!-- public-list -->
+            </div> <!-- center-bottom -->
+        </div> <!-- center-content -->
+
+        <div class="right-sidebar">
+            <div class="right-top">
+                {% block make %}
+                    {% if task != None %}
+                        Let's make:
+                        <ul>    
+                            <li> <button>new <b>'{{task}}'</b> skill</button> </li>
+                     
+                            <li> <button>new <b>'{{task}}'</b> project</button> </li>
+                        </ul>
+                        <hr>               
+                    {% endif %}
+                {%endblock%}
+            </div> <!-- right-top -->
+
+            <div class="right-bottom">               
+                {% block agenda %}
+                    <!-- NO CONTENT -->                
+                {%endblock%} <!-- agenda-->
+            </div> <!-- right-bottom -->
+        </div> <!-- right-sidebar -->
+    </div> <!-- workplace -->
+{%endblock%} <!-- perform -->
 
     <div class="bottom">
         <div class="bottom-bar"> <!-- Первая нижняя полоса -->

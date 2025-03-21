@@ -34,9 +34,9 @@ def show_title(request):
         form = TaskForm(request.POST)
         if form.is_valid():
             task = form.cleaned_data['new_task']
-            ## TODO: find templates
-                
-            skill = USkill(task)
+         
+            ## find skill templates    
+            skill = USkill(local_user, task)
             _path = finders.find(skill.get_file_name())
     
             if skill.load_template(_path):
@@ -44,14 +44,16 @@ def show_title(request):
                 logging.info(f"show_title(): has found skill {task}")
             else:
                 def_context.update({"skill": None})
-
-            project = UProject(task, local_user)
+            
+            ## find project templates
+            project = UProject(local_user, task)
             _path = finders.find(project.get_file_name())
             if project.load_template(_path):
                 def_context.update({"project": task})
             else:
                 def_context.update({"project": None})
 
+            ## find public dealers & user's contacts
             user_dealers_list = []
             if local_user != None:
                 if isinstance(local_user, UUser):
