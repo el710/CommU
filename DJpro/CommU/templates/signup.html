@@ -1,8 +1,9 @@
 {% extends "index.html" %}
 {% load static %}
 
-{% block style %}
-    <style>
+
+<style>
+    {% block style %}
         .context {
             display: flex;
             flex-wrap: nowrap;
@@ -53,8 +54,9 @@
             font-style: italic;
             font-weight: bold;
         }
-    </style>
-{% endblock %}
+    {% endblock %}
+</style>
+
 
 
 {% block application %}

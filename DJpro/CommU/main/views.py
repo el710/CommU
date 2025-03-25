@@ -40,10 +40,10 @@ def show_title(request):
             _path = finders.find(skill.get_file_name())
     
             if skill.load_template(_path):
-                def_context.update({"skill": task})
-                logging.info(f"show_title(): has found skill {task}")
+                def_context.update({"skills": [skill.get_slug_name()] })
+                logging.info(f"show_title(): has found skill {skill.get_slug_name()}")
             else:
-                def_context.update({"skill": None})
+                def_context.update({"skills": None})
             
             ## find project templates
             project = UProject(local_user, task)
@@ -73,6 +73,10 @@ def show_title(request):
         def_context.update({"task": task})
     else:
         def_context.update({'form': TaskForm()})
+
+    USkill.load_public_skills("static")
+    logging.info(f"show_title(): {USkill.get_public_skills()}")
+    def_context.update({'public_skills': USkill.get_public_skills()})        
     
     if local_user == None:
         return render(request, 'index.html', context=def_context)

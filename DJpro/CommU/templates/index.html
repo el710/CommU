@@ -17,14 +17,12 @@
     {% endblock %}
 
     
-   
     <link rel="stylesheet" href="{% static 'main.css' %}">
-    
+
 </head>
 
-{% block style %}
-    <style>
-
+<style>
+    {% block style %}
         .input-container {
             display: flex;
             justify-content: center;
@@ -62,28 +60,6 @@
             */
         }
 
-        .left-sidebar {
-            background-color: #f4f4f4;
-            text-align: left;
-            
-            width: 25%;
-            /*
-            border: 2px solid #ccc;
-            border-radius: 5px;
-            */
-        }
-
-        .right-sidebar {
-            /*background-color: #f4f4f4;*/
-            text-align: left;
-
-            width: 25%;
-            /*
-            border: 2px solid #ccc;
-            border-radius: 5px;
-            */
-        }
-
         .ul {
             list-style-type: circle;
             padding: 0;
@@ -98,6 +74,41 @@
             color: #333;
             font-size: 18px;
         }        
+
+        .left-sidebar {
+            background-color: #f4f4f4;
+            text-align: left;
+            
+            width: 25%;
+            /*
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            */
+        }
+        
+        .left-top {
+            /*background-color: #e9e9e9;*/
+            
+            justify-content: left;
+            text-align: left;
+
+            /*
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            */
+        }        
+
+        .right-sidebar {
+            /*background-color: #f4f4f4;*/
+            text-align: left;
+
+            width: 25%;
+            /*
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            */
+        }
+
 
 
         .center-content {
@@ -164,9 +175,9 @@
             border-radius: 5px;
             */
         }
+    {% endblock %}
+</style>        
 
-    </style>        
-{% endblock %}        
 
 
 
@@ -213,17 +224,7 @@
 {% block perform %}
     <div class="workplace">
         <div class="left-sidebar">
-            {% block public-list %}
-                <ul>
-                    <li>public skills</li>
-                    <li>public projects</li>
-                    <li>public dealers</li>
-                </ul>
-            {%endblock%}
-        </div>
-
-        <div class="center-content">
-            <div class="center-top">
+            <div class="left-top">
                 {% block search-result %}
                     {% if task != None %}
                         <p>find out public skills, projects, dealers as <b>'{{task}}'</b>...</p>
@@ -235,10 +236,12 @@
                                 </ul>
                             {% endif %}
 
-                            {% if skill != None %}
+                            {% if skills != None %}
                                 <li>there are skills:</li>
                                 <ul>
-                                    <li> <a href="skills/">{{skill}}</a> </li>
+                                    {% for item in skills %}
+                                        <li> <a href="skills/#{{item}}">{{item}}</a> </li>
+                                    {% endfor %}
                                 </ul>
                             {% endif %}
                     
@@ -251,13 +254,38 @@
                                 </ul>
                             {% endif %}
                         </ul>  <!-- list of templates-->
+                        <hr>
                     {% endif %} <!-- task -->
                 {%endblock%} <!-- search-result-->
+            </div>
+            
+            {% block public-list %}
+                <div class="left-bottom">
+                    <ul>
+                        <li>public dealers & contacts</li>
+                        <li>public projects</li>
+                        <li>public skills</li>
+                            {% if public_skills != None %}
+                                <ul>
+                                    {% for item in public_skills %}
+                                        <li> <a href="skills/#{{item}}">{{item}}</a> </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                    </ul>
+                </div>
+            {%endblock%}
+            
+        </div>
+
+        <div class="center-content">
+            <div class="center-top">
+                {% block user-project-list %}
+                Find out what skils & projects are...
+                {%endblock%} <!-- public-list -->
             </div> <!-- center-top-->
             <div class="center-bottom">
-                {% block user-project-list %}
-                    Find out what skils & projects are...
-                {%endblock%} <!-- public-list -->
+ 
             </div> <!-- center-bottom -->
         </div> <!-- center-content -->
 

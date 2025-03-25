@@ -2,9 +2,9 @@
 {% load static %}
 
 
-{% block style %}
-    {{ block.super }}
-    <style>
+<style>
+    {% block style %}
+        {{ block.super }}
         .exit-bar {
             height: 20px;
             display: flex;
@@ -16,8 +16,9 @@
             height: 25px;
             margin-left: 10px;
         }
-    </style>
-{% endblock %}
+    {% endblock %}        
+</style>
+
 
 {% block application %}
     <div class="menutitle links">
@@ -41,17 +42,21 @@
     
 {% block perform %}
     <div class="workplace">
-        <div class="left-sidebar sidebar">
-            {% block public-list %}
-            {{block.super}}
-            {%endblock%} <!-- public-list -->            
-        </div>
-
-        <div class="center-content">
-            <div class="center-top">
+        <div class="left-sidebar">
+            <div class="left-top">
                 {% block search-result %}
                     {{ block.super }}
                 {%endblock%} <!-- search-result-->
+            </div>
+            {% block public-list %}
+                {{ block.super}}
+            {%endblock%}              
+
+        </div> <!-- left-sidebar -->
+
+        <div class="center-content">
+            <div class="center-top">
+
             </div> <!-- center-top-->
             <div class="center-bottom">
                 {% block user-project-list %}
@@ -65,7 +70,7 @@
             </div> <!-- center-bottom -->
         </div> <!-- center-content -->
 
-        <div class="right-sidebar sidebar">
+        <div class="right-sidebar">
             <div class="right-top">
                 {% block make %}
                     {{ block.super }}

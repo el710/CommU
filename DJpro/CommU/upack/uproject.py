@@ -122,6 +122,20 @@ class USkill(UObject):
         A simple skill that depends only on one person.
         The person do it by itself
     """
+    public_skills = None
+    find_static = None
+
+    def load_public_skills(subdir=None):
+        if USkill.find_static == None:
+            os.chdir(subdir)
+            USkill.find_static = os.curdir
+        
+        logging.info(f"load_public_skills(): dir {os.listdir()}")
+        files = [f for f in os.listdir() if os.path.isfile(f) and ".stp" in os.path.splitext(f)]
+        USkill.public_skills = [os.path.splitext(f)[0] for f in files]
+    
+    def get_public_skills():
+        return USkill.public_skills
 
     def __init__(self, owner_id, name:str, goal:str = None, description:str = None, resources:str = None):
         super().__init__(owner_id)
@@ -146,6 +160,9 @@ class USkill(UObject):
         self.state = "template" ## "offer" -> "deal" -> "done"
 
         self.public = False
+    
+    def get_slug_name(self):
+        return f"{slugify(self.name)}"
 
 class UContract(UObject):
     """
@@ -208,8 +225,6 @@ class UProject(UObject):
         self.target = "The point of project is: ..."
         self.project_laws = {} ## 'Do not" laws
         
-
-
         """Lists of user contracts"""
         self.partner_contracts = None ## list of class UContract() objects
         self.customer_contracts = None ## list of class UContract() objects
@@ -271,6 +286,8 @@ if __name__ == "__main__":
     if load_skill.load_template():
         print(load_skill)
 
+    USkill.load_public_skills()
+    print(USkill.get_public_skills())
 
 
 
