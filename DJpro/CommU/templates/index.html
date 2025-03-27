@@ -21,8 +21,8 @@
 
 </head>
 
-<style>
-    {% block style %}
+{% block style %}
+    <style>
         .input-container {
             display: flex;
             justify-content: center;
@@ -76,7 +76,9 @@
         }        
 
         .left-sidebar {
+            /*
             background-color: #f4f4f4;
+            */
             text-align: left;
             
             width: 25%;
@@ -118,7 +120,7 @@
            /*justify-content: left;
             align-items: ;
             */
-
+            background-color: #f4f4f4;
             width: 50%;
             /* background-color: cyan; */
             padding: 0;
@@ -142,6 +144,14 @@
             border: 2px solid #ccc;
             border-radius: 5px;
             */
+        }
+
+        .center-middle {
+            /*
+            display: flex;
+            flex-direction: row;
+            */
+            
         }
 
         .center-bottom {
@@ -175,8 +185,25 @@
             border-radius: 5px;
             */
         }
-    {% endblock %}
-</style>        
+
+        .linkbt {
+            border: 1px solid black;
+            width: 120px;
+            height: 20px;
+            color: blue;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+
+            display: flex;
+            box-sizing: border-box;
+            justify-content: center;
+            align-items: center;
+            
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>        
+{% endblock %}
 
 
 
@@ -189,7 +216,7 @@
             
             <span>
                 <div class="logotext">
-                    CommU
+                    <a href="/">CommU</a>
                 </div>
             </span>
         </div>
@@ -240,7 +267,7 @@
                                 <li>there are skills:</li>
                                 <ul>
                                     {% for item in skills %}
-                                        <li> <a href="skills/#{{item}}">{{item}}</a> </li>
+                                        <li> <a href="skill={{item}}">{{item}}</a> </li>
                                     {% endfor %}
                                 </ul>
                             {% endif %}
@@ -268,7 +295,7 @@
                             {% if public_skills != None %}
                                 <ul>
                                     {% for item in public_skills %}
-                                        <li> <a href="skills/#{{item}}">{{item}}</a> </li>
+                                        <li> <a href="skill/{{item}}">{{item}}</a> </li>
                                     {% endfor %}
                                 </ul>
                             {% endif %}
@@ -280,28 +307,35 @@
 
         <div class="center-content">
             <div class="center-top">
-                {% block user-project-list %}
                 Find out what skils & projects are...
-                {%endblock%} <!-- public-list -->
+                {{about_type}} {{about_item}}
             </div> <!-- center-top-->
+
+            {% block make %}
+                <div class="center-middle">
+                    <br>
+                    <form method="post" >
+                        {% csrf_token %}
+                        {% if task != None %}
+                            <a href="skill/{{task}}">new <b>'{{task}}'</b> skill</a>
+                         
+                            <button class="button" type="submit">new <b>'{{task}}'</b> contract </button>
+                            <button class="button" type="submit">new <b>'{{task}}'</b> project</button>
+                        {% else %}
+                            <a href="skill/" class="linkbt" >new skill</a>
+                            <button class="button" type="submit">new contract</button>
+                            <button class="button" type="submit">new project</button>
+                        {% endif %}
+                    </form>        
+                </div>
+            {%endblock%}    
+
             <div class="center-bottom">
- 
             </div> <!-- center-bottom -->
         </div> <!-- center-content -->
 
         <div class="right-sidebar">
             <div class="right-top">
-                {% block make %}
-                    {% if task != None %}
-                        Let's make:
-                        <ul>    
-                            <li> <button>new <b>'{{task}}'</b> skill</button> </li>
-                     
-                            <li> <button>new <b>'{{task}}'</b> project</button> </li>
-                        </ul>
-                        <hr>               
-                    {% endif %}
-                {%endblock%}
             </div> <!-- right-top -->
 
             <div class="right-bottom">               
@@ -330,7 +364,13 @@
         </div>
     </div>
 
+    {% block point %}
     <script>
+        function clearform() {
+            document.getElementById("dataid").reset()
+        }
+
+    
         // Скрипт для отображения текущей даты, времени, часового пояса
         function updateDateTime() {
             const options = { 
@@ -360,7 +400,9 @@
         //setInterval(updateGeoPosition, 60000);
         updateDateTime();
         updateGeoPosition();
+        
     </script>
+    {% endblock %}
 
 </body>
 </html>

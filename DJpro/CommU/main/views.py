@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .djforms import (SignUpForm, TaskForm)
+from .djforms import (SignUpForm, TaskForm, SkillForm)
 
 from django.contrib.staticfiles import finders
 
@@ -16,19 +16,44 @@ import os
 
 """ Operating Data"""
 local_user = None
+about_item = None
 public_dealers = []
 
+WORK_PATH = os.path.join(os.getcwd(), "static")
 
-def show_title(request):
-    global local_user
+
+def show_title(request, about=None):
+    global local_user, about_item
+
     """
         This function shows main title Web page
     """
     
     logging.info(f"\nshow_title(): user {local_user}")
     logging.info(f"\nshow_title(): method {request.method} ")
+    logging.info(f"\nshow_title(): about {about} ")
+    logging.info(f"\nshow_title(): about state {about_item} ")
 
     def_context = {"local_user": local_user}
+
+    if about:
+        item = str.split(about,'=')
+        logging.info(f"\nshow_title(): about detail {item} ")
+        if len(item) > 1:
+            if item[0] == 'skill':
+                about_item = {'skill': item[1]}
+                logging.info(f"\nshow_title(): new about state {about_item} ")
+                return redirect('/')
+        else:
+            about_item = None
+
+    if about_item:
+        for k, v in about_item.items():
+            def_context.update({"about_type": k, "about_item": v})
+
+    
+    
+
 
     if request.method == "POST":
         form = TaskForm(request.POST)
@@ -184,32 +209,56 @@ def logout(request):
     # return render(request, 'index.html')        
             
 
-def get_post_request(request):
-    ## first enter to page
-    if request.method == "GET":                          
-        def_context = {
-            "hist": "zero",
-            "title": "Get & Post"
-        } 
-    elif request.method == 'POST':
-        mess = request.POST.get("data", '')
-        ## return HttpResponse(f"Get from user data: {mess}") ## simple output
+def crud_skill(request, name=None):
+    logging.info(f'\ncrud_skill(): open skill: {name}')
 
-        '''
-            get data by html form's <name> 
-        '''
-        username = request.POST.get("username")
-        password = request.POST.get("user_password")
-        repassword = request.POST.get("user_repassword")
-        age = request.POST.get("user_age")
-        premium = request.POST.get("premium") == 'on'
+    def_context={}
 
+    if name:
+        new_skill = USkill(owner_id=local_user, name=name)
+        new_skill.load_template()
+        def_context.update({"skill_name": new_skill.name,
+                            "skill_resources": new_skill.resources,
+                            "skill_desc": new_skill.description,
+                            "skill_goal": new_skill.goal,
+                            "skill_public": new_skill.public,
+                            "skill_author": new_skill.author
+                            })
+        logging.info(f"\ncrud_skill(): load template {def_context} ")
 
-        print(f"get_post_request(): {username} {password}-{repassword} {age} premium: {premium}")
-        
-        def_context = {
-            "hist": mess,
-            "title": "Get & Post"
-        }
+    
+    if request.method == "POST":
+        form = SkillForm(request.POST)
 
-    return render(request, "post.html", context=def_context)
+        logging.info(f"\ncrud_skill(): valid POST {form.is_valid()} ")
+        logging.info(f'\ncrud_skill(): {form.cleaned_data}')
+
+        if form.is_valid(): ## is_valid also makes cleaned_data
+            skill_name = form.cleaned_data['skill_name']
+            skill_resources = form.cleaned_data['skill_resources']
+            skill_desc = form.cleaned_data['skill_desc']
+            skill_goal = form.cleaned_data['skill_goal']
+            skill_public = form.cleaned_data['skill_public']
+            skill_author = form.cleaned_data['skill_author']
+
+            new_skill = USkill(owner_id=local_user,
+                               name=skill_name,
+                               goal=skill_goal,
+                               description=skill_desc,
+                               resources=skill_resources)
+            if skill_public:
+                new_skill.set_public(skill_author)
+            
+            if request.POST.get('delete'):
+                new_skill.delete_template(WORK_PATH)
+            else:
+                new_skill.save_as_template(True,WORK_PATH)
+    
+            return redirect("../")
+     
+    else:
+        form = SkillForm(request.POST)
+    
+    def_context.update({"form": form})
+    
+    return render(request, "skill.html", context=def_context)

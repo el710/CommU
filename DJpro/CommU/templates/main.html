@@ -2,9 +2,9 @@
 {% load static %}
 
 
-<style>
-    {% block style %}
-        {{ block.super }}
+{% block style %}
+{{ block.super }}
+    <style>
         .exit-bar {
             height: 20px;
             display: flex;
@@ -16,8 +16,8 @@
             height: 25px;
             margin-left: 10px;
         }
-    {% endblock %}        
-</style>
+    </style>
+{% endblock %}
 
 
 {% block application %}
@@ -58,35 +58,36 @@
             <div class="center-top">
 
             </div> <!-- center-top-->
+            {% block make %}
+                {{block.super}}
+            {%endblock%}
+
             <div class="center-bottom">
                 {% block user-project-list %}
+                <hr>
                 Projects:
                 <ul class="project_list">
                     <li class="project_item"><a href="#">Life</a></li>
                 </ul>
                 {%endblock%}
-
-
             </div> <!-- center-bottom -->
+
         </div> <!-- center-content -->
 
         <div class="right-sidebar">
             <div class="right-top">
-                {% block make %}
-                    {{ block.super }}
-                {%endblock%}
             </div> <!-- right-top -->
 
-            <div class="right-bottom">
-                {% block agenda %}
+            {% block agenda %}
+                <div class="right-bottom">
                     Today agenda:
                     <ul>
                         <li>05:00 AM:  raise up [Health] </li>
                         <li>11:00 AM Sunday: lesson [GoncharClub] {till: 13:00} </li>
                         <li>13:30 PM Sunday: lesson [IT-TOP] {till: 14:30}</li>
-                    </ul>                
-                {%endblock%} <!-- agenda-->
-            </div> <!-- right-bottom -->
+                    </ul> 
+                </div> <!-- right-bottom -->
+            {%endblock%} <!-- agenda-->
 
         </div> <!-- right-sidebar -->
     </div> <!-- workplace -->

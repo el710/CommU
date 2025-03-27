@@ -75,12 +75,16 @@ class UObject():
         temp = self.__dict__
 
         if isinstance(self, USkill):
-            temp["event"] = temp["event"].__dict__
+            if temp["event"]:
+                temp["event"] = temp["event"].__dict__
         
+        logging.info(f"save_as_template(): dir: {os.getcwd()} ")
+
         if path: 
             _name = os.path.join(path, self.get_file_name())
         else:
             _name = self.get_file_name()
+        logging.info(f"save_as_template(): file name {_name}")
 
         if not over:
             """IF file exists """
@@ -97,10 +101,10 @@ class UObject():
         """
             Load template of object
         """
-        if path == None:
-            _name = self.get_file_name()
+        if path:
+            _name = os.path.join(path, self.get_file_name())
         else:
-            _name = path
+            _name = self.get_file_name()
 
         logging.info(f"load_template(): trying to find template {_name}")
         
@@ -116,6 +120,26 @@ class UObject():
             logging.info(f"load_template(): can't open template {_name} {exc}")
             return False
 
+    def delete_template(self, path=None):
+        """
+            Delete template of object
+        """
+        if path:
+            _name = os.path.join(path, self.get_file_name())
+        else:
+            _name = self.get_file_name()
+
+        logging.info(f"delete_template(): trying to find template {_name}")
+        
+        try:
+            ## !!! IT SHOULD BE REPLACE TO ARCHIVE
+            os.remove(_name)
+            logging.info(f"delete_template(): {_name} file deleted")
+
+            return True
+        except Exception as exc:
+            logging.info(f"delete_template(): can't delete file {_name} {exc}")
+            return False
 
 class USkill(UObject):
     """
@@ -130,7 +154,7 @@ class USkill(UObject):
             os.chdir(subdir)
             USkill.find_static = os.curdir
         
-        logging.info(f"load_public_skills(): dir {os.listdir()}")
+        ## logging.info(f"load_public_skills(): dir {os.listdir()}")
         files = [f for f in os.listdir() if os.path.isfile(f) and ".stp" in os.path.splitext(f)]
         USkill.public_skills = [os.path.splitext(f)[0] for f in files]
     
