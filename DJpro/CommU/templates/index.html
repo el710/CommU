@@ -147,11 +147,12 @@
         }
 
         .center-middle {
-            /*
             display: flex;
             flex-direction: row;
+            /*
+            border: 2px solid #ccc;
+            border-radius: 5px;
             */
-            
         }
 
         .center-bottom {
@@ -187,20 +188,31 @@
         }
 
         .linkbt {
-            border: 1px solid black;
-            width: 120px;
-            height: 20px;
-            color: blue;
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 16px;
-
+       /*
             display: flex;
-            box-sizing: border-box;
             justify-content: center;
             align-items: center;
+
             
+
+            height: 20px;
+
+            color: black;
+            
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            
+            box-sizing: border-box;
+        */
+
+            text-align: center;
+            /*
             border: 2px solid #ccc;
             border-radius: 5px;
+            */
+            width: 150px;
+            height: 20px;
+            margin: 5px;
         }
     </style>        
 {% endblock %}
@@ -226,10 +238,17 @@
         {% endblock %}
 
         {% block user %}
-            <div class="auth-buttons">
-                <a href="login/">Log In</a>
-               <a href="signup/">Sign Up</a>
-            </div>        
+            {% if local_user %}
+                <div class="exit-bar">   
+                    <div> {{local_user}} </div>
+                    <a href="logout/"><img src="{% static 'logout.png' %}" alt="log out"></a> 
+                </div>
+            {% else %}
+                <div class="auth-buttons">
+                    <a href="login/">Log In</a>
+                    <a href="signup/">Sign Up</a>
+                </div>
+            {% endif %}      
         {% endblock %}
     </div>
 
@@ -243,7 +262,7 @@
     </div>
     <div>
 
-        Public: <a href="">skills</a> / <a href="">projects</a> / <a href="">dealers</a>
+        Public: <!-- <a href="">skills</a> / <a href="">projects</a> / <a href="">dealers</a> -->
 
     </div>
 {% endblock %}
@@ -253,6 +272,7 @@
         <div class="left-sidebar">
             <div class="left-top">
                 {% block search-result %}
+                    {% if project != None or skills != None or dealers != None %}
                     {% if task != None %}
                         <p>find out public skills, projects, dealers as <b>'{{task}}'</b>...</p>
                         <ul> <!-- list of templates-->
@@ -267,7 +287,7 @@
                                 <li>there are skills:</li>
                                 <ul>
                                     {% for item in skills %}
-                                        <li> <a href="skill={{item}}">{{item}}</a> </li>
+                                        <li> <a href="skill/{{item}}">{{item}}</a> </li>
                                     {% endfor %}
                                 </ul>
                             {% endif %}
@@ -283,15 +303,16 @@
                         </ul>  <!-- list of templates-->
                         <hr>
                     {% endif %} <!-- task -->
+                    {% endif %}
                 {%endblock%} <!-- search-result-->
             </div>
             
             {% block public-list %}
                 <div class="left-bottom">
                     <ul>
-                        <li>public dealers & contacts</li>
-                        <li>public projects</li>
-                        <li>public skills</li>
+                        <li>dealers & contacts</li>
+                        <li>projects</li>
+                        <li>skills</li>
                             {% if public_skills != None %}
                                 <ul>
                                     {% for item in public_skills %}
@@ -316,16 +337,22 @@
                     <br>
                     <form method="post" >
                         {% csrf_token %}
-                        {% if task != None %}
-                            <a href="skill/{{task}}">new <b>'{{task}}'</b> skill</a>
-                         
-                            <button class="button" type="submit">new <b>'{{task}}'</b> contract </button>
-                            <button class="button" type="submit">new <b>'{{task}}'</b> project</button>
+                        {% if task == None %}
+                            <a href="skill/" class="linkbt">New skill</a>
+                            <a href="contract/" class="linkbt">New contract</a>
+                            <a href="project/" class="linkbt">New project</a>
                         {% else %}
-                            <a href="skill/" class="linkbt" >new skill</a>
-                            <button class="button" type="submit">new contract</button>
-                            <button class="button" type="submit">new project</button>
-                        {% endif %}
+                            {% if project != None or skills != None or dealers != None %}
+                                <a href="skill/" class="linkbt">New skill</a>
+                                <a href="contract/" class="linkbt">New contract</a>
+                                <a href="project/" class="linkbt">New project</a>
+                            {% else %}
+                                Make new <b>'{{task}}'</b>: 
+                                <a href="skill/{{task}}" class="linkbt">skill</a>
+                                <a href="contract/{{task}}" class="linkbt">contract </a>
+                                <a href="project/{{task}}" class="linkbt">project</a>                            
+                            {% endif %}
+                        {% endif %}    
                     </form>        
                 </div>
             {%endblock%}    

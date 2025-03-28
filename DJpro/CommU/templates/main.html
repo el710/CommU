@@ -22,17 +22,20 @@
 
 {% block application %}
     <div class="menutitle links">
-        <a href="#">[my projects (plans, deals)] [my bank] [my store (needs, sale, exchange)] [my services (contracts)]  !new offer !new message</a>
+        <a href="#">[my projects] [my bank] [my store (needs, sale, exchange)] [my services (contracts)]  !new offer !new message</a>
     </div>
 {% endblock %}
 
 {% block user %}
+
+    {{ block.super }}
+<!--
     <div class="exit-bar">   
         <div> {{local_user}} </div>
 
         <a href="logout/"><img src="{% static 'logout.png' %}" alt="log out"></a> 
     </div>
-       
+    -->   
 {% endblock %}
 
 {% block theme %}
@@ -65,7 +68,7 @@
             <div class="center-bottom">
                 {% block user-project-list %}
                 <hr>
-                Projects:
+                Project: {{user_project}}>
                 <ul class="project_list">
                     <li class="project_item"><a href="#">Life</a></li>
                 </ul>

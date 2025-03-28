@@ -29,12 +29,12 @@
         .bottom-field {
             display: flex;
             flex-direction: row;
-            justify-content: space-between;
+            justify-content: space-around;
             margin-top: 15px;
             text-align: center;
             border: 1px solid #ccc;
             border-radius: 8px;
-            width: 40%
+            width: 100%
         }
         label, input, textarea{
             display: block;
@@ -45,14 +45,40 @@
             width: auto;
             display: inline-block;
         }
+
+        .linkback{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            margin-top: 5px;
+
+            width: 120px;
+            height: 25px;
+
+            color: black;
+            background-color: #ccc;
+            
+            font-size: 14px;
+            
+            border: 1px solid black;
+            border-radius: 4px;
+        }        
+        .button{
+            width: 120px;
+            height: 25px;
+        }
     </style>
 {% endblock %}
 
 {% block user %}
+
+<!--
 <div class="auth-buttons">
     <a href="../login/">Log In</a>
    <a href="../signup/">Sign Up</a>
 </div>        
+-->
 {% endblock %}
 
 {% block theme %}      
@@ -80,11 +106,18 @@
                 </fieldset>
 
                 <div class="bottom-field">
-                    <input type="submit" value="Save" name="save">
-                    <label><input type="checkbox" checked> save overwrite</label>
-                    {% if skill_name %}
-                        <input type="submit" value="Delete" name="delete">
-                    {% endif %}       
+                    <div>
+                        <input type="submit" value="Save" name="save">
+                        <label><input type="checkbox" checked> save overwrite</label>
+                    </div>
+                    <div class="button">
+                        {% if skill_name %}
+                            <input type="submit" value="Delete" name="delete">
+                        {% endif %}       
+                    </div>
+                    <div>
+                        <a href="/" class="linkback" >Back</a>
+                    </div>                    
                 </div>
             </form> <!-- post -->
         </div> <!-- column -->

@@ -24,6 +24,9 @@ class UUser():
 
         ## list of all user's projects, include 'life' as default 
         self.projects = [UProject("Life", self.nickname), ]
+
+        ## index of project user wor with - def as Life
+        self.work_project = 0
         
 class ClientUser(UUser):
     users = [] ## login + tokens

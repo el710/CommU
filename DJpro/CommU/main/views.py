@@ -19,6 +19,7 @@ local_user = None
 about_item = None
 public_dealers = []
 
+
 WORK_PATH = os.path.join(os.getcwd(), "static")
 
 
@@ -28,13 +29,24 @@ def show_title(request, about=None):
     """
         This function shows main title Web page
     """
+    USkill.load_public_skills("static")
+    logging.info(f"show_title(): {USkill.get_public_skills()}")
+    def_context = {'public_skills': USkill.get_public_skills()}
+        
     
     logging.info(f"\nshow_title(): user {local_user}")
+    if local_user:
+        def_context.update({"local_user": local_user.nickname,
+                            "user_project": local_user.work_project
+                        })
+        
+    
+
     logging.info(f"\nshow_title(): method {request.method} ")
     logging.info(f"\nshow_title(): about {about} ")
     logging.info(f"\nshow_title(): about state {about_item} ")
 
-    def_context = {"local_user": local_user}
+
 
     if about:
         item = str.split(about,'=')
@@ -52,9 +64,6 @@ def show_title(request, about=None):
             def_context.update({"about_type": k, "about_item": v})
 
     
-    
-
-
     if request.method == "POST":
         form = TaskForm(request.POST)
         if form.is_valid():
@@ -62,9 +71,9 @@ def show_title(request, about=None):
          
             ## find skill templates    
             skill = USkill(local_user, task)
-            _path = finders.find(skill.get_file_name())
+            ##_path = finders.find(skill.get_file_name())
     
-            if skill.load_template(_path):
+            if skill.load_template(WORK_PATH):
                 def_context.update({"skills": [skill.get_slug_name()] })
                 logging.info(f"show_title(): has found skill {skill.get_slug_name()}")
             else:
@@ -99,9 +108,7 @@ def show_title(request, about=None):
     else:
         def_context.update({'form': TaskForm()})
 
-    USkill.load_public_skills("static")
-    logging.info(f"show_title(): {USkill.get_public_skills()}")
-    def_context.update({'public_skills': USkill.get_public_skills()})        
+    
     
     if local_user == None:
         return render(request, 'index.html', context=def_context)
@@ -160,7 +167,7 @@ def signup(request):
             # print(f"ext_post(): POST: {name} {email} {password} {repassword} ")
             
             # if password == repassword:
-            local_user = name
+            local_user = UUser(name)
             return redirect('/') 
             # else:
             #     def_context.update({'passstate': "... passwords is not equal. Try again."})
