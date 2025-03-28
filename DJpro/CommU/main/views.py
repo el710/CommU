@@ -17,51 +17,25 @@ import os
 """ Operating Data"""
 local_user = None
 about_item = None
-public_dealers = []
+public_dealers = None
 
 
 WORK_PATH = os.path.join(os.getcwd(), "static")
 
 
-def show_title(request, about=None):
+def show_title(request):
     global local_user, about_item
 
     """
-        This function shows main title Web page
+        This function shows title Web page
     """
     USkill.load_public_skills("static")
     logging.info(f"show_title(): {USkill.get_public_skills()}")
     def_context = {'public_skills': USkill.get_public_skills()}
         
-    
     logging.info(f"\nshow_title(): user {local_user}")
-    if local_user:
-        def_context.update({"local_user": local_user.nickname,
-                            "user_project": local_user.work_project
-                        })
-        
-    
-
     logging.info(f"\nshow_title(): method {request.method} ")
-    logging.info(f"\nshow_title(): about {about} ")
     logging.info(f"\nshow_title(): about state {about_item} ")
-
-
-
-    if about:
-        item = str.split(about,'=')
-        logging.info(f"\nshow_title(): about detail {item} ")
-        if len(item) > 1:
-            if item[0] == 'skill':
-                about_item = {'skill': item[1]}
-                logging.info(f"\nshow_title(): new about state {about_item} ")
-                return redirect('/')
-        else:
-            about_item = None
-
-    if about_item:
-        for k, v in about_item.items():
-            def_context.update({"about_type": k, "about_item": v})
 
     
     if request.method == "POST":
@@ -93,7 +67,74 @@ def show_title(request, about=None):
                 if isinstance(local_user, UUser):
                     user_dealers_list.append(local_user.partners)
                 
-            if len(public_dealers):
+            if public_dealers:
+                user_dealers_list.append(public_dealers)
+                
+            if len(user_dealers_list):
+                def_context.update({"dealers": user_dealers_list})
+            else: 
+                def_context.update({"dealers": None})
+                
+        else:
+            task = None
+
+        def_context.update({"task": task})
+    else:
+        def_context.update({'form': TaskForm()})
+ 
+    return render(request, 'index.html', context=def_context)
+
+
+def show_userpage(request):
+    """
+        This function shows user's page
+    """
+    global local_user
+
+    USkill.load_public_skills("static")
+    logging.info(f"show_userpage(): {USkill.get_public_skills()}")
+    def_context = {'public_skills': USkill.get_public_skills()}
+        
+    logging.info(f"\nshow_userpage(): user {local_user}")
+    if local_user:
+        def_context.update({"local_user": local_user.nickname,
+                            "user_project": local_user.work_project
+                        })
+    
+
+    logging.info(f"\nshow_userpage(): method {request.method} ")
+    logging.info(f"\nshow_userpage(): about state {about_item} ")
+
+
+    if request.method == "POST":
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            task = form.cleaned_data['new_task']
+         
+            ## find skill templates    
+            skill = USkill(local_user, task)
+    
+            if skill.load_template(WORK_PATH):
+                def_context.update({"skills": [skill.get_slug_name()] })
+                logging.info(f"show_title(): has found skill {skill.get_slug_name()}")
+            else:
+                def_context.update({"skills": None})
+            
+            ## find project templates
+            project = UProject(local_user, task)
+            _path = finders.find(project.get_file_name())
+            if project.load_template(_path):
+                def_context.update({"project": task})
+            else:
+                def_context.update({"project": None})
+
+            ## find public dealers & user's contacts
+            user_dealers_list = []
+            if local_user != None:
+                if isinstance(local_user, UUser):
+                    user_dealers_list.append(local_user.partners)
+                
+            if public_dealers:
                 user_dealers_list.append(public_dealers)
                 
             if len(user_dealers_list):
@@ -108,13 +149,10 @@ def show_title(request, about=None):
     else:
         def_context.update({'form': TaskForm()})
 
-    
-    
-    if local_user == None:
-        return render(request, 'index.html', context=def_context)
-    else:
+    if local_user:
         return render(request, 'main.html', context=def_context)
-
+    
+    return redirect('/')
 
 def show_about(request):
     """
@@ -168,7 +206,7 @@ def signup(request):
             
             # if password == repassword:
             local_user = UUser(name)
-            return redirect('/') 
+            return redirect('/user/') 
             # else:
             #     def_context.update({'passstate': "... passwords is not equal. Try again."})
 
@@ -197,8 +235,8 @@ def login(request):
             # print(f"ext_post(): POST: {name} {email} {password} ")
             
             # if password == repassword:
-            local_user = name
-            return redirect('/') 
+            local_user = UUser(name)
+            return redirect('/user/') 
             # else:
             #     def_context.update({'passstate': "... passwords is not equal. Try again."})
 
@@ -216,13 +254,15 @@ def logout(request):
     # return render(request, 'index.html')        
             
 
-def crud_skill(request, name=None):
-    logging.info(f'\ncrud_skill(): open skill: {name}')
+def crud_skill(request, args=None):
+    global local_user
 
-    def_context={}
+    logging.info(f'\ncrud_skill(): open skill: {args}')
 
-    if name:
-        new_skill = USkill(owner_id=local_user, name=name)
+    def_context={"local_user": local_user}
+
+    if args:
+        new_skill = USkill(owner_id=local_user, name=args)
         new_skill.load_template()
         def_context.update({"skill_name": new_skill.name,
                             "skill_resources": new_skill.resources,

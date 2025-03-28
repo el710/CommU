@@ -59,10 +59,31 @@
 
         <div class="center-content">
             <div class="center-top">
-
             </div> <!-- center-top-->
-            {% block make %}
-                {{block.super}}
+
+            {% block center-middle %}
+                <div class="center-middle">
+                    <br>
+                    <form method="post" >
+                        {% csrf_token %}
+                        {% if task == None %}
+                            <a href="skill/" class="linkbt">New skill</a>
+                            <a href="contract/" class="linkbt">New contract</a>
+                            <a href="project/" class="linkbt">New project</a>
+                        {% else %}
+                            {% if project != None or skills != None or dealers != None %}
+                                <a href="skill/" class="linkbt">New skill</a>
+                                <a href="contract/" class="linkbt">New contract</a>
+                                <a href="project/" class="linkbt">New project</a>
+                            {% else %}
+                                Make new <b>'{{task}}'</b>: 
+                                <a href="skill/{{task}}" class="linkbt">skill</a>
+                                <a href="contract/{{task}}" class="linkbt">contract </a>
+                                <a href="project/{{task}}" class="linkbt">project</a>                            
+                            {% endif %}
+                        {% endif %}    
+                    </form>        
+                </div>
             {%endblock%}
 
             <div class="center-bottom">

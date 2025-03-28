@@ -241,7 +241,7 @@
             {% if local_user %}
                 <div class="exit-bar">   
                     <div> {{local_user}} </div>
-                    <a href="logout/"><img src="{% static 'logout.png' %}" alt="log out"></a> 
+                    <a href="/logout/"><img src="{% static 'logout.png' %}" alt="log out"></a> 
                 </div>
             {% else %}
                 <div class="auth-buttons">
@@ -259,11 +259,6 @@
             <label class="search-label" for="new_idea">Query: </label>
             <input type="text" name="new_task" placeholder="Type name of skill, project or dealer..." id="new_idea">
         </form>
-    </div>
-    <div>
-
-        Public: <!-- <a href="">skills</a> / <a href="">projects</a> / <a href="">dealers</a> -->
-
     </div>
 {% endblock %}
 
@@ -309,6 +304,7 @@
             
             {% block public-list %}
                 <div class="left-bottom">
+                    Public:
                     <ul>
                         <li>dealers & contacts</li>
                         <li>projects</li>
@@ -329,33 +325,9 @@
         <div class="center-content">
             <div class="center-top">
                 Find out what skils & projects are...
-                {{about_type}} {{about_item}}
             </div> <!-- center-top-->
 
-            {% block make %}
-                <div class="center-middle">
-                    <br>
-                    <form method="post" >
-                        {% csrf_token %}
-                        {% if task == None %}
-                            <a href="skill/" class="linkbt">New skill</a>
-                            <a href="contract/" class="linkbt">New contract</a>
-                            <a href="project/" class="linkbt">New project</a>
-                        {% else %}
-                            {% if project != None or skills != None or dealers != None %}
-                                <a href="skill/" class="linkbt">New skill</a>
-                                <a href="contract/" class="linkbt">New contract</a>
-                                <a href="project/" class="linkbt">New project</a>
-                            {% else %}
-                                Make new <b>'{{task}}'</b>: 
-                                <a href="skill/{{task}}" class="linkbt">skill</a>
-                                <a href="contract/{{task}}" class="linkbt">contract </a>
-                                <a href="project/{{task}}" class="linkbt">project</a>                            
-                            {% endif %}
-                        {% endif %}    
-                    </form>        
-                </div>
-            {%endblock%}    
+    
 
             <div class="center-bottom">
             </div> <!-- center-bottom -->

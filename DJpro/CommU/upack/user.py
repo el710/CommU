@@ -18,9 +18,9 @@ class UUser():
         self.language = 'en'
 
         ## list of all user's contacts - phone book
-        self.contacts = []
+        self.contacts = None
 
-        self.partners = []
+        self.partners = None
 
         ## list of all user's projects, include 'life' as default 
         self.projects = [UProject("Life", self.nickname), ]

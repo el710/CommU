@@ -71,18 +71,8 @@
     </style>
 {% endblock %}
 
-{% block user %}
-
-<!--
-<div class="auth-buttons">
-    <a href="../login/">Log In</a>
-   <a href="../signup/">Sign Up</a>
-</div>        
--->
-{% endblock %}
-
-{% block theme %}      
-{% endblock %}
+{% block theme %}
+{%endblock%}
 
 {% block perform %}
     <div class="container">
@@ -106,28 +96,23 @@
                 </fieldset>
 
                 <div class="bottom-field">
-                    <div>
-                        <input type="submit" value="Save" name="save">
-                        <label><input type="checkbox" checked> save overwrite</label>
-                    </div>
-                    <div class="button">
-                        {% if skill_name %}
-                            <input type="submit" value="Delete" name="delete">
-                        {% endif %}       
-                    </div>
+                    {% if local_user %}
+                        <div>
+                            <input type="submit" value="Save" name="save">
+                            <label><input type="checkbox" checked> save overwrite</label>
+                        </div>
+                        <div class="button">
+                            {% if skill_name %}
+                                <input type="submit" value="Delete" name="delete">
+                            {% endif %}       
+                        </div>
+                    {% endif %}    
                     <div>
                         <a href="/" class="linkback" >Back</a>
                     </div>                    
                 </div>
             </form> <!-- post -->
-        </div> <!-- column -->
-
-        
-
-            
-
-        
-
+        </div> <!-- column -->        
     </div> <!-- container -->
 {% endblock %}
 

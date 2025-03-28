@@ -73,11 +73,6 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO,
                         format="%(levelname)s: | %(module)s     %(message)s") ##, filename="log.log")
     
-
-    # print("Testing UUser staff...\n")
-    # default_user = UUser("default")
-
-
     # start thread with telegram bot
     # telegram_link = run_thread_agent(telebot_start, add_link=True)
     # logging.info(f"got telegram bot link {telegram_link}")

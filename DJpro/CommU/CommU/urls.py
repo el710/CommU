@@ -23,13 +23,13 @@ from django.contrib import admin
 from django.urls import path
 
 from main.views import (show_title, show_about, show_terms, show_laws, show_rules,
-                        signup, login, logout,
+                        signup, login, logout, show_userpage, 
                         crud_skill)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', show_title),
-    path('<str:about>', show_title), 
+    path('', show_title), 
+    path('user/', show_userpage), 
     path('about/', show_about),
     path('terms/', show_terms),
     path('basic_laws/', show_laws),
@@ -40,6 +40,6 @@ urlpatterns = [
     path('logout/',logout),
 
     path('skill/', crud_skill),
-    path('skill/<str:name>', crud_skill)
+    path('skill/<str:args>', crud_skill)
 
 ]
