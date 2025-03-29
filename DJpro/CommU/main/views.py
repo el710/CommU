@@ -16,28 +16,42 @@ import os
 
 """ Operating Data"""
 local_user = None
-about_item = None
+
 public_dealers = None
 
 
 WORK_PATH = os.path.join(os.getcwd(), "static")
 
 
-def show_title(request):
-    global local_user, about_item
+def show_index(request, args=None):
+    '''
+        function make index.html
+    '''
+    ## dict args for index.html
+    def_context = {} 
 
-    """
-        This function shows title Web page
-    """
-    USkill.load_public_skills("static")
-    logging.info(f"show_title(): {USkill.get_public_skills()}")
-    def_context = {'public_skills': USkill.get_public_skills()}
-        
-    logging.info(f"\nshow_title(): user {local_user}")
-    logging.info(f"\nshow_title(): method {request.method} ")
-    logging.info(f"\nshow_title(): about state {about_item} ")
+    ## need to show item info; format: <type>=<name>
+    if args:
+        try:
+            item = str.split(args,'=')
+            logging.info(f"\nshow_index(): about detail {item} {len(item)}")
+
+            if len(item) == 2:
+                def_context.update({"about_type": item[0], "about_name": item[1]})
+        except Exception as exc:
+            logging.info(f"\nshow_index(): wrong item info {args} {exc}")
 
     
+    ## Make list of public skills for index.html
+    USkill.load_public_skills("static")
+    logging.info(f"show_title(): {USkill.get_public_skills()}")
+    def_context.update({'public_skills': USkill.get_public_skills()})
+        
+
+    
+    # logging.info(f"\nshow_title(): about state {about_item} ")
+
+    logging.info(f"\nshow_title(): method {request.method} ")
     if request.method == "POST":
         form = TaskForm(request.POST)
         if form.is_valid():
@@ -45,7 +59,7 @@ def show_title(request):
          
             ## find skill templates    
             skill = USkill(local_user, task)
-            ##_path = finders.find(skill.get_file_name())
+       
     
             if skill.load_template(WORK_PATH):
                 def_context.update({"skills": [skill.get_slug_name()] })
@@ -103,7 +117,7 @@ def show_userpage(request):
     
 
     logging.info(f"\nshow_userpage(): method {request.method} ")
-    logging.info(f"\nshow_userpage(): about state {about_item} ")
+
 
 
     if request.method == "POST":
@@ -150,7 +164,7 @@ def show_userpage(request):
         def_context.update({'form': TaskForm()})
 
     if local_user:
-        return render(request, 'main.html', context=def_context)
+        return render(request, 'userpage.html', context=def_context)
     
     return redirect('/')
 

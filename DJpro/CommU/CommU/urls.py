@@ -22,13 +22,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from main.views import (show_title, show_about, show_terms, show_laws, show_rules,
+from main.views import (show_index, show_about, show_terms, show_laws, show_rules,
                         signup, login, logout, show_userpage, 
                         crud_skill)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', show_title), 
+    path('', show_index), ## index page 
+    path('<str:args>', show_index), ## index.html page to show choosen user/skill/contract/project
     path('user/', show_userpage), 
     path('about/', show_about),
     path('terms/', show_terms),

@@ -306,13 +306,14 @@
                 <div class="left-bottom">
                     Public:
                     <ul>
-                        <li>dealers & contacts</li>
+                        <li>users</li>
                         <li>projects</li>
+                        <li>deals</li>
                         <li>skills</li>
                             {% if public_skills != None %}
                                 <ul>
                                     {% for item in public_skills %}
-                                        <li> <a href="skill/{{item}}">{{item}}</a> </li>
+                                        <li> <a href="skill={{item}}">{{item}}</a> </li>
                                     {% endfor %}
                                 </ul>
                             {% endif %}
@@ -324,7 +325,21 @@
 
         <div class="center-content">
             <div class="center-top">
-                Find out what skils & projects are...
+                {% if about_type %}
+                    {% if about_type == "skill" %}
+                        {{about_type}} '{{about_name}}': 
+                    {% elif about_type == "user" %}
+                        {{about_type}} "{{about_name}}":
+                    {% elif about_type == "contract" %}
+                        {{about_type}} '{{about_name}}':
+                    {% elif about_type == "project" %}
+                        {{about_type}} '{{about_name}}':
+                    {% else %}
+                        Unknown item {{about_name}}
+                    {% endif %}
+                {% else %}
+                    Find out what items are...
+                {% endif %}
             </div> <!-- center-top-->
 
     
