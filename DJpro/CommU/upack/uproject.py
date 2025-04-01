@@ -10,6 +10,7 @@ except:
     from uevent import *
 
 
+# from pydantic import BaseModel
 from slugify import slugify
 import json
 
@@ -67,24 +68,32 @@ class UObject():
             _name = _name + ".otp"
 
         return _name
+    
+    def json(self):
+        temp = vars(self) ## or <self.__dict__>  
+        ## for USkill object
+        if isinstance(self, USkill):
+            if temp["event"]:
+                ## make dictionary from subobject 'event'
+                temp["event"] = vars(temp["event"])
+        return temp
+    
 
     def save_as_template(self, over:bool=False, path=None):
         """
             Save structure of object as dictionary template
         """
-        temp = self.__dict__
 
-        if isinstance(self, USkill):
-            if temp["event"]:
-                temp["event"] = temp["event"].__dict__
+        temp = self.json()
         
-        logging.info(f"save_as_template(): dir: {os.getcwd()} ")
+        logging.info(f"dict object: {temp} ")
+        logging.info(f"dir: {os.getcwd()} ")
 
         if path: 
             _name = os.path.join(path, self.get_file_name())
         else:
             _name = self.get_file_name()
-        logging.info(f"save_as_template(): file name {_name}")
+        logging.info(f"file name {_name}")
 
         if not over:
             """IF file exists """
@@ -106,18 +115,18 @@ class UObject():
         else:
             _name = self.get_file_name()
 
-        logging.info(f"load_template(): trying to find template {_name}")
+        logging.info(f"trying to find template {_name}")
         
         try:
             with open(_name, mode='r', encoding='utf-8') as file:
                 data = json.loads(file.read()) ## make dict from string
 
                 self.set(**data)
-            logging.info(f"load_template(): has found template {_name}")
+            logging.info(f"has found template {_name}")
 
             return True
         except Exception as exc:
-            logging.info(f"load_template(): can't open template {_name} {exc}")
+            logging.info(f"can't open template {_name} {exc}")
             return False
 
     def delete_template(self, path=None):
@@ -129,17 +138,18 @@ class UObject():
         else:
             _name = self.get_file_name()
 
-        logging.info(f"delete_template(): trying to find template {_name}")
+        logging.info(f"trying to find template {_name}")
         
         try:
             ## !!! IT SHOULD BE REPLACE TO ARCHIVE
             os.remove(_name)
-            logging.info(f"delete_template(): {_name} file deleted")
+            logging.info(f"{_name} file deleted")
 
             return True
         except Exception as exc:
-            logging.info(f"delete_template(): can't delete file {_name} {exc}")
+            logging.info(f"can't delete file {_name} {exc}")
             return False
+
 
 class USkill(UObject):
     """
@@ -154,7 +164,7 @@ class USkill(UObject):
             os.chdir(subdir)
             USkill.find_static = os.curdir
         
-        ## logging.info(f"load_public_skills(): dir {os.listdir()}")
+        ## logging.info(f"dir {os.listdir()}")
         files = [f for f in os.listdir() if os.path.isfile(f) and ".stp" in os.path.splitext(f)]
         USkill.public_skills = [os.path.splitext(f)[0] for f in files]
     
@@ -277,7 +287,7 @@ if __name__ == "__main__":
     os.system('cls')
 
     logging.basicConfig(level=logging.INFO,
-                        format="%(levelname)s: | %(module)s     %(message)s")
+                        format="%(levelname)s: | %(module)s  %(funcName)s():   %(message)s") ##, filename="log.log")
 
     print("Testing class Comm UProject()...\n")
 
@@ -303,15 +313,17 @@ if __name__ == "__main__":
 
     new_skill = termmake(user)
     print(new_skill)
+    
 
     new_skill.save_as_template()
     load_skill = USkill("anyone", new_skill.name)
 
+
     if load_skill.load_template():
         print(load_skill)
 
-    USkill.load_public_skills()
-    print(USkill.get_public_skills())
+    # USkill.load_public_skills()
+    # print(USkill.get_public_skills())
 
 
 

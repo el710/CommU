@@ -268,8 +268,8 @@
             <div class="left-top">
                 {% block search-result %}
                     {% if project != None or skills != None or dealers != None %}
-                    {% if task != None %}
-                        <p>find out public skills, projects, dealers as <b>'{{task}}'</b>...</p>
+                    {% if index_search != None %}
+                        <p>find out public skills, projects, dealers as <b>'{{index_search}}'</b>...</p>
                         <ul> <!-- list of templates-->
                             {% if project != None %}
                                 <li>there are project templates:</li>
@@ -282,7 +282,7 @@
                                 <li>there are skills:</li>
                                 <ul>
                                     {% for item in skills %}
-                                        <li> <a href="skill/{{item}}">{{item}}</a> </li>
+                                        <li> <a href="skill={{item}}">{{item}}</a> </li>
                                     {% endfor %}
                                 </ul>
                             {% endif %}
@@ -326,17 +326,13 @@
         <div class="center-content">
             <div class="center-top">
                 {% if about_type %}
-                    {% if about_type == "skill" %}
-                        {{about_type}} '{{about_name}}': 
-                    {% elif about_type == "user" %}
-                        {{about_type}} "{{about_name}}":
-                    {% elif about_type == "contract" %}
-                        {{about_type}} '{{about_name}}':
-                    {% elif about_type == "project" %}
-                        {{about_type}} '{{about_name}}':
-                    {% else %}
-                        Unknown item {{about_name}}
-                    {% endif %}
+                    {{about_type}} '{{about_name}}': 
+                    <ul>
+                    {% for item in about_value %}
+                        <li>{{item}}</li> 
+                    {% endfor %}
+                    </ul>
+                    <a href="{{about_link}}">All parameters</a>
                 {% else %}
                     Find out what items are...
                 {% endif %}

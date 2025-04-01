@@ -16,85 +16,108 @@ import os
 
 """ Operating Data"""
 local_user = None
-
+## last search word at index.html
+index_search = None
 public_dealers = None
 
 
+
 WORK_PATH = os.path.join(os.getcwd(), "static")
+
+def make_searching_data(search):
+    context = {}
+
+    if search:
+        ## find skill templates    
+        skill = USkill(local_user, search)
+        if skill.load_template(WORK_PATH):
+            context.update({"skills": [skill.get_slug_name()] })
+            logging.info(f"has found skill {skill.get_slug_name()}")
+        else:
+            context.update({"skills": None})
+            
+        ## find project templates
+        project = UProject(local_user, search)
+        _path = finders.find(project.get_file_name())
+        if project.load_template(_path):
+            context.update({"project": index_search})
+        else:
+            context.update({"project": None})
+
+        ## find public contacts
+        user_dealers_list = []
+        if local_user != None:
+            if isinstance(local_user, UUser):
+                user_dealers_list.append(local_user.partners)
+                
+        if public_dealers:
+            user_dealers_list.append(public_dealers)
+                
+        if len(user_dealers_list):
+            context.update({"dealers": user_dealers_list})
+        else: 
+            context.update({"dealers": None})    
+        
+    return context
 
 
 def show_index(request, args=None):
     '''
         function make index.html
     '''
-    ## dict args for index.html
+    global index_search
+
+    ## make dictionary of args for page
     def_context = {} 
 
-    ## need to show item info; format: <type>=<name>
+    ## find out what item about need to show info; format: <type>=<name>
     if args:
         try:
             item = str.split(args,'=')
-            logging.info(f"\nshow_index(): about detail {item} {len(item)}")
+            logging.info(f"about detail {item} {len(item)}\n")
 
             if len(item) == 2:
-                def_context.update({"about_type": item[0], "about_name": item[1]})
+                info = []
+                match(item[0]):
+                    case "skill":
+                        skill = USkill(None, item[1])
+                        skill.load_template(WORK_PATH)
+                        for key, value in skill.json().items():
+                            if (value != None) and (isinstance(value, str) and len(value) or not isinstance(value, str)):
+                                logging.info(f"make dict of object: {key} : {value}")
+                                info.append(f"{key}: {value}")
+                    # case "user": 
+                    # case "contract":
+                    # case "project":
+
+                logging.info(f"add object's info: {info}")
+                if len(info):
+                    def_context.update({"about_type": item[0], "about_name": item[1], "about_value": info, "about_link": f"{item[0]}/{item[1]}"})
         except Exception as exc:
-            logging.info(f"\nshow_index(): wrong item info {args} {exc}")
+            logging.info(f"wrong item info {args} {exc}\n")
 
-    
-    ## Make list of public skills for index.html
+    ## Make list of public skills
     USkill.load_public_skills("static")
-    logging.info(f"show_title(): {USkill.get_public_skills()}")
+    logging.info(f"show_index(): {USkill.get_public_skills()}")
     def_context.update({'public_skills': USkill.get_public_skills()})
-        
-
     
-    # logging.info(f"\nshow_title(): about state {about_item} ")
 
-    logging.info(f"\nshow_title(): method {request.method} ")
+    logging.info(f"method {request.method} ")
     if request.method == "POST":
+
+        ## check up searching field
         form = TaskForm(request.POST)
         if form.is_valid():
-            task = form.cleaned_data['new_task']
-         
-            ## find skill templates    
-            skill = USkill(local_user, task)
-       
-    
-            if skill.load_template(WORK_PATH):
-                def_context.update({"skills": [skill.get_slug_name()] })
-                logging.info(f"show_title(): has found skill {skill.get_slug_name()}")
-            else:
-                def_context.update({"skills": None})
-            
-            ## find project templates
-            project = UProject(local_user, task)
-            _path = finders.find(project.get_file_name())
-            if project.load_template(_path):
-                def_context.update({"project": task})
-            else:
-                def_context.update({"project": None})
-
-            ## find public dealers & user's contacts
-            user_dealers_list = []
-            if local_user != None:
-                if isinstance(local_user, UUser):
-                    user_dealers_list.append(local_user.partners)
-                
-            if public_dealers:
-                user_dealers_list.append(public_dealers)
-                
-            if len(user_dealers_list):
-                def_context.update({"dealers": user_dealers_list})
-            else: 
-                def_context.update({"dealers": None})
-                
-        else:
-            task = None
-
-        def_context.update({"task": task})
+            ##remember search
+            index_search = form.cleaned_data['new_task']
+            def_context.update(make_searching_data(index_search))
     else:
+        ## show last searching results
+        def_context.update(make_searching_data(index_search))
         def_context.update({'form': TaskForm()})
+
+    logging.info(f"search {index_search} ")
+    def_context.update({"index_search": index_search})    
  
     return render(request, 'index.html', context=def_context)
 

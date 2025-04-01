@@ -71,7 +71,7 @@ if __name__ == '__main__':
     
 
     logging.basicConfig(level=logging.INFO,
-                        format="%(levelname)s: | %(module)s     %(message)s") ##, filename="log.log")
+                        format="%(levelname)s: | %(module)s  %(funcName)s():   %(message)s") ##, filename="log.log")
     
     # start thread with telegram bot
     # telegram_link = run_thread_agent(telebot_start, add_link=True)
