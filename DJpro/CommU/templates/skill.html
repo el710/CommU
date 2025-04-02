@@ -2,8 +2,8 @@
 {% load static %}
 
 {% block style %}
+    {{ block.super }}
     <style>
-        
         .container {
             
             display: flex;
@@ -71,6 +71,10 @@
     </style>
 {% endblock %}
 
+{% block user %}
+    {{ block.super }}
+{% endblock %}
+
 {% block theme %}
 {%endblock%}
 
@@ -108,7 +112,11 @@
                         </div>
                     {% endif %}    
                     <div>
-                        <a href="/" class="linkback" >Back</a>
+                        {% if local_user %}
+                            <a href="/user/" class="linkback" >Back</a>
+                        {% else %}
+                            <a href="/" class="linkback" >Back</a>
+                        {% endif %}
                     </div>                    
                 </div>
             </form> <!-- post -->

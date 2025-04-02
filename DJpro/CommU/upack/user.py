@@ -1,12 +1,16 @@
 """
     Copyright (c) 2024 Kim Oleg <theel710@gmail.com>
 """
+
 try:
     from .uproject import UProject
 except:
     from uproject import UProject
 
 class UUser():
+    '''
+        User's data
+    '''
     def __init__(self, nickname):
         self.commu_id = None
         self.nickname = nickname
@@ -27,6 +31,9 @@ class UUser():
 
         ## index of project user wor with - def as Life
         self.work_project = 0
+
+        ## searching
+        self.search = None
         
 class ClientUser(UUser):
     users = [] ## login + tokens

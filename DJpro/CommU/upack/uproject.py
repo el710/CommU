@@ -151,6 +151,45 @@ class UObject():
             return False
 
 
+
+def get_uitem_info(args=None, filepath=None):
+    '''
+        args format: <type=name>  Ex: skill=wake-up
+        Return dict with info about founded skill, user, contract or project...
+    '''
+ 
+    if args:
+        try:
+            ## find out type & name of Uitem
+            item = str.split(args,'=')
+            logging.info(f"about detail {item} {len(item)}\n")
+
+            if len(item) == 2:
+                info = []
+                match(item[0]):
+                    case "skill":
+                        skill = USkill(None, item[1])
+                        skill.load_template(filepath)
+                        for key, value in skill.json().items():
+                            if (value != None) and (isinstance(value, str) and len(value) or not isinstance(value, str)):
+                                logging.info(f"make dict of object: {key} : {value}")
+                                info.append(f"{key}: {value}")
+                        # case "user": 
+                        # case "contract":
+                        # case "project":
+
+                logging.info(f"add object's info: {info}")
+                if len(info):
+                    return {"about_type": item[0],
+                            "about_name": item[1],
+                            "about_value": info,
+                            "about_link": f"/{item[0]}/{item[1]}"}
+                    
+        except Exception as exc:
+            logging.info(f"wrong item info {args} {exc}\n")
+        
+    return {}
+
 class USkill(UObject):
     """
         A simple skill that depends only on one person.

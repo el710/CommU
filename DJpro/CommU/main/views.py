@@ -7,7 +7,7 @@ from django.contrib.staticfiles import finders
 # Create your views here.
 
 
-from upack.uproject import USkill, UProject
+from upack.uproject import *
 from upack.user import UUser
 
 
@@ -25,6 +25,10 @@ public_dealers = None
 WORK_PATH = os.path.join(os.getcwd(), "static")
 
 def make_searching_data(search):
+    '''
+        Search Uitem by 'search' word 
+        Return Uitem info as dict()
+    '''
     context = {}
 
     if search:
@@ -63,38 +67,17 @@ def make_searching_data(search):
 
 def show_index(request, args=None):
     '''
-        function make index.html
+        Make index.html
+        args: Uitems to view info {skill, contract, project}
     '''
     global index_search
 
     ## make dictionary of args for page
     def_context = {} 
 
-    ## find out what item about need to show info; format: <type>=<name>
-    if args:
-        try:
-            item = str.split(args,'=')
-            logging.info(f"about detail {item} {len(item)}\n")
+    ## add 'about' data of searching result
+    def_context.update(get_uitem_info(args, filepath=WORK_PATH))
 
-            if len(item) == 2:
-                info = []
-                match(item[0]):
-                    case "skill":
-                        skill = USkill(None, item[1])
-                        skill.load_template(WORK_PATH)
-                        for key, value in skill.json().items():
-                            if (value != None) and (isinstance(value, str) and len(value) or not isinstance(value, str)):
-                                logging.info(f"make dict of object: {key} : {value}")
-                                info.append(f"{key}: {value}")
-                    # case "user": 
-                    # case "contract":
-                    # case "project":
-
-                logging.info(f"add object's info: {info}")
-                if len(info):
-                    def_context.update({"about_type": item[0], "about_name": item[1], "about_value": info, "about_link": f"{item[0]}/{item[1]}"})
-        except Exception as exc:
-            logging.info(f"wrong item info {args} {exc}\n")
 
     ## Make list of public skills
     USkill.load_public_skills("static")
@@ -110,86 +93,61 @@ def show_index(request, args=None):
         if form.is_valid():
             ##remember search
             index_search = form.cleaned_data['new_task']
-            def_context.update(make_searching_data(index_search))
-    else:
-        ## show last searching results
-        def_context.update(make_searching_data(index_search))
+    else:    
         def_context.update({'form': TaskForm()})
 
+    ## show new or last searching results
+    def_context.update(make_searching_data(index_search))
+    
     logging.info(f"search {index_search} ")
     def_context.update({"index_search": index_search})    
  
     return render(request, 'index.html', context=def_context)
 
 
-def show_userpage(request):
+def show_userpage(request, args=None):
     """
         This function shows user's page
     """
     global local_user
 
+    ## make dictionary of args for page
+    def_context = {}
+
+    ## add 'about' data as searching result
+    def_context.update(get_uitem_info(args, filepath=WORK_PATH))
+
     USkill.load_public_skills("static")
-    logging.info(f"show_userpage(): {USkill.get_public_skills()}")
-    def_context = {'public_skills': USkill.get_public_skills()}
-        
-    logging.info(f"\nshow_userpage(): user {local_user}")
-    if local_user:
-        def_context.update({"local_user": local_user.nickname,
-                            "user_project": local_user.work_project
-                        })
-    
+    logging.info(f"{USkill.get_public_skills()}\n")
+    def_context.update({'public_skills': USkill.get_public_skills()})
 
-    logging.info(f"\nshow_userpage(): method {request.method} ")
-
-
-
+    logging.info(f"method {request.method} ")
     if request.method == "POST":
+        ## check up searching field
         form = TaskForm(request.POST)
         if form.is_valid():
-            task = form.cleaned_data['new_task']
-         
-            ## find skill templates    
-            skill = USkill(local_user, task)
-    
-            if skill.load_template(WORK_PATH):
-                def_context.update({"skills": [skill.get_slug_name()] })
-                logging.info(f"show_title(): has found skill {skill.get_slug_name()}")
-            else:
-                def_context.update({"skills": None})
-            
-            ## find project templates
-            project = UProject(local_user, task)
-            _path = finders.find(project.get_file_name())
-            if project.load_template(_path):
-                def_context.update({"project": task})
-            else:
-                def_context.update({"project": None})
-
-            ## find public dealers & user's contacts
-            user_dealers_list = []
-            if local_user != None:
-                if isinstance(local_user, UUser):
-                    user_dealers_list.append(local_user.partners)
-                
-            if public_dealers:
-                user_dealers_list.append(public_dealers)
-                
-            if len(user_dealers_list):
-                def_context.update({"dealers": user_dealers_list})
-            else: 
-                def_context.update({"dealers": None})
-                
-        else:
-            task = None
-
-        def_context.update({"task": task})
+            ##remember search
+            local_user.search = form.cleaned_data['new_task']
     else:
         def_context.update({'form': TaskForm()})
 
-    if local_user:
-        return render(request, 'userpage.html', context=def_context)
-    
-    return redirect('/')
+
+    logging.info(f"user {local_user}\n")
+    if local_user:          
+        def_context.update({"local_user": local_user.nickname,
+                            "user_project": local_user.work_project
+                        })
+    else:
+        return redirect('/')
+
+    ## show new or last searching results
+    def_context.update(make_searching_data(local_user.search))
+
+    logging.info(f"search {local_user.search} ")
+    def_context.update({"index_search": local_user.search})    
+
+    return render(request, 'userpage.html', context=def_context)
+
 
 def show_about(request):
     """
@@ -294,9 +252,15 @@ def logout(request):
 def crud_skill(request, args=None):
     global local_user
 
-    logging.info(f'\ncrud_skill(): open skill: {args}')
+    logging.info(f'open skill: {args}\n')
+    logging.info(f'local user: {local_user}\n')
 
-    def_context={"local_user": local_user}
+    def_context = {}
+
+    if local_user:
+        def_context.update({"local_user": local_user.nickname,
+                            "user_project": local_user.work_project
+                        })
 
     if args:
         new_skill = USkill(owner_id=local_user, name=args)
@@ -314,8 +278,8 @@ def crud_skill(request, args=None):
     if request.method == "POST":
         form = SkillForm(request.POST)
 
-        logging.info(f"\ncrud_skill(): valid POST {form.is_valid()} ")
-        logging.info(f'\ncrud_skill(): {form.cleaned_data}')
+        logging.info(f"valid POST {form.is_valid()} \n")
+        logging.info(f'data: {form.cleaned_data}\n')
 
         if form.is_valid(): ## is_valid also makes cleaned_data
             skill_name = form.cleaned_data['skill_name']
@@ -325,7 +289,7 @@ def crud_skill(request, args=None):
             skill_public = form.cleaned_data['skill_public']
             skill_author = form.cleaned_data['skill_author']
 
-            new_skill = USkill(owner_id=local_user,
+            new_skill = USkill(owner_id=local_user.nickname,
                                name=skill_name,
                                goal=skill_goal,
                                description=skill_desc,
@@ -336,9 +300,12 @@ def crud_skill(request, args=None):
             if request.POST.get('delete'):
                 new_skill.delete_template(WORK_PATH)
             else:
-                new_skill.save_as_template(True,WORK_PATH)
-    
-            return redirect("../")
+                new_skill.save_as_template(True, WORK_PATH)
+            
+            if local_user:
+                return redirect("/user/")
+            else:
+                return redirect("/")
      
     else:
         form = SkillForm(request.POST)
@@ -346,3 +313,57 @@ def crud_skill(request, args=None):
     def_context.update({"form": form})
     
     return render(request, "skill.html", context=def_context)
+
+
+def crud_contract(request, args=None):
+    global local_user
+
+    logging.info(f'open skill: {args}\n')
+    logging.info(f'local user: {local_user}\n')
+
+    def_context = {}
+
+    if local_user:
+        def_context.update({"local_user": local_user.nickname,
+                            "user_project": local_user.work_project
+                        })
+
+    if args:
+        logging.info(f"\ncrud_skill(): load template {def_context} ")
+
+    
+    if request.method == "POST":
+        
+        if local_user:
+            return redirect("/user/")
+        else:
+            return redirect("/")
+    
+    return render(request, "index_temp.html", context=def_context)
+
+
+def crud_project(request, args=None):
+    global local_user
+
+    logging.info(f'open skill: {args}\n')
+    logging.info(f'local user: {local_user}\n')
+
+    def_context = {}
+
+    if local_user:
+        def_context.update({"local_user": local_user.nickname,
+                            "user_project": local_user.work_project
+                        })
+
+    if args:
+        logging.info(f"\ncrud_skill(): load template {def_context} ")
+
+    
+    if request.method == "POST":
+        
+        if local_user:
+            return redirect("/user/")
+        else:
+            return redirect("/")
+    
+    return render(request, "index_temp.html", context=def_context)

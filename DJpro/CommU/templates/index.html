@@ -23,6 +23,18 @@
 
 {% block style %}
     <style>
+        .exit-bar {
+            height: 20px;
+            display: flex;
+            justify-items: center;
+            justify-content: space-around;
+        }
+    
+        .exit-bar img{
+            height: 25px;
+            margin-left: 10px;
+        }
+
         .input-container {
             display: flex;
             justify-content: center;
@@ -245,8 +257,8 @@
                 </div>
             {% else %}
                 <div class="auth-buttons">
-                    <a href="login/">Log In</a>
-                    <a href="signup/">Sign Up</a>
+                    <a href="/login/">Log In</a>
+                    <a href="/signup/">Sign Up</a>
                 </div>
             {% endif %}      
         {% endblock %}
@@ -324,19 +336,22 @@
         </div>
 
         <div class="center-content">
-            <div class="center-top">
-                {% if about_type %}
-                    {{about_type}} '{{about_name}}': 
-                    <ul>
-                    {% for item in about_value %}
-                        <li>{{item}}</li> 
-                    {% endfor %}
-                    </ul>
-                    <a href="{{about_link}}">All parameters</a>
-                {% else %}
-                    Find out what items are...
-                {% endif %}
-            </div> <!-- center-top-->
+            {% block about %}
+                <div class="center-top">
+                    {% if about_type %}
+                        {{about_type}} '{{about_name}}': 
+                        <ul>
+                        {% for item in about_value %}
+                            <li>{{item}}</li> 
+                        {% endfor %}
+                        </ul>
+                        <hr>
+                        <a href="{{about_link}}">All parameters</a>
+                    {% else %}
+                        Find out what items are...
+                    {% endif %}
+                </div> <!-- center-top-->
+            {%endblock%}
 
     
 

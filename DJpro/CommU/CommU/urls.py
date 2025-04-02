@@ -24,13 +24,14 @@ from django.urls import path
 
 from main.views import (show_index, show_about, show_terms, show_laws, show_rules,
                         signup, login, logout, show_userpage, 
-                        crud_skill)
+                        crud_skill, crud_contract, crud_project)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', show_index), ## index page 
     path('<str:args>', show_index), ## index.html page to show choosen user/skill/contract/project
-    path('user/', show_userpage), 
+    path('user/', show_userpage),
+    path('user/<str:args>', show_userpage),
     path('about/', show_about),
     path('terms/', show_terms),
     path('basic_laws/', show_laws),
@@ -41,6 +42,11 @@ urlpatterns = [
     path('logout/',logout),
 
     path('skill/', crud_skill),
-    path('skill/<str:args>', crud_skill)
+    path('skill/<str:args>', crud_skill),
 
+    path('contract/', crud_contract),
+    path('contract/<str:args>', crud_contract),
+
+    path('project/', crud_project),
+    path('project/<str:args>', crud_project)
 ]
