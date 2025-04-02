@@ -96,6 +96,16 @@ def show_index(request, args=None):
     else:    
         def_context.update({'form': TaskForm()})
 
+    '''
+        Variable part of page constractor
+    '''
+    logging.info(f"user {local_user}\n")
+    if local_user:          
+        return redirect('/user/')
+    '''
+        End of variable part of page constractor
+    '''  
+
     ## show new or last searching results
     def_context.update(make_searching_data(index_search))
     
@@ -131,7 +141,9 @@ def show_userpage(request, args=None):
     else:
         def_context.update({'form': TaskForm()})
 
-
+    '''
+        Variable part of page constractor
+    '''
     logging.info(f"user {local_user}\n")
     if local_user:          
         def_context.update({"local_user": local_user.nickname,
@@ -139,6 +151,9 @@ def show_userpage(request, args=None):
                         })
     else:
         return redirect('/')
+    '''
+        End of variable part of page constractor
+    '''    
 
     ## show new or last searching results
     def_context.update(make_searching_data(local_user.search))

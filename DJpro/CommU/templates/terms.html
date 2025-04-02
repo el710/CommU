@@ -1,17 +1,20 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8" />
-    <title>Terms</title>
-</head>
-<body>
+{% extends "index.html" %}
+{% load static %}
+
+{% block title %}
+<title>Terms</title>
+{% endblock %}
+
+{% block theme %} 
+{% endblock %}
+
+{% block perform %}
     <div>
         <ul>
-            <li>To join to <a href="../about/">CommU</a> you should accept and follow <a href="../basic_laws/"> CommU Laws </a></li>
-            <li>There are some <a href="../rules/">rules</a> to use <a href="../about/">CommU</a></li>
+            <li>To join CommU you should accept and follow CommU <a href="/basic_laws/"> Laws </a></li>
+            <li>There are some <a href="/rules/">rules</a> to use CommU</li>
         </ul>
     </div>
 
-    <a href="../">[back to Main page]</a>
-</body>
-</html>
+    <a href="/" class="linkback">back to Main page</a>
+{% endblock %}

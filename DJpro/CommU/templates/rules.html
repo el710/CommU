@@ -1,18 +1,21 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8" />
-    <title>Rules</title>
-</head>
-<body>
+{% extends "index.html" %}
+{% load static %}
 
+{% block title %}
+<title>Rules</title>
+{% endblock %}
+
+{% block theme %}
+    There are some rules:
+{% endblock %}
+
+{% block perform %}
     <div>
         <ul>
             <li>1. <a href="/login/">Log in</a> first</li>
-            <li>2. To join other user's projects you must have been invitatated.</li>
+            <li>2. To join other user's business/projects you must have been invitatated.</li>
         </ul>
     </div>
 
-    <a href="../">[back to Main page]</a>
-</body>
-</html>
+    <a href="/" class="linkback">back to Main page</a>
+{% endblock %}

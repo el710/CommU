@@ -33,11 +33,11 @@ def run_thread_agent(target_function, *args, add_link=False):
         conection by two queues: "in" thread & "out" thread
         Return: in/out queues or None
     """
-    logging.info(f"run_thread_agent(): function {target_function}; args {args}; add_link {add_link}")
+    logging.info(f"function {target_function}; args {args}; add_link {add_link}")
     if add_link: 
         in_queue = queue.Queue()
         out_queue = queue.Queue()
-        logging.info(f"run_thread_agent(): got queues: {in_queue} - {out_queue}")
+        logging.info(f"got queues: {in_queue} - {out_queue}")
 
         # params = (in_queue, out_queue, *args)
         # logging.info(f"run_thread_agent(): thread arguments {params}")
@@ -52,7 +52,7 @@ def run_thread_agent(target_function, *args, add_link=False):
     try:
         thread.start()
     except Exception as exc:
-        logging.info(f"run_thread_agent(): exception at start - {exc}")
+        logging.info(f"exception at start - {exc}")
         raise Exception
     
     if add_link:
