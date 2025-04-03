@@ -8,88 +8,68 @@
     </div>
 {% endblock %}
 
-{% block user %}
-    {{ block.super }}
-{% endblock %}
+{% block make_new %}
+    <div class="make-new">
+    <p>Make new:</p>
+    <form method="post">
+        {% csrf_token %}
+        {% if task == None %}
+            <a href="/skill/" class="linkbt">New skill</a>
+            <a href="/contract/" class="linkbt">New contract</a>
+            <a href="/project/" class="linkbt">New project</a>
+        {% else %}
+            {% if project != None or skills != None or dealers != None %}
+                <a href="/skill/" class="linkbt">New skill</a>
+                <a href="/contract/" class="linkbt">New contract</a>
+                <a href="/project/" class="linkbt">New project</a>
+            {% else %}
+                Make new <b>'{{task}}'</b>: 
+                <a href="/skill/{{task}}" class="linkbt">skill</a>
+                <a href="/contract/{{task}}" class="linkbt">contract </a>
+                <a href="/project/{{task}}" class="linkbt">project</a>                            
+            {% endif %}
+        {% endif %}    
+    </form>
+    <hr>
+    </div>
+{% endblock %} <!-- make_new -->
 
-{% block theme %}
-   {{block.super}}
-{% endblock %}
+{% block most-used %}
+    <div class="most-used">
+        <p>Most used:</p>
+        <hr>
+    </div>
+{%endblock%} <!-- most-used -->
 
-    
-{% block perform %}
-    <div class="workplace">
-        <div class="left-sidebar">
-            <div class="left-top">
-                {% block search-result %}
-                    {{ block.super }}
-                {%endblock%} <!-- search-result-->
-            </div>
-            {% block public-list %}
-                {{ block.super}}
-            {%endblock%}              
+{% block about %}
+    <div class="center-top">
+        {% if about_type %}
+            {{about_type}} '{{about_name}}': 
+            <ul>
+                {% for item in about_value %}
+                    <li>{{item}}</li> 
+                {% endfor %}
+            </ul>
+            <hr>
+                <a href="/event/">Add</a>
+                <a href="{{about_link}}">Edit</a>
+            <hr>
+        {% endif %}
+    </div> <!-- center-top-->
+{%endblock%}
 
-        </div> <!-- left-sidebar -->
 
-        <div class="center-content">
-            {% block about %}
-                <div class="center-top">
-                    {% if about_type %}
-                        {{about_type}} '{{about_name}}': 
-                        <ul>
-                            {% for item in about_value %}
-                                <li>{{item}}</li> 
-                            {% endfor %}
-                        </ul>
-                        <hr>
-                        <a href="{{about_link}}">Add</a>
-                        <a href="{{about_link}}">Edit</a>
-                    {% endif %}
-                </div> <!-- center-top-->
-            {%endblock%}
+{% block user-project-list %}
+    <div class="center-bottom">
+        Project: {{user_project}}>
+        <ul class="project_list">
+            <li class="project_item"><a href="#">Life</a></li>
+        </ul>
+    </div> <!-- center-bottom -->
+ {%endblock%}
 
-            {% block center-middle %}
-                <div class="center-middle">
-                    <hr>
-                    <form method="post" >
-                        {% csrf_token %}
-                        {% if task == None %}
-                            <a href="/skill/" class="linkbt">New skill</a>
-                            <a href="/contract/" class="linkbt">New contract</a>
-                            <a href="/project/" class="linkbt">New project</a>
-                        {% else %}
-                            {% if project != None or skills != None or dealers != None %}
-                                <a href="/skill/" class="linkbt">New skill</a>
-                                <a href="/contract/" class="linkbt">New contract</a>
-                                <a href="/project/" class="linkbt">New project</a>
-                            {% else %}
-                                Make new <b>'{{task}}'</b>: 
-                                <a href="/skill/{{task}}" class="linkbt">skill</a>
-                                <a href="/contract/{{task}}" class="linkbt">contract </a>
-                                <a href="/project/{{task}}" class="linkbt">project</a>                            
-                            {% endif %}
-                        {% endif %}    
-                    </form>        
-                </div>
-            {%endblock%}
 
-            <div class="center-bottom">
-                {% block user-project-list %}
-                <hr>
-                Project: {{user_project}}>
-                <ul class="project_list">
-                    <li class="project_item"><a href="#">Life</a></li>
-                </ul>
-                {%endblock%}
-            </div> <!-- center-bottom -->
-
-        </div> <!-- center-content -->
-
-        <div class="right-sidebar">
-            <div class="right-top">
-            </div> <!-- right-top -->
-
-            {% block agenda %}
+{% block agenda %}
                 <div class="right-bottom">
                     Today agenda:
                     <ul>
@@ -98,8 +78,4 @@
                         <li>13:30 PM Sunday: lesson [IT-TOP] {till: 14:30}</li>
                     </ul> 
                 </div> <!-- right-bottom -->
-            {%endblock%} <!-- agenda-->
-
-        </div> <!-- right-sidebar -->
-    </div> <!-- workplace -->
-{%endblock%} <!-- perform -->
+{%endblock%} <!-- agenda-->

@@ -71,12 +71,10 @@
     </style>
 {% endblock %}
 
-{% block user %}
-    {{ block.super }}
-{% endblock %}
-
 {% block theme %}
-{%endblock%}
+    <a href="/" class="linkback">back to Main page</a>
+    <hr>
+{% endblock %}
 
 {% block perform %}
     <div class="container">
@@ -110,14 +108,7 @@
                                 <input type="submit" value="Delete" name="delete">
                             {% endif %}       
                         </div>
-                    {% endif %}    
-                    <div>
-                        {% if local_user %}
-                            <a href="/user/" class="linkback" >Back</a>
-                        {% else %}
-                            <a href="/" class="linkback" >Back</a>
-                        {% endif %}
-                    </div>                    
+                    {% endif %}                 
                 </div>
             </form> <!-- post -->
         </div> <!-- column -->        

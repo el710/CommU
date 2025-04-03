@@ -99,18 +99,6 @@
             border-radius: 5px;
             */
         }
-        
-        .left-top {
-            /*background-color: #e9e9e9;*/
-            
-            justify-content: left;
-            text-align: left;
-
-            /*
-            border: 2px solid #ccc;
-            border-radius: 5px;
-            */
-        }        
 
         .right-sidebar {
             /*background-color: #f4f4f4;*/
@@ -296,11 +284,16 @@
 {% block perform %}
     <div class="workplace">
         <div class="left-sidebar">
-            <div class="left-top">
-                {% block search-result %}
+
+            {% block make_new %}
+                <!-- reserved -->
+            {% endblock %} <!-- make_new -->
+
+            {% block search-result %}
+                <div class="search-result">
                     {% if project != None or skills != None or dealers != None %}
                     {% if index_search != None %}
-                        <p>find out public skills, projects, dealers as <b>'{{index_search}}'</b>...</p>
+                        <p>Founded: <b>'{{index_search}}'</b>...</p>
                         <ul> <!-- list of templates-->
                             {% if project != None %}
                                 <li>there are project templates:</li>
@@ -327,19 +320,24 @@
                                 </ul>
                             {% endif %}
                         </ul>  <!-- list of templates-->
-                        <hr>
+                        
                     {% endif %} <!-- task -->
+                    <hr>
                     {% endif %}
-                {%endblock%} <!-- search-result-->
-            </div>
+                </div> <!-- search-result-->
+            {%endblock%} <!-- search-result-->
             
+            {% block most-used %}
+                <!-- reserved -->
+            {%endblock%} <!-- most-used -->
+
             {% block public-list %}
-                <div class="left-bottom">
-                    Public:
+                <div class="public-list">
+                    <p>Public:</p>
                     <ul>
                         <li>users</li>
                         <li>projects</li>
-                        <li>deals</li>
+                        <li>contracts</li>
                         <li>skills</li>
                             {% if public_skills != None %}
                                 <ul>
@@ -351,10 +349,10 @@
                     </ul>
                 </div>
             {%endblock%}
-            
-        </div>
+        </div> <!-- left-sidebar -->
 
         <div class="center-content">
+
             {% block about %}
                 <div class="center-top">
                     {% if about_type %}
@@ -372,21 +370,15 @@
                 </div> <!-- center-top-->
             {%endblock%}
 
-    
-
-            <div class="center-bottom">
-            </div> <!-- center-bottom -->
+            {% block user-project-list %}
+                <!-- reserved -->
+            {%endblock%}
         </div> <!-- center-content -->
 
         <div class="right-sidebar">
-            <div class="right-top">
-            </div> <!-- right-top -->
-
-            <div class="right-bottom">               
-                {% block agenda %}
-                    <!-- NO CONTENT -->                
-                {%endblock%} <!-- agenda-->
-            </div> <!-- right-bottom -->
+            {% block agenda %}
+                <!-- reserved -->                
+            {%endblock%} <!-- agenda-->
         </div> <!-- right-sidebar -->
     </div> <!-- workplace -->
 {%endblock%} <!-- perform -->
@@ -401,8 +393,8 @@
         <div class="footer-bar"> <!-- Самая нижняя полоса -->
             <div class="copyright">&copy; 2024 CommU</div>
             <div class="links">
-                <a href="/about/">About</a>
-                <a href="/terms/">Terms</a>
+                <a href="/info/about">About</a>
+                <a href="/info/terms">Terms</a>
                 Theel710@gmail.com
             </div>
         </div>

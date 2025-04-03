@@ -70,7 +70,7 @@ def show_index(request, args=None):
         Make index.html
         args: Uitems to view info {skill, contract, project}
     '''
-    global index_search
+    global local_user, index_search
 
     ## make dictionary of args for page
     def_context = {} 
@@ -164,33 +164,30 @@ def show_userpage(request, args=None):
     return render(request, 'userpage.html', context=def_context)
 
 
-def show_about(request):
-    """
-        This function shows about page
-        with template - about.html
-    """
-    return render(request, 'about.html')
+def show_info(request, args=None):
+    '''
+        Make info pages depends on
+        args: 'about', 'terms', 'laws', 'rules'  .html
+    '''
+    global local_user
 
-def show_terms(request):
-    """
-        This function shows terms page
-        with template - terms.html
-    """
-    return render(request, 'terms.html')
+    ## make dictionary of args for page
+    def_context = {}
 
-def show_laws(request):
-    """
-        This function shows laws page
-        with template - laws.html
-    """
-    return render(request, 'laws.html')
+    logging.info(f"user {local_user}\n")
+    if local_user:          
+        def_context.update({"local_user": local_user.nickname})
+    
+    if args == 'terms':
+        page = 'terms.html'
+    elif args == 'laws':
+        page = 'laws.html'
+    elif args == 'rules':
+        page = 'rules.html'
+    else:
+        page = 'about.html'
 
-def show_rules(request):
-    """
-        This function shows rules page
-        with template - rules.html
-    """
-    return render(request, 'rules.html')
+    return render(request, page, context=def_context)
 
 
 
@@ -265,6 +262,10 @@ def logout(request):
             
 
 def crud_skill(request, args=None):
+    '''
+        Make data about skill
+        args: <name> - show CRUD page - skill.html
+    '''
     global local_user
 
     logging.info(f'open skill: {args}\n')
@@ -287,7 +288,7 @@ def crud_skill(request, args=None):
                             "skill_public": new_skill.public,
                             "skill_author": new_skill.author
                             })
-        logging.info(f"\ncrud_skill(): load template {def_context} ")
+        logging.info(f"load template {def_context}\n")
 
     
     if request.method == "POST":
@@ -382,3 +383,48 @@ def crud_project(request, args=None):
             return redirect("/")
     
     return render(request, "index_temp.html", context=def_context)
+
+
+def crud_event(request, args=None):
+    global local_user
+
+    logging.info(f'open skill: {args}\n')
+    logging.info(f'local user: {local_user}\n')
+
+    def_context = {}
+
+    if local_user:
+        def_context.update({"local_user": local_user.nickname,
+                            "user_project": local_user.work_project
+                        })
+
+    if args:
+        logging.info(f"load template {args}\n")
+
+    
+    if request.method == "POST":
+        form = SkillForm(request.POST)
+
+        logging.info(f"valid POST {form.is_valid()} \n")
+        logging.info(f'data: {form.cleaned_data}\n')
+
+        if form.is_valid(): ## is_valid also makes cleaned_data
+            ## take data
+
+            if request.POST.get('set'):
+                pass
+            elif request.POST.get('delete'):
+                pass
+
+            
+            if local_user:
+                return redirect("/user/")
+            else:
+                return redirect("/")
+     
+    else:
+        form = SkillForm(request.POST)
+    
+    def_context.update({"form": form})
+    
+    return render(request, "event.html", context=def_context)
