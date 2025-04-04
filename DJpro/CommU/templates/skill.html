@@ -84,16 +84,18 @@
                 {% csrf_token %}
                 <fieldset>
                     <legend> <h4>Skill's Parameters</h4> </legend>
-                    <label>Name: <input type="text" name="skill_name"  maxlength="100" value="{{skill_name}}" ></label>
-                    <label>Resources: <textarea name="skill_resources" maxlength="300" >{{skill_resources}}</textarea></label>
-                    <label>Description: <textarea name="skill_desc" maxlength="300" >{{skill_desc}}</textarea></label>
-                    <label>Goal: <textarea name="skill_goal" maxlength="100">{{skill_goal}}</textarea></label>
-                    {% if skill_public == True %}
+                    <label>Name: <input type="text" name="skill_name"  maxlength="100" value="{{name}}" ></label>
+                    <label>Description: <textarea name="skill_desc" maxlength="300" >{{description}}</textarea></label>
+                    <label>Resources: <textarea name="skill_resources" maxlength="300" >{{resources}}</textarea></label>
+                    <label>Goal: <textarea name="skill_goal" maxlength="100">{{goal}}</textarea></label>
+                    {% if public == True %}
                         <label><input type="checkbox" name="skill_public" checked>Public</label>
                     {% else %}
                         <label><input type="checkbox" name="skill_public" >Public</label>
                     {% endif %}
-                    <label>Author: <input type="text" name="skill_author" maxlength="100" value="{{skill_author}}"></label>
+                    <!--  
+                    <label>Author: <input type="text" name="skill_author" maxlength="100" value="{{author}}"></label> 
+                    -->
                     <input type="button" onclick="clearform()" value="Clear">
                 </fieldset>
 

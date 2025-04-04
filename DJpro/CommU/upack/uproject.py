@@ -16,11 +16,28 @@ import json
 
 import os
 import logging
+from datetime import datetime
+
 
 class UObject():
+    '''
+        Common class for CommU atomic items: skill, contract, project (Utems)
+    '''
 
-    def __init__(self, author):
-        self.author = author
+    def __init__(self):
+        ## Author who create particular Utem
+        self.author = None
+
+        ## date & time
+        ## when particular Utem has been created
+        self.create_datetime = None
+
+        ## geosocuim - dictionary of community depends on place (Earth, city/town, village, family, ...)
+        ## in what community it works
+        self.geosocium = None
+
+        self.public = False
+
 
     def info(self):
         if isinstance(self, USkill):
@@ -42,15 +59,18 @@ class UObject():
             Set means of object's attributes by names
         """
         for key, value in kwargs.items():
-            setattr(self, key, value)
+            if key in vars(self):
+                if key == "create_datetime":
+                    setattr(self, key, datetime.fromisoformat(value))
+                else:
+                    setattr(self, key, value)
     
-    def set_public(self, author):
+    def set_public(self):
         self.public = True
-        self.author = author
     
-    def set_personal(self, author):
+    def set_personal(self):
         self.public = False
-        self.author = author
+
 
     def get_file_name(self):
         """
@@ -71,11 +91,15 @@ class UObject():
     
     def json(self):
         temp = vars(self) ## or <self.__dict__>  
+        if temp["create_datetime"]:
+            ## make dictionary from subobject 'dateTime'
+            temp["create_datetime"] = temp["create_datetime"].isoformat()
+        
         ## for USkill object
         if isinstance(self, USkill):
-            if temp["event"]:
+            if temp["_event"]:
                 ## make dictionary from subobject 'event'
-                temp["event"] = vars(temp["event"])
+                temp["_event"] = vars(temp["_event"])
         return temp
     
 
@@ -86,8 +110,8 @@ class UObject():
 
         temp = self.json()
         
-        logging.info(f"dict object: {temp} ")
-        logging.info(f"dir: {os.getcwd()} ")
+        logging.info(f"\ndict object: {temp} ")
+        logging.info(f"dir: {os.getcwd()}\n")
 
         if path: 
             _name = os.path.join(path, self.get_file_name())
@@ -151,8 +175,7 @@ class UObject():
             return False
 
 
-
-def get_uitem_info(args=None, filepath=None):
+def get_utem_info(args=None, filepath=None):
     '''
         args format: <type=name>  Ex: skill=wake-up
         Return dict with info about founded skill, user, contract or project...
@@ -168,12 +191,13 @@ def get_uitem_info(args=None, filepath=None):
                 info = []
                 match(item[0]):
                     case "skill":
-                        skill = USkill(None, item[1])
+                        skill = USkill(item[1])
                         skill.load_template(filepath)
                         for key, value in skill.json().items():
                             if (value != None) and (isinstance(value, str) and len(value) or not isinstance(value, str)):
                                 logging.info(f"make dict of object: {key} : {value}")
-                                info.append(f"{key}: {value}")
+                                if key != 'name' and key[:1] != '_' :
+                                    info.append(f"{key}: {value}")
                         # case "user": 
                         # case "contract":
                         # case "project":
@@ -183,7 +207,9 @@ def get_uitem_info(args=None, filepath=None):
                     return {"about_type": item[0],
                             "about_name": item[1],
                             "about_value": info,
-                            "about_link": f"/{item[0]}/{item[1]}"}
+                            "about_link": f"/{item[0]}/{item[1]}",
+                            "add_link": f"/event/{item[0]}={item[1]}",
+                            }
                     
         except Exception as exc:
             logging.info(f"wrong item info {args} {exc}\n")
@@ -210,30 +236,63 @@ class USkill(UObject):
     def get_public_skills():
         return USkill.public_skills
 
-    def __init__(self, owner_id, name:str, goal:str = None, description:str = None, resources:str = None):
-        super().__init__(owner_id)
+    def __init__(self, name:str, description:str = None, resources:str = None, goal:str = None):
+        super().__init__()
         
         self.name = name ## "wake up"
 
-        """resources"""
-        self.resources = resources
-
-        """how to do skill"""
+        ## how to do skill
         self.description = description 
 
-        """object of process"""
+        ## resources
+        self.resources = resources
+
+        ## object of process
         self.goal = goal ## "time"
 
+        ## -advanced parameters
+
         """moment to do """
-        self.event = None ## at 5:00 AM....
+        self._event = None ## at 5:00 AM....
 
         """average duration"""
-        self.duration = None
+        self._duration = None
         
-        self.state = "template" ## "offer" -> "deal" -> "done"
+        self._state = "template" ## "offer" -> "deal" -> "done"
 
-        self.public = False
     
+    def update(self, author, geosocium = None, public = None):
+        self.author = author
+
+        if geosocium:
+            self.geosocium = geosocium
+
+        if public:
+            self.public = public
+
+        self.create_datetime = datetime.now()
+        
+    
+    ## overload '=='
+    def __eq__(self, value):
+        if value: 
+            return (self.name == value.name and
+                    self.resources == value.resources and
+                    self.description == value.description and
+                    self.goal == value.goal
+                   )
+        return False
+    
+    ## overload '!='
+    def __ne__(self, value):
+        if value:
+            return (self.name != value.name or
+                    self.resources != value.resources or
+                    self.description != value.description or
+                    self.goal != value.goal
+                    )
+        return True
+
     def get_slug_name(self):
         return f"{slugify(self.name)}"
 
@@ -241,7 +300,7 @@ class UContract(UObject):
     """
         Deal structure with other dealer
     """
-    def __init__(self, owner_id, owner_type:str="partner", dealer_id=None):
+    def __init__(self, owner_id=None, owner_type:str="partner", dealer_id=None):
         super().__init__(owner_id)
         
 
@@ -286,14 +345,14 @@ class UProject(UObject):
         but there are always default project - life project
     """
 
-    def __init__(self, owner_id, project_name):
+    def __init__(self, project_name, owner_id=None):
         """ 
             initialisation project with:
             - project_name
             - user_id
             other attributes are None
         """
-        super().__init__(owner_id)
+        super().__init__()
         self.name = project_name
         self.target = "The point of project is: ..."
         self.project_laws = {} ## 'Do not" laws

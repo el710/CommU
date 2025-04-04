@@ -21,6 +21,8 @@ class UUser():
         self.lastname = None
         self.language = 'en'
 
+        self.geosocium = 'Earth'
+
         ## list of all user's contacts - phone book
         self.contacts = None
 
@@ -34,6 +36,11 @@ class UUser():
 
         ## searching
         self.search = None
+
+        ## skill that is been making or loaded
+        self.work_skill = None
+
+
         
 class ClientUser(UUser):
     users = [] ## login + tokens

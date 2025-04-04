@@ -1,0 +1,99 @@
+{% extends "index.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Set event</title>
+{% endblock %}
+
+{% block style %}
+    {{ block.super }}
+    <style>
+        .work-field {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+
+            /*
+            border: 1px solid blue;
+            border-radius: 8px;
+            */
+        }
+
+        .items {
+          
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        input[type='text'] {
+            width: 50px;
+        }
+
+    </style>
+{% endblock %}
+
+{% block theme %} 
+    <a href="/" class="linkback">back to Main page</a>
+    <hr>
+{% endblock %}
+
+
+{% block perform %}
+    <h3> Add skill "{{skill}}" to project "{{user_project}}": <span id="status">once</span></h3>
+    <div class="work-field">
+        <div class="items">
+            <fieldset>
+                <legend>First date</legend>
+                <input type="text" placeholder="Day">
+                <input type="text" placeholder="Month">
+                <input type="text" placeholder="Year">
+            </fieldset>
+            <fieldset>
+                <legend>Last date</legend>
+                <input type="text" placeholder="Day">
+                <input type="text" placeholder="Month">
+                <input type="text" placeholder="Year">
+            </fieldset>
+        </div>
+
+        <div class="items">
+            <fieldset>
+                <legend>Repeating</legend>
+                    <label><input type="checkbox" name="check" onclick="onlyOne(this, 'once at...')" checked> Once </label>
+                    <label><input type="checkbox" name="check" onclick="onlyOne(this, 'every day')"> Daily </label>
+                    <label><input type="checkbox" name="check" onclick="onlyOne(this, 'from monday to friday')"> Work days </label>
+                    <label><input type="checkbox" name="check" onclick="onlyOne(this, 'every ...')"> Weekly </label>
+                    <label><input type="checkbox" name="check" onclick="onlyOne(this, 'at day...')"> Monthly on day </label>
+                    <label><input type="checkbox" name="check" onclick="onlyOne(this, 'at first...')"> Monthly weekday </label>
+                    <label><input type="checkbox" name="check" onclick="onlyOne(this, 'every year at...')"> Every year </label>
+            </fieldset>
+    
+            <fieldset>
+                <legend>Remind</legend>
+                <label><input type="checkbox" > 5 Min</label>
+                <label><input type="checkbox" > 15 Min</label>
+                <label><input type="checkbox" > 30 Min</label>
+                <label><input type="checkbox" > 1 Hour</label>
+                <label><input type="checkbox" > 1 Day</label>
+            </fieldset>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block point %}
+    {{ block.super }}
+<script>
+        function onlyOne(checkbox, type) {
+            var checkboxes = document.getElementsByName("check")
+            checkboxes.forEach((item) => {
+                if (item !== checkbox) item.checked = false
+            })
+
+            document.getElementById("status").textContent = type
+        }
+
+</script>
+{% endblock %}
