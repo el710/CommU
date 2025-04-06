@@ -24,46 +24,6 @@ public_dealers = None
 
 WORK_PATH = os.path.join(os.getcwd(), "static")
 
-def make_searching_data(search):
-    '''
-        Search Utem by 'search' word 
-        Return Utem info as dict()
-    '''
-    context = {}
-
-    if search:
-        ## find skill templates    
-        skill = USkill(search)
-        if skill.load_template(WORK_PATH):
-            context.update({"skills": [skill.get_slug_name()] })
-            logging.info(f"has found skill {skill.get_slug_name()}")
-        else:
-            context.update({"skills": None})
-            
-        ## find project templates
-        project = UProject(search)
-        _path = finders.find(project.get_file_name())
-        if project.load_template(_path):
-            context.update({"project": index_search})
-        else:
-            context.update({"project": None})
-
-        ## find public contacts
-        user_dealers_list = []
-        if local_user != None:
-            if isinstance(local_user, UUser):
-                user_dealers_list.append(local_user.partners)
-                
-        if public_dealers:
-            user_dealers_list.append(public_dealers)
-                
-        if len(user_dealers_list):
-            context.update({"dealers": user_dealers_list})
-        else: 
-            context.update({"dealers": None})    
-        
-    return context
-
 
 def show_index(request, args=None):
     '''
@@ -107,7 +67,7 @@ def show_index(request, args=None):
     '''  
 
     ## show new or last searching results
-    def_context.update(make_searching_data(index_search))
+    def_context.update(find_utems(index_search, path=WORK_PATH, local_user=local_user, public_dealers=public_dealers))
     
     logging.info(f"search {index_search} ")
     def_context.update({"index_search": index_search})    
@@ -156,11 +116,12 @@ def show_userpage(request, args=None):
     '''    
 
     ## show new or last searching results
-    def_context.update(make_searching_data(local_user.search))
+    def_context.update(find_utems(local_user.search, path=WORK_PATH, local_user=local_user, public_dealers=public_dealers))
 
     logging.info(f"search {local_user.search} ")
-    def_context.update({"index_search": local_user.search})    
+    def_context.update({"index_search": local_user.search})
 
+    logging.info(f"Context: {def_context} ")
     return render(request, 'userpage.html', context=def_context)
 
 
@@ -222,6 +183,7 @@ def signup(request):
         
     def_context = {'form': form}
     return render(request, 'signup.html', context=def_context )
+
 
 def login(request):
     global local_user

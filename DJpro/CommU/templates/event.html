@@ -10,9 +10,10 @@
     <style>
         .work-field {
             display: flex;
-            flex-direction: row;
-            align-items: center;
+            flex-direction: column;
+            align-items: left;
             justify-content: center;
+            font-size: large;
 
             /*
             border: 1px solid blue;
@@ -20,15 +21,29 @@
             */
         }
 
-        .items {
-          
+        .center {
+            display: flex;
+       
+            justify-content: left;
+            border: 1px solid blue;
+            border-radius: 8px;
             padding: 10px;
+
+        }
+
+        .items {
+            padding: 5px;
+            padding-left: 20px;
             border: 1px solid #ccc;
             border-radius: 8px;
         }
 
         input[type='text'] {
             width: 50px;
+        }
+        input[type='submit'] {
+            width: 150px;
+            font-size: large;
         }
 
     </style>
@@ -41,44 +56,67 @@
 
 
 {% block perform %}
-    <h3> Add skill "{{skill}}" to project "{{user_project}}": <span id="status">once</span></h3>
     <div class="work-field">
-        <div class="items">
-            <fieldset>
-                <legend>First date</legend>
-                <input type="text" placeholder="Day">
-                <input type="text" placeholder="Month">
-                <input type="text" placeholder="Year">
-            </fieldset>
-            <fieldset>
-                <legend>Last date</legend>
-                <input type="text" placeholder="Day">
-                <input type="text" placeholder="Month">
-                <input type="text" placeholder="Year">
-            </fieldset>
+        <form method="POST" id="dataid">
+        {% csrf_token %}
+
+        <div class="center">
+            <div class="items">
+                Add skill "{{skill}}" to project "{{user_project}}": <span id="status">once</span>
+            </div>
+            <div class="items">
+                <input type="submit" value="Add" name="Add">
+            </div>            
+        </div>
+        <div class="center">
+            <div class="items">
+                <fieldset>
+                    <legend>First date</legend>
+                    <input type="date" id="start_day">
+                </fieldset>
+                <fieldset>
+                    <legend>Last date</legend>
+                    <input type="date" id="end_day" disabled>
+                 </fieldset>
+            </div>
+            <div class="items">
+                <fieldset>
+                    <legend>Repeating</legend>
+                        <label><input type="checkbox" name="check" onclick="onlyOne(this, 'once')" checked> Once </label>
+                        <label><input type="checkbox" name="check" onclick="onlyOne(this, 'daily')">Daily</label>
+                        <label><input type="checkbox" name="check" onclick="onlyOne(this, 'work')"> Work days </label>
+                       <label><input type="checkbox" name="check" onclick="onlyOne(this, 'weekly')"> Weekly </label>
+                        <label><input type="checkbox" name="check" onclick="onlyOne(this, 'atday')"> Monthly on day </label>
+                        <label><input type="checkbox" name="check" onclick="onlyOne(this, 'atweek')"> Monthly weekday </label>
+                        <label><input type="checkbox" name="check" onclick="onlyOne(this, 'yearly')"> Every year </label>
+               </fieldset>
+         </div>
         </div>
 
-        <div class="items">
-            <fieldset>
-                <legend>Repeating</legend>
-                    <label><input type="checkbox" name="check" onclick="onlyOne(this, 'once at...')" checked> Once </label>
-                    <label><input type="checkbox" name="check" onclick="onlyOne(this, 'every day')"> Daily </label>
-                    <label><input type="checkbox" name="check" onclick="onlyOne(this, 'from monday to friday')"> Work days </label>
-                    <label><input type="checkbox" name="check" onclick="onlyOne(this, 'every ...')"> Weekly </label>
-                    <label><input type="checkbox" name="check" onclick="onlyOne(this, 'at day...')"> Monthly on day </label>
-                    <label><input type="checkbox" name="check" onclick="onlyOne(this, 'at first...')"> Monthly weekday </label>
-                    <label><input type="checkbox" name="check" onclick="onlyOne(this, 'every year at...')"> Every year </label>
-            </fieldset>
-    
-            <fieldset>
-                <legend>Remind</legend>
-                <label><input type="checkbox" > 5 Min</label>
-                <label><input type="checkbox" > 15 Min</label>
-                <label><input type="checkbox" > 30 Min</label>
-                <label><input type="checkbox" > 1 Hour</label>
-                <label><input type="checkbox" > 1 Day</label>
-            </fieldset>
+        <div class="center">
+            <div class="items">
+                <fieldset>
+                    <legend>Start time</legend>
+                    <input type="time" placeholder="Hour" id="start_hour">
+                </fieldset>
+                <fieldset>
+                    <legend>Duration</legend>
+                    <input type="text" placeholder="Hours" id="end_day" disabled>
+                    <input type="text" placeholder="Minuts" id="end_month" disabled>
+                 </fieldset>
+            </div>            
+            <div class="items">
+               <fieldset>
+                    <legend>Remind</legend>
+                    <label><input type="checkbox" > 5 Min</label>
+                    <label><input type="checkbox" > 15 Min</label>
+                    <label><input type="checkbox" > 30 Min</label>
+                    <label><input type="checkbox" > 1 Hour</label>
+                   <label><input type="checkbox" > 1 Day</label>
+                </fieldset>
+            </div>
         </div>
+        </form>
     </div>
 {% endblock %}
 
@@ -91,6 +129,24 @@
             checkboxes.forEach((item) => {
                 if (item !== checkbox) item.checked = false
             })
+
+            if (type == 'once') {
+                document.getElementById('start_day'  ).disabled = false;
+                document.getElementById('start_month').disabled = false;
+                document.getElementById('start_year' ).disabled = false;
+                document.getElementById('end_day'  ).disabled = true;
+                document.getElementById('end_month').disabled = true;
+                document.getElementById('end_year' ).disabled = true;
+            }
+            else if (type == 'daily') {
+                document.getElementById('start_day'  ).disabled = true;
+                document.getElementById('start_month').disabled = true;
+                document.getElementById('start_year' ).disabled = true;
+                document.getElementById('end_day'  ).disabled = true;
+                document.getElementById('end_month').disabled = true;
+                document.getElementById('end_year' ).disabled = true;
+            }            
+            
 
             document.getElementById("status").textContent = type
         }

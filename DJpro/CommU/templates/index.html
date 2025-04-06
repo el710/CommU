@@ -291,30 +291,30 @@
 
             {% block search-result %}
                 <div class="search-result">
-                    {% if project != None or skills != None or dealers != None %}
+                    {% if find_projects != None or find_skills != None or find_dealers != None %}
                     {% if index_search != None %}
                         <p>Founded: <b>'{{index_search}}'</b>...</p>
                         <ul> <!-- list of templates-->
-                            {% if project != None %}
+                            {% if find_projects != None %}
                                 <li>there are project templates:</li>
                                 <ul>
-                                    <li>  <a href="projects/">{{project}}</a>  </li>
+                                    <li>  <a href="projects/">{{find_projects}}</a>  </li>
                                 </ul>
                             {% endif %}
 
-                            {% if skills != None %}
+                            {% if find_skills != None %}
                                 <li>there are skills:</li>
                                 <ul>
-                                    {% for item in skills %}
+                                    {% for item in find_skills %}
                                         <li> <a href="skill={{item}}">{{item}}</a> </li>
                                     {% endfor %}
                                 </ul>
                             {% endif %}
                     
-                            {% if dealers != None %}
+                            {% if find_dealers != None %}
                                 <li>there are dealers:</li>
                                 <ul>
-                                    {% for item in dealers %}
+                                    {% for item in find_dealers %}
                                         <li> <a href="dealers/">{{item}}</a>  </li>
                                     {% endfor%}
                                 </ul>

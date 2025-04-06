@@ -24,7 +24,11 @@ class UObject():
         Common class for CommU atomic items: skill, contract, project (Utems)
     '''
 
-    def __init__(self):
+    def __init__(self, name):
+
+        ## name of object
+        self.name = name  
+
         ## Author who create particular Utem
         self.author = None
 
@@ -174,6 +178,52 @@ class UObject():
             logging.info(f"can't delete file {_name} {exc}")
             return False
 
+def find_utems(key_name, path=None, local_user=None, public_dealers=None):
+    '''
+        Find by <key_name> end return public utems
+    '''
+    context = {}
+
+    logging.info(f"key {key_name}")
+    if key_name:
+        ## find skill templates    
+        skill = USkill(key_name)
+        if skill.load_template(path):
+            context.update({"find_skills": [skill.get_slug_name()] })
+            logging.info(f"has found skill {skill.get_slug_name()}")
+        else:
+            context.update({"find_skills": None})
+
+        ## find project templates
+        project = UProject(key_name)
+        if project.load_template(path):
+            context.update({"find_projects": project.get_file_name()})
+        else:
+            context.update({"find_projects": None})
+
+        ## find contract templates
+        contract = UContract(key_name)
+        if contract.load_template(path):
+            context.update({"find_contracts": contract.get_file_name()})
+        else:
+            context.update({"find_contracts": None})
+
+        ## find public contacts
+        user_dealers_list = []
+        if local_user != None:
+            # if isinstance(local_user, UUser):
+            user_dealers_list.append(local_user.partners)
+                
+        if public_dealers:
+            user_dealers_list.append(public_dealers)
+                
+        if len(user_dealers_list):
+            context.update({"find_dealers": user_dealers_list})
+        else: 
+            context.update({"find_dealers": None})    
+        
+    return context
+
 
 def get_utem_info(args=None, filepath=None):
     '''
@@ -216,6 +266,7 @@ def get_utem_info(args=None, filepath=None):
         
     return {}
 
+
 class USkill(UObject):
     """
         A simple skill that depends only on one person.
@@ -237,10 +288,8 @@ class USkill(UObject):
         return USkill.public_skills
 
     def __init__(self, name:str, description:str = None, resources:str = None, goal:str = None):
-        super().__init__()
+        super().__init__(name)
         
-        self.name = name ## "wake up"
-
         ## how to do skill
         self.description = description 
 
@@ -300,8 +349,8 @@ class UContract(UObject):
     """
         Deal structure with other dealer
     """
-    def __init__(self, owner_id=None, owner_type:str="partner", dealer_id=None):
-        super().__init__(owner_id)
+    def __init__(self, contract_name, owner_id=None, owner_type:str="partner", dealer_id=None):
+        super().__init__(contract_name)
         
 
         if dealer_id == None:
@@ -352,8 +401,8 @@ class UProject(UObject):
             - user_id
             other attributes are None
         """
-        super().__init__()
-        self.name = project_name
+        super().__init__(project_name)
+        
         self.target = "The point of project is: ..."
         self.project_laws = {} ## 'Do not" laws
         
@@ -402,10 +451,10 @@ if __name__ == "__main__":
         print("Terminal maker of skills\n")
         name = input("Input name of skill: ")
             
-        new_skill = USkill(user, name)
+        new_skill = USkill(name=name)
         new_skill.description = input(f"Describe skill '{new_skill.name}' in simple words: ")
         new_skill.goal = input(f"What goal(result) of skill '{new_skill.name}': ")
-        new_skill.event = UEvent()
+        new_skill._event = UEvent()
 
         return new_skill
 
