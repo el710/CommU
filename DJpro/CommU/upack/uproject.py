@@ -18,6 +18,14 @@ import os
 import logging
 from datetime import datetime
 
+'''
+    Data constants
+'''
+UTYPE_SKILL = 'skill'
+
+GUEST_USER = 'Guest'
+
+
 
 class UObject():
     '''
@@ -95,7 +103,7 @@ class UObject():
     
     def json(self):
         temp = vars(self) ## or <self.__dict__>  
-        if temp["create_datetime"]:
+        if isinstance(temp["create_datetime"], datetime):
             ## make dictionary from subobject 'dateTime'
             temp["create_datetime"] = temp["create_datetime"].isoformat()
         
@@ -178,6 +186,41 @@ class UObject():
             logging.info(f"can't delete file {_name} {exc}")
             return False
 
+def utemname_parse(args):
+    '''
+        find out is there a utem
+        agrs: <type=nmae>
+    '''
+    if args:
+        try:
+            ## find out type & name of Uitem
+            item = str.split(args,'=')
+            logging.info(f"args: {item} size: {len(item)}\n")
+            if item[0] in ['skill', 'contract', 'project']:
+                return item[0], item[1]
+            
+        except Exception as exc:
+            logging.info(f" wrong args: {args} {exc}\n")
+            
+    logging.info(f" wrong args: {args}\n")
+    return None, None
+
+
+def isthere_utem(type, key_name, path=None):
+    '''
+        Search for urtems by name
+    '''
+    match type:
+        case UTYPE_SKILL:
+            return USkill(key_name).load_template(path=path)
+        
+
+    contract = UContract(key_name)
+    project = UProject(key_name)
+
+    return False
+
+
 def find_utems(key_name, path=None, local_user=None, public_dealers=None):
     '''
         Find by <key_name> end return public utems
@@ -225,46 +268,36 @@ def find_utems(key_name, path=None, local_user=None, public_dealers=None):
     return context
 
 
-def get_utem_info(args=None, filepath=None):
+def get_utem_info(utem):
     '''
-        args format: <type=name>  Ex: skill=wake-up
-        Return dict with info about founded skill, user, contract or project...
+        Return dict with info about founded skill, contract or project...
     '''
- 
-    if args:
-        try:
-            ## find out type & name of Uitem
-            item = str.split(args,'=')
-            logging.info(f"about detail {item} {len(item)}\n")
+    result = {}
+    info = []
+    if isinstance(utem, USkill):
+        for key, value in utem.json().items():
+            if (value != None) and (isinstance(value, str) and len(value) or not isinstance(value, str)):
+                logging.info(f"make dict of object: {key} : {value}")
+                if key != 'name' and key[:1] != '_' :
+                    info.append(f"{key}: {value}")
+        utem_type = UTYPE_SKILL
 
-            if len(item) == 2:
-                info = []
-                match(item[0]):
-                    case "skill":
-                        skill = USkill(item[1])
-                        skill.load_template(filepath)
-                        for key, value in skill.json().items():
-                            if (value != None) and (isinstance(value, str) and len(value) or not isinstance(value, str)):
-                                logging.info(f"make dict of object: {key} : {value}")
-                                if key != 'name' and key[:1] != '_' :
-                                    info.append(f"{key}: {value}")
-                        # case "user": 
-                        # case "contract":
-                        # case "project":
-
-                logging.info(f"add object's info: {info}")
-                if len(info):
-                    return {"about_type": item[0],
-                            "about_name": item[1],
-                            "about_value": info,
-                            "about_link": f"/{item[0]}/{item[1]}",
-                            "add_link": f"/event/{item[0]}={item[1]}",
-                            }
-                    
-        except Exception as exc:
-            logging.info(f"wrong item info {args} {exc}\n")
+    elif isinstance(utem, UContract):
+        pass
+    elif isinstance(utem, UProject):
+        pass
+    else:
+        logging.info(f"wrong utem {utem}\n")
         
-    return {}
+    logging.info(f"add object's info: {info}")
+    if len(info):
+        result = {"about_type": utem_type,
+                  "about_name": utem.name,
+                  "about_value": info
+                }
+        
+    return result    
+    
 
 
 class USkill(UObject):

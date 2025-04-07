@@ -22,6 +22,7 @@ class UUser():
         self.language = 'en'
 
         self.geosocium = 'Earth'
+        self.timezone = None
 
         ## list of all user's contacts - phone book
         self.contacts = None
@@ -31,14 +32,20 @@ class UUser():
         ## list of all user's projects, include 'life' as default 
         self.projects = [UProject("Life", self.nickname), ]
 
-        ## index of project user wor with - def as Life
+        '''
+            Working context
+        '''
+        self.work_utem = None
+        ## index of project user is working with - def as Life
         self.work_project = 0
+        
+        ## skill user is working with (making, loading, adding ...)
+        self.work_skill = None
 
-        ## searching
+        ## searching utems
         self.search = None
 
-        ## skill that is been making or loaded
-        self.work_skill = None
+
 
 
         

@@ -13,6 +13,10 @@
     <p>Make new:</p>
     <form method="post">
         {% csrf_token %}
+        <a href="/skill/" class="linkbt">New skill</a>
+        <a href="/contract/" class="linkbt">New contract</a>
+        <a href="/project/" class="linkbt">New project</a>
+<!--
         {% if task == None %}
             <a href="/skill/" class="linkbt">New skill</a>
             <a href="/contract/" class="linkbt">New contract</a>
@@ -29,6 +33,7 @@
                 <a href="/project/{{task}}" class="linkbt">project</a>                            
             {% endif %}
         {% endif %}    
+-->
     </form>
     <hr>
     </div>
@@ -50,9 +55,9 @@
                     <li>{{item}}</li> 
                 {% endfor %}
             </ul>
-            <hr>
-                <a href="{{add_link}}">Add</a>
-                <a href="{{about_link}}">Edit</a>
+
+                <a href="{{add_link}}">Add to plan</a>
+                <a href="{{edit_link}}">Edit</a>
             <hr>
         {% endif %}
     </div> <!-- center-top-->
