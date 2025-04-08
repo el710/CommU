@@ -49,7 +49,7 @@
     </style>
 {% endblock %}
 
-{% block theme %} 
+{% block query %} 
     <a href="/" class="linkback">back to Main page</a>
     <hr>
 {% endblock %}
@@ -117,7 +117,20 @@
             </div>
         </div>
         </form>
-    </div>
+
+        <form method="POST" id="dataid">
+        {% csrf_token %}
+        <div class="bottom-field">
+            {% if local_user %}
+                <div class="button">
+                    {% if edit_mode %}
+                        <input type="submit" value="Delete" name="delete">
+                    {% endif %}       
+                </div>
+            {% endif %}                 
+        </div> <!-- bottom-field -->
+
+    </div> <!-- work-field -->
 {% endblock %}
 
 

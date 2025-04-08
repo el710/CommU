@@ -236,9 +236,6 @@
     </style>        
 {% endblock %}
 
-
-
-
 <body>
 
     <div class="top-bar"> <!-- Верхняя полоса -->
@@ -252,26 +249,31 @@
             </span>
         </div>
 
-        {% block application %}
+{% block application %}
+    {% if local_user %}
+        <div class="menutitle links">
+            <a href="#">[my projects] [my bank] [my store (needs, sale, exchange)] [my services (contracts)]  !new offer !new message</a>
+        </div>
+    {% endif %}
+{% endblock %}
 
-        {% endblock %}
+{% block user %}
+    {% if local_user %}
+        <div class="exit-bar">   
+            <div> {{local_user}} </div>
+                <a href="/logout/"><img src="{% static 'logout.png' %}" alt="log out"></a> 
+            </div>
+    {% else %}
+        <div class="auth-buttons">
+            <a href="/login/">Log In</a>
+            <a href="/signup/">Sign Up</a>
+        </div>
+    {% endif %}      
+{% endblock %}
 
-        {% block user %}
-            {% if local_user %}
-                <div class="exit-bar">   
-                    <div> {{local_user}} </div>
-                    <a href="/logout/"><img src="{% static 'logout.png' %}" alt="log out"></a> 
-                </div>
-            {% else %}
-                <div class="auth-buttons">
-                    <a href="/login/">Log In</a>
-                    <a href="/signup/">Sign Up</a>
-                </div>
-            {% endif %}      
-        {% endblock %}
-    </div>
+    </div> <!-- top-bar Верхняя полоса -->
 
-{% block theme %}
+{% block query %}
     <div class="input-container">
         <form method="post" >
             {% csrf_token %}
@@ -286,7 +288,18 @@
         <div class="left-sidebar">
 
             {% block make_new %}
-                <!-- reserved -->
+            {% if local_user %}
+                <div class="make-new">
+                    <p>Make new:</p>
+                    <form method="post">
+                    {% csrf_token %}
+                        <a href="/skill/" class="linkbt">New skill</a>
+                        <a href="/contract/" class="linkbt">New contract</a>
+                        <a href="/project/" class="linkbt">New project</a>
+                    </form>
+                    <hr>
+                </div> <!-- make_new -->
+            {% endif %}
             {% endblock %} <!-- make_new -->
 
             {% block search-result %}
@@ -328,7 +341,12 @@
             {%endblock%} <!-- search-result-->
             
             {% block most-used %}
-                <!-- reserved -->
+            {% if local_user %}
+                <div class="most-used">
+                    <p>Most used:</p>
+                    <hr>
+                </div> <!-- most-used -->
+            {% endif %}
             {%endblock%} <!-- most-used -->
 
             {% block public-list %}
@@ -352,7 +370,6 @@
         </div> <!-- left-sidebar -->
 
         <div class="center-content">
-
             {% block about %}
                 <div class="center-top">
                     {% if about_type %}
@@ -363,21 +380,41 @@
                         {% endfor %}
                         </ul>
 
-                        <a href="{{edit_link}}">parameters</a>
-                    {% else %}
-                        Find out what items are...
+                        {% if local_user %}
+                            <a href="{{add_link}}">Add to plan</a>
+                            <a href="{{edit_link}}">Edit</a>
+                        {% else %}
+                            <a href="{{edit_link}}">parameters</a>
+                        {% endif%}
+                        <hr>
                     {% endif %}
                 </div> <!-- center-top-->
             {%endblock%}
 
             {% block user-project-list %}
-                <!-- reserved -->
+            {% if local_user %}
+                <div class="center-bottom">
+                    Project: {{user_project}}>
+                    <ul class="project_list">
+                        <li class="project_item"><a href="#">Life</a></li>
+                    </ul>
+                </div> <!-- center-bottom -->
+            {% endif %}
             {%endblock%}
         </div> <!-- center-content -->
 
         <div class="right-sidebar">
             {% block agenda %}
-                <!-- reserved -->                
+            {% if local_user %}
+                <div class="right-bottom">
+                    Today agenda:
+                    <ul>
+                        <li>05:00 AM:  raise up [Health] </li>
+                        <li>11:00 AM Sunday: lesson [GoncharClub] {till: 13:00} </li>
+                        <li>13:30 PM Sunday: lesson [IT-TOP] {till: 14:30}</li>
+                    </ul> 
+                </div> <!-- right-bottom -->
+            {% endif %}
             {%endblock%} <!-- agenda-->
         </div> <!-- right-sidebar -->
     </div> <!-- workplace -->

@@ -290,7 +290,7 @@ def crud_skill(request, args=None):
     logging.info(f'local user: {local_user}\n')
 
     ## don't open skill page for none
-    if args == None and local_user.commu_id == None
+    if args == None and local_user.commu_id == None:
         return redirect("/")
 
     def_context = {}
