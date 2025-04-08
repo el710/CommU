@@ -31,8 +31,8 @@ urlpatterns = [
     path('', show_index), ## index page 
     path('<str:args>', show_index), ## index.html page to show choosen user/skill/contract/project
 
-    path('user/', show_userpage),
-    path('user/<str:args>', show_userpage),
+    # path('user/', show_userpage),
+    # path('user/<str:args>', show_userpage),
 
     path('info/', show_info),
     path('info/<str:args>', show_info),

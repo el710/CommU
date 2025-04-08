@@ -17,7 +17,8 @@ from datetime import datetime
 
 
 """ Operating Data"""
-local_user = None
+## There is always a user - by define 'Guest'
+local_user = UUser(GUEST_USER)
 
 public_dealers = None
 
@@ -31,33 +32,54 @@ def show_index(request, args=None):
     '''
     global local_user
 
-    ## first service start
-    if local_user == None:
-        local_user = UUser(GUEST_USER)
+    logging.info(f'get utem: {args}\n')
+    logging.info(f'local user: {local_user}\n')
 
-    ## make dictionary of args for page
-    def_context = {} 
+    ## dictionary of args for HTML page
+    def_context = {}
 
+    ## if real user
+    if local_user.commu_id:
+        def_context = {"local_user": local_user.nickname,
+                       "user_project": local_user.projects[local_user.work_project].name
+                    }
     '''
         perform args
     '''
-    utem_type, utem_name = utemname_parse(args)
+    logging.info(f'local user utem: {local_user.work_utem}\n')
+    if args == None and local_user.work_utem:
+        utem_type = local_user.work_utem[0]
+        utem_name = local_user.work_utem[1]
+    else:
+        utem_type, utem_name = utemname_parse(args)
+        
     if utem_type == UTYPE_SKILL:
         if isthere_utem(UTYPE_SKILL, utem_name, WORK_PATH):
             local_user.work_skill = USkill(utem_name)
             local_user.work_skill.load_template(WORK_PATH)
             def_context.update({"edit_link": "/skill/edit"})
-
-
-    ## add 'about' data of searching result
-    def_context.update(get_utem_info(local_user.work_skill))
+            if local_user.commu_id:
+                def_context.update({"add_link": "/event/"})
+            
+            ## add data of choosen utem
+            def_context.update(get_utem_info(local_user.work_skill))
+    
+    elif utem_type == "contract":
+        pass
+    
+    elif utem_type == "project":
+        pass
               
+    ## save what we work with
+    if utem_type and utem_name:
+        local_user.work_utem = [utem_type, utem_name]              
 
     ## Make list of public skills
     USkill.load_public_skills("static")
     logging.info(f"loaded {USkill.get_public_skills()}")
     def_context.update({'public_skills': USkill.get_public_skills()})
     
+
     logging.info(f"method {request.method} ")
     if request.method == "POST":
         ## check up searching field
@@ -68,110 +90,95 @@ def show_index(request, args=None):
     else:    
         def_context.update({'form': TaskForm()})
 
-    '''
-        Variable part of page constractor
-    '''
-    logging.info(f"user {local_user.nickname}\n")
-
-    if local_user.commu_id:          
-        return redirect('/user/')
-    '''
-        End of variable part of page constractor
-    '''  
-
     ## show new or last searching results
     def_context.update(find_utems(local_user.search, path=WORK_PATH, local_user=local_user, public_dealers=public_dealers))
     
     logging.info(f"search {local_user.search} ")
-    def_context.update({"index_search": local_user.search})    
+    def_context.update({"index_search": local_user.search})
+
+    logging.info(f"Context: {def_context} ")
  
     return render(request, 'index.html', context=def_context)
 
 
 def show_userpage(request, args=None):
-    """
-        This function shows user's page
-    """
-    global local_user
+    pass
+    # """
+    #     This function shows user's page
+    # """
+    # global local_user
 
-    if local_user.commu_id == None: 
-        return redirect('/')
+    # if local_user.commu_id == None: 
+    #     return redirect('/')
     
-    logging.info(f'get utem: {args}\n')
-    logging.info(f'local user: {local_user}\n')
-
-    ## first service start
-    if local_user == None:
-        local_user = UUser(GUEST_USER)
+    # logging.info(f'get utem: {args}\n')
+    # logging.info(f'local user: {local_user}\n')
 
     ## make dictionary of args for page
-    def_context = {}
+    # def_context = {}
 
-    '''
-        perform args
-    '''
-    logging.info(f'local user utem: {local_user.work_utem}\n')
-    if args == None and local_user.work_utem:
-        utem_type = local_user.work_utem[0]
-        utem_name = local_user.work_utem[1]
-    else:
-        utem_type, utem_name = utemname_parse(args)
+    # '''
+    #     perform args
+    # '''
+    # logging.info(f'local user utem: {local_user.work_utem}\n')
+    # if args == None and local_user.work_utem:
+    #     utem_type = local_user.work_utem[0]
+    #     utem_name = local_user.work_utem[1]
+    # else:
+    #     utem_type, utem_name = utemname_parse(args)
     
-    if utem_type == UTYPE_SKILL:
-        if isthere_utem(UTYPE_SKILL, utem_name, WORK_PATH):
-            local_user.work_skill = USkill(utem_name)
-            local_user.work_skill.load_template(WORK_PATH)
-            def_context.update({"add_link": "/event/",
-                                "edit_link": "/skill/edit"
-                               })
-            ## add 'about' data as searching result
-            def_context.update(get_utem_info(local_user.work_skill))
-    elif utem_type == "contract":
-        pass
-    elif utem_type == "project":
-        pass
+    # if utem_type == UTYPE_SKILL:
+    #     if isthere_utem(UTYPE_SKILL, utem_name, WORK_PATH):
+    #         local_user.work_skill = USkill(utem_name)
+    #         local_user.work_skill.load_template(WORK_PATH)
+    #         def_context.update({"add_link": "/event/",
+    #                             "edit_link": "/skill/edit"
+    #                            })
+    #         ## add 'about' data as searching result
+    #         def_context.update(get_utem_info(local_user.work_skill))
+    # elif utem_type == "contract":
+    #     pass
+    # elif utem_type == "project":
+    #     pass
 
-    ## save what we work with
-    if utem_type and utem_name:
-        local_user.work_utem = [utem_type, utem_name]
+    # ## save what we work with
+    # if utem_type and utem_name:
+    #     local_user.work_utem = [utem_type, utem_name]
 
+    # USkill.load_public_skills("static")
+    # logging.info(f"{USkill.get_public_skills()}\n")
+    # def_context.update({'public_skills': USkill.get_public_skills()})
 
-    USkill.load_public_skills("static")
-    logging.info(f"{USkill.get_public_skills()}\n")
-    def_context.update({'public_skills': USkill.get_public_skills()})
-
-    logging.info(f"method {request.method} ")
-    if request.method == "POST":
-        ## check up searching field
-        form = TaskForm(request.POST)
-        if form.is_valid():
-            ##remember search
-            local_user.search = form.cleaned_data['new_task']
-    else:
-        def_context.update({'form': TaskForm()})
+    # logging.info(f"method {request.method} ")
+    # if request.method == "POST":
+    #     ## check up searching field
+    #     form = TaskForm(request.POST)
+    #     if form.is_valid():
+    #         ##remember search
+    #         local_user.search = form.cleaned_data['new_task']
+    # else:
+    #     def_context.update({'form': TaskForm()})
 
     '''
         Variable part of page constractor
     '''
-    logging.info(f"user {local_user.nickname}\n")
+    # logging.info(f"user {local_user.nickname}\n")
 
+    # def_context.update({"local_user": local_user.nickname,
+    #                     "user_project": local_user.projects[local_user.work_project].name
+    #                    })
+    # '''
+    #     End of variable part of page constractor
+    # '''    
 
+    # ## show new or last searching results
+    # def_context.update(find_utems(local_user.search, path=WORK_PATH, local_user=local_user, public_dealers=public_dealers))
 
-    def_context.update({"local_user": local_user.nickname,
-                        "user_project": local_user.projects[local_user.work_project].name
-                       })
-    '''
-        End of variable part of page constractor
-    '''    
+    # logging.info(f"search {local_user.search} ")
+    # def_context.update({"index_search": local_user.search})
 
-    ## show new or last searching results
-    def_context.update(find_utems(local_user.search, path=WORK_PATH, local_user=local_user, public_dealers=public_dealers))
-
-    logging.info(f"search {local_user.search} ")
-    def_context.update({"index_search": local_user.search})
-
-    logging.info(f"Context: {def_context} ")
-    return render(request, 'userpage.html', context=def_context)
+    # logging.info(f"Context: {def_context} ")
+    # return render(request, 'userpage.html', context=def_context)
 
 
 def show_info(request, args=None):
@@ -181,13 +188,12 @@ def show_info(request, args=None):
     '''
     global local_user
 
-    ## make dictionary of args for page
+    ## dictionary of args for HTML page
     def_context = {}
-
-    logging.info(f"user {local_user}\n")
-    if local_user:          
-        def_context.update({"local_user": local_user.nickname})
     
+    if local_user.commu_id:
+        def_context = {"local_user": local_user.nickname}
+   
     if args == 'terms':
         page = 'terms.html'
     elif args == 'laws':
@@ -224,7 +230,7 @@ def signup(request):
             # if password == repassword:
             local_user = UUser(name)
             local_user.commu_id = hash(local_user.nickname)
-            return redirect('/user/') 
+            return redirect('/') 
             # else:
             #     def_context.update({'passstate': "... passwords is not equal. Try again."})
 
@@ -255,7 +261,7 @@ def login(request):
             # if password == repassword:
             local_user = UUser(name)
             local_user.commu_id = hash(local_user.nickname)
-            return redirect('/user/') 
+            return redirect('/') 
             # else:
             #     def_context.update({'passstate': "... passwords is not equal. Try again."})
 
@@ -268,7 +274,7 @@ def login(request):
 def logout(request):
     global local_user
 
-    local_user = None
+    local_user = UUser(GUEST_USER)
     return redirect('/')
     # return render(request, 'index.html')        
             
@@ -284,22 +290,20 @@ def crud_skill(request, args=None):
     logging.info(f'local user: {local_user}\n')
 
     ## don't open skill page for none
-    if (args == None and local_user.commu_id == None) or local_user == None:
+    if args == None and local_user.commu_id == None
         return redirect("/")
 
     def_context = {}
 
-    if local_user and local_user.commu_id:
-        def_context.update({"local_user": local_user.nickname,
-                            "user_project": local_user.work_project
-                        })
+    if local_user.commu_id:
+        def_context.update({"local_user": local_user.nickname})
+
 
     if args: ## there is only one argument - 'edit'
         def_context.update(local_user.work_skill.json())
         logging.info(f"load template {def_context}\n")
-    else:
-        local_user.work_skill = None
-
+    # else:
+    #     local_user.work_skill = None
     
     if request.method == "POST":
         if request.POST.get('delete'):
@@ -333,11 +337,7 @@ def crud_skill(request, args=None):
                     logging.info(f"new skill {local_user.work_skill}")
                     local_user.work_skill.save_as_template(True, WORK_PATH)
             
-        if local_user.commu_id:
-            return redirect("/user/")
-        else:
-            return redirect("/")
-     
+        return redirect("/")
     else:
         form = SkillForm(request.POST)
     
@@ -406,7 +406,7 @@ def crud_event(request, args=None):
     logging.info(f'open skill: {args}\n')
     logging.info(f'local user: {local_user}\n')
 
-    if local_user==None or local_user.commu_id==None:
+    if local_user.commu_id==None:
         return redirect("/")
 
     '''
@@ -414,7 +414,7 @@ def crud_event(request, args=None):
     '''
     def_context = {}
     
-    if local_user and local_user.commu_id:
+    if local_user.commu_id:
         def_context.update({"local_user": local_user.nickname,
                             "user_project": local_user.projects[local_user.work_project].name,
                             "user_skill": local_user.work_skill.name
@@ -430,7 +430,7 @@ def crud_event(request, args=None):
         logging.info(f'read event\n')
         pass
     else:
-            logging.info(f"wrong args to crud_event {args}\n")
+        logging.info(f"wrong args to crud_event {args}\n")
 
 
     logging.info(f"request.method {request.method} \n")
@@ -451,7 +451,8 @@ def crud_event(request, args=None):
     else:
         form = SkillForm(request.POST)
 
-    
     def_context.update({"form": form})
-    
+
+    logging.info(f"def_context {def_context} \n")
+
     return render(request, "event.html", context=def_context)
