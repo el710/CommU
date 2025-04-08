@@ -10,7 +10,7 @@
     <style>
         .work-field {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: left;
             justify-content: center;
             font-size: large;
@@ -62,22 +62,24 @@
 
         <div class="center">
             <div class="items">
-                <input type="submit" value="Add to plan" name="Add">
+                <input type="submit" value="Add to..." name="Add">
             </div>            
             <div class="items">
-                skill "{{user_skill}}" to project "{{user_project}}": <span id="status">once</span>
+                project "{{user_project}}" "{{user_skill}}": <label id="status">once {{start_date_day}}.{{start_date_month}}.{{start_date_year}} at {{start_time}}</label>
             </div>
         </div>
         <div class="center">
             <div class="items">
                 <fieldset>
-                    <legend>First date</legend>
-                    <input type="date" id="start_day">
+                    <legend>Date</legend>
+                    <input type="date" id="start_date" value="{{start_date_year}}-{{start_date_month}}-{{start_date_day}}">
                 </fieldset>
+                <!--
                 <fieldset>
                     <legend>Last date</legend>
-                    <input type="date" id="end_day" disabled>
+                    <input type="date" id="end_day" disabled value="{{start_date_year}}-{{start_date_month}}-{{start_date_day}}">
                  </fieldset>
+                -->
             </div>
             <div class="items">
                 <fieldset>
@@ -85,10 +87,10 @@
                         <label><input type="checkbox" name="check" onclick="onlyOne(this, 'once')" checked> Once </label>
                         <label><input type="checkbox" name="check" onclick="onlyOne(this, 'daily')">Daily</label>
                         <label><input type="checkbox" name="check" onclick="onlyOne(this, 'work')"> Work days </label>
-                       <label><input type="checkbox" name="check" onclick="onlyOne(this, 'weekly')"> Weekly </label>
+                        <label><input type="checkbox" name="check" onclick="onlyOne(this, 'weekly')"> Weekly </label>
                         <label><input type="checkbox" name="check" onclick="onlyOne(this, 'atday')"> Monthly on day </label>
                         <label><input type="checkbox" name="check" onclick="onlyOne(this, 'atweek')"> Monthly weekday </label>
-                        <label><input type="checkbox" name="check" onclick="onlyOne(this, 'yearly')"> Every year </label>
+                        <label><input type="checkbox" name="check" onclick="onlyOne(this, 'yearly')"> Annually </label>
                </fieldset>
          </div>
         </div>
@@ -97,12 +99,11 @@
             <div class="items">
                 <fieldset>
                     <legend>Start time</legend>
-                    <input type="time" placeholder="Hour" id="start_hour">
+                    <input type="time" id="start_time" value={{start_time}}>
                 </fieldset>
                 <fieldset>
-                    <legend>Duration</legend>
-                    <input type="text" placeholder="Hours" id="end_day" disabled>
-                    <input type="text" placeholder="Minuts" id="end_month" disabled>
+                    <legend>End time</legend>
+                    <input type="time" id="end_time" value={{end_time}}>
                  </fieldset>
             </div>            
             <div class="items">
@@ -143,25 +144,51 @@
                 if (item !== checkbox) item.checked = false
             })
 
+            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const weekdays = ["Sunday", "Monday", "Tuesday", "Wednsday", "Thirsday", "Friday", "Saturday"];
+
+
+            var start_time = document.getElementById("start_time").value;
+            console.log(start_time);
+            console.log(Number(start_time.slice(0, 2)), Number(start_time.slice(3, 6)));
+
+            var start_date = new Date(document.getElementById("start_date").value);
+            start_date.setHours(Number(start_time.slice(0, 2)));
+            start_date.setMinutes(Number(start_time.slice(3, 6)));
+            console.log(start_date);
+            
+            var start_year = start_date.getFullYear();
+            console.log(start_year);
+            var start_day = start_date.getDate();
+            console.log(start_day);
+            var start_month = start_date.getMonth() + 1;
+            console.log(start_month);
+            
+            var start_weekday = start_date.getDay();
+            
+            var start_hour = start_date.getHours();
+            var start_minute = start_date.getMinutes();
+
+
             if (type == 'once') {
-                document.getElementById('start_day'  ).disabled = false;
-                document.getElementById('start_month').disabled = false;
-                document.getElementById('start_year' ).disabled = false;
-                document.getElementById('end_day'  ).disabled = true;
-                document.getElementById('end_month').disabled = true;
-                document.getElementById('end_year' ).disabled = true;
+                document.getElementById("status").innerHTML = "once " + start_day +' '+ months[start_month] +' '+ start_year +" at "+ start_hour+":"+start_minute;
             }
             else if (type == 'daily') {
-                document.getElementById('start_day'  ).disabled = true;
-                document.getElementById('start_month').disabled = true;
-                document.getElementById('start_year' ).disabled = true;
-                document.getElementById('end_day'  ).disabled = true;
-                document.getElementById('end_month').disabled = true;
-                document.getElementById('end_year' ).disabled = true;
+                document.getElementById("status").innerHTML = "everyday at "+ start_hour+":"+start_minute;
             }            
-            
-
-            document.getElementById("status").textContent = type
+            else if (type == 'work') {
+                document.getElementById("status").innerHTML = "from Monday to Friday at "+ start_hour+":"+start_minute;
+            }
+            else if (type == 'weekly') {
+                document.getElementById("status").innerHTML = "every " + weekdays[start_weekday] +" at "+ start_hour+":"+start_minute;
+            }            
+            else if (type == 'atday') {
+                document.getElementById("status").innerHTML = "every month in " + start_day+"'th" + " at "+ start_hour+":"+start_minute;
+            }            
+            else if (type == 'yearly') {
+                document.getElementById("status").innerHTML = "every year " + start_day +' '+ months[start_month] + " at "+ start_hour+":"+start_minute;
+            }
+      
         }
 
 </script>
