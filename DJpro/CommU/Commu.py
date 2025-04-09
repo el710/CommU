@@ -68,8 +68,6 @@ if __name__ == '__main__':
     os.system('cls')
     print("Vivat Academia")
 
-    
-
     logging.basicConfig(level=logging.INFO,
                         format="%(levelname)s: | %(module)s  %(funcName)s():   %(message)s") ##, filename="log.log")
     

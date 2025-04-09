@@ -232,7 +232,46 @@
             
             border: 1px solid black;
             border-radius: 4px;
-        }    
+        }
+
+        //-----------------------------------------
+        // Menu-TREE of Utems
+        ul, #menu-tree {
+            list-style-type: none;
+        }
+
+        #menu-tree {
+            margin: 0;
+            padding: 0;
+        } /**/
+
+        .caret {
+            cursor: pointer;
+            user-select: none; /* Prevent text selection */
+        }
+        
+        /* Create the caret/arrow with a unicode, and style it */
+        .caret::before {
+            content: "\25B6";
+            color: black;
+            display: inline-block;
+            margin-right: 6px;
+        }
+        /* Rotate the caret/arrow icon when clicked on (using JavaScript) */
+        .caret-down::before {
+            transform: rotate(90deg);
+        }
+
+/*        .nested {
+            display: none; /* Hide the nested list */
+        }/**/
+
+        /* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
+        .active {
+            display: block;
+        }
+        //-----------------------------------------
+
     </style>        
 {% endblock %}
 
@@ -351,19 +390,26 @@
 
             {% block public-list %}
                 <div class="public-list">
-                    <p>Public:</p>
-                    <ul>
-                        <li>users</li>
-                        <li>projects</li>
-                        <li>contracts</li>
-                        <li>skills</li>
+                    <ul id="menu-tree">
+                        <li><span class="caret"">Contacts</span>
+                            <ul class="nested">
+                                <li>User1</li>
+                                <li>User2</li>
+                            </ul>
+                        </li>
+                        <li><span class="caret">Projects</span>
+                        </li>
+                        <li><span class="caret">Contracts</span>
+                        </li>
+                        <li><span class="caret">Skills</span>
                             {% if public_skills != None %}
-                                <ul>
+                                <ul class="nested">
                                     {% for item in public_skills %}
                                         <li> <a href="skill={{item}}">{{item}}</a> </li>
                                     {% endfor %}
                                 </ul>
                             {% endif %}
+                        </li>
                     </ul>
                 </div>
             {%endblock%}
@@ -439,6 +485,24 @@
 
     {% block point %}
     <script>
+
+        var toggler = document.getElementsByClassName("caret");
+        var i;
+        
+        for (i = 0; i < toggler.length; i++) {
+            toggler[i].addEventListener("click", function() {
+                this.parentElement.querySelector(".nested").classList.toggle("active");
+                this.classList.toggle("caret-down");
+                });
+        } 
+
+/*
+        function menutree(this) {
+            console.log(this)
+            this.parentElement.querySelector(".nested").classList.toggle("active");
+            this.classList.toggle("caret-down");
+        } 
+*/
         function clearform() {
             document.getElementById("dataid").reset()
         }

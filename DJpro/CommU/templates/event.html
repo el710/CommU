@@ -62,10 +62,10 @@
 
         <div class="center">
             <div class="items">
-                <input type="submit" value="Add to..." name="Add">
+                <input type="submit" value="Add to..." name="set">
             </div>            
             <div class="items">
-                project "{{user_project}}" "{{user_skill}}": <label id="status">once {{start_date_day}}.{{start_date_month}}.{{start_date_year}} at {{start_time}}</label>
+                project "{{user_project}}" skill "{{user_skill}}": <label id="status">once {{start_date_day}} {{start_month_name}} {{start_date_year}} at {{start_time}}</label>
             </div>
         </div>
         <div class="center">
@@ -89,8 +89,22 @@
                         <label><input type="checkbox" name="check" onclick="onlyOne(this, 'work')"> Work days </label>
                         <label><input type="checkbox" name="check" onclick="onlyOne(this, 'weekly')"> Weekly </label>
                         <label><input type="checkbox" name="check" onclick="onlyOne(this, 'atday')"> Monthly on day </label>
-                        <label><input type="checkbox" name="check" onclick="onlyOne(this, 'atweek')"> Monthly weekday </label>
+                        <label><input type="checkbox" name="check" onclick="onlyOne(this, 'atweek')" disabled> Monthly weekday </label>
                         <label><input type="checkbox" name="check" onclick="onlyOne(this, 'yearly')"> Annually </label>
+                    <div>
+                        <hr>
+                        <label><input type="checkbox" name="check" onclick="onlyOne(this, 'weekdays')">Week days</label>
+                        <fieldset>
+                            
+                            <label><input type="checkbox" class="w_days" name="w_monday"   onclick="addwday()" disabled>Monday</label>
+                            <label><input type="checkbox" class="w_days" name="w_tuesday"  onclick="addwday()" disabled>Tuesday</label>
+                            <label><input type="checkbox" class="w_days" name="w_wednsday" onclick="addwday()" disabled>Wednsday</label>
+                            <label><input type="checkbox" class="w_days" name="w_thirsday" onclick="addwday()" disabled>Thirsday</label>
+                            <label><input type="checkbox" class="w_days" name="w_friday"   onclick="addwday()" disabled>Friday</label>
+                            <label><input type="checkbox" class="w_days" name="w_saturday" onclick="addwday()" disabled>Saturday</label>
+                            <label><input type="checkbox" class="w_days" name="w_sunday"   onclick="addwday()" disabled>Sunday</label>
+                        </fieldset>
+                    </div>
                </fieldset>
          </div>
         </div>
@@ -103,7 +117,8 @@
                 </fieldset>
                 <fieldset>
                     <legend>End time</legend>
-                    <input type="time" id="end_time" value={{end_time}}>
+                    <input type="time" id="end_time" value={{end_time}} disabled>
+                    <label><input type="checkbox" onclick="addendtime(this)"> duration </label>
                  </fieldset>
             </div>            
             <div class="items">
@@ -138,40 +153,88 @@
 {% block point %}
     {{ block.super }}
 <script>
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const weekdays = ["Sunday", "Monday", "Tuesday", "Wednsday", "Thirsday", "Friday", "Saturday"];
+
+    //console.log({{start_weekday}})
+
+    function addendtime(checkbox) {
+        document.getElementById("end_time").disabled = !checkbox.checked;
+    }
+
+    function check_week_day() {
+        var checkboxes = document.getElementsByClassName("w_days")
+        var ind = {{start_weekday}}
+        checkboxes[ind].checked = true
+    }
+
+
+    function addwday() {
+        var checkboxes = document.getElementsByClassName("w_days")
+        var day_list = "in "
+        
+        for (let i = 0; i < 7; i++) {
+            checkboxes[i].disabled = false
+
+            if (checkboxes[i].checked == true){
+                if (i == 6) ind = 0; else ind = i + 1;
+                if (day_list == "in ") div = ''; else div = ', ';
+                
+                day_list = day_list +div+ weekdays[ind];
+            }     
+        }
+
+        var start_time = document.getElementById("start_time").value;
+        var start_hour = start_time.slice(0, 2);
+        var start_minute = start_time.slice(3, 6);
+                
+        document.getElementById("status").innerHTML = day_list +" at "+ start_hour+":"+start_minute;
+    }
+
+    function closewday(){
+        var checkboxes = document.getElementsByClassName("w_days");             
+        for (let i = 0; i < 7; i++) checkboxes[i].disabled = true;
+    }
+
         function onlyOne(checkbox, type) {
-            var checkboxes = document.getElementsByName("check")
-            checkboxes.forEach((item) => {
-                if (item !== checkbox) item.checked = false
-            })
+            if (checkbox.checked == false) { checkbox.checked = true } // one at least must be checked
+            else {
+                if (type != 'weekdays') closewday()
 
-            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            const weekdays = ["Sunday", "Monday", "Tuesday", "Wednsday", "Thirsday", "Friday", "Saturday"];
-
+                var checkboxes = document.getElementsByName("check")
+            
+                checkboxes.forEach((item) => {
+                    if (item !== checkbox) item.checked = false;
+                })
+            }
 
             var start_time = document.getElementById("start_time").value;
-            console.log(start_time);
-            console.log(Number(start_time.slice(0, 2)), Number(start_time.slice(3, 6)));
+            //console.log(start_time);
+            //console.log(Number(start_time.slice(0, 2)), Number(start_time.slice(3, 6)));
+
+            var start_hour = start_time.slice(0, 2);
+            var start_minute = start_time.slice(3, 6);
 
             var start_date = new Date(document.getElementById("start_date").value);
-            start_date.setHours(Number(start_time.slice(0, 2)));
-            start_date.setMinutes(Number(start_time.slice(3, 6)));
-            console.log(start_date);
+            //start_date.setHours(Number(start_time.slice(0, 2)));
+            //start_date.setMinutes(Number(start_time.slice(3, 6)));
+            //console.log(start_date);
             
             var start_year = start_date.getFullYear();
-            console.log(start_year);
+            //console.log(start_year);
             var start_day = start_date.getDate();
-            console.log(start_day);
+            //console.log(start_day);
             var start_month = start_date.getMonth() + 1;
-            console.log(start_month);
+            //console.log(start_month);
             
             var start_weekday = start_date.getDay();
             
-            var start_hour = start_date.getHours();
-            var start_minute = start_date.getMinutes();
+            //var start_hour = start_date.getHours();
+            //var start_minute = start_date.getMinutes();
 
 
             if (type == 'once') {
-                document.getElementById("status").innerHTML = "once " + start_day +' '+ months[start_month] +' '+ start_year +" at "+ start_hour+":"+start_minute;
+                document.getElementById("status").innerHTML = "once " + start_day +' '+ months[start_month-1] +' '+ start_year +" at "+ start_hour+":"+start_minute;
             }
             else if (type == 'daily') {
                 document.getElementById("status").innerHTML = "everyday at "+ start_hour+":"+start_minute;
@@ -186,10 +249,12 @@
                 document.getElementById("status").innerHTML = "every month in " + start_day+"'th" + " at "+ start_hour+":"+start_minute;
             }            
             else if (type == 'yearly') {
-                document.getElementById("status").innerHTML = "every year " + start_day +' '+ months[start_month] + " at "+ start_hour+":"+start_minute;
+                document.getElementById("status").innerHTML = "every year " + start_day +' '+ months[start_month-1] + " at "+ start_hour+":"+start_minute;
             }
-      
+            else if (type == 'weekdays') { addwday(); }
+                  
         }
 
+        check_week_day()
 </script>
 {% endblock %}

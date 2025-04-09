@@ -423,25 +423,28 @@ def crud_event(request, args=None):
     if args == None: ## create event
         logging.info(f'create event\n')
         now = datetime.now(tz=local_user.timezone)
+        
         start_date_day = f"{now.day:02d}"
         start_date_month = f"{now.month:02d}"
+        start_month_name = now.strftime("%B")
         start_date_year = now.year
-        start_weekday = now.weekday
+        start_weekday = now.weekday()
 
         end_date = f"{now.year}-{now.month:02d}-{now.day:02d}"
+        start_time = f"{now.hour:02d}:{now.minute:02d}"
 
-        start_time = f"{now.hour}:{now.minute}"
-        def_context.update({"start_date_day": start_date_day,
-                            "start_date_month": start_date_month,
-                            "start_date_year": start_date_year,
-                            "start_wekday": start_weekday,
-                            "end_date": end_date,
-                            "start_time": start_time,
-                            "end_time": start_time
-                          })
     elif args == 'edit': ## read & edit event 
         logging.info(f'read event\n')
-        pass
+        now = datetime(year=2025, month=1, day=1, hour=8, minute=0, tzinfo=local_user.timezone)
+
+        start_date_day = f"{now.day:02d}"
+        start_date_month = f"{now.month:02d}"
+        start_month_name = now.strftime("%B")
+        start_date_year = now.year
+        start_weekday = now.weekday()
+
+        end_date = f"{now.year}-{now.month:02d}-{now.day:02d}"
+        start_time = f"{now.hour:02d}:{now.minute:02d}"
     else:
         logging.info(f"wrong args to crud_event {args}\n")
 
@@ -463,8 +466,18 @@ def crud_event(request, args=None):
                 
     else:
         form = SkillForm(request.POST)
+        
 
     def_context.update({"form": form})
+    def_context.update({"start_date_day": start_date_day,
+                        "start_date_month": start_date_month,
+                        "start_month_name": start_month_name,
+                        "start_date_year": start_date_year,
+                        "start_weekday": start_weekday,
+                        "end_date": end_date,
+                        "start_time": start_time,
+                        "end_time": start_time
+                        })
 
     logging.info(f"def_context {def_context} \n")
 
