@@ -44,18 +44,42 @@ class SkillForm(forms.Form):
     skill_desc = forms.CharField(label="Description:", max_length=300,widget=forms.Textarea, required=False)
     skill_goal = forms.CharField(label="Goal:", max_length=300, widget=forms.Textarea, required=False)
     skill_public = forms.BooleanField(label="Public", required=False)
-    skill_author = forms.CharField(label="Author:", max_length=100,  required=False)
+    ##skill_author = forms.CharField(label="Author:", max_length=100,  required=False)
 
 
 class EventForm(forms.Form):
     '''
         Form of Event's parameters
     '''
-    start_date = forms.CharField(max_length=100,  required=True)
+    start_date = forms.CharField(max_length=100)
+    
+    once = forms.BooleanField(label="Once", required=False)
     '''
-    skill_resources = forms.CharField(label="Resources:", max_length=300, widget=forms.Textarea, required=False)
-    skill_desc = forms.CharField(label="Description:", max_length=300,widget=forms.Textarea, required=False)
-    skill_goal = forms.CharField(label="Goal:", max_length=300, widget=forms.Textarea, required=False)
-    skill_public = forms.BooleanField(label="Public", required=False)
-    skill_author = forms.CharField(label="Author:", max_length=100,  required=False)
-    '''
+    daily = forms.BooleanField()
+    work = forms.BooleanField()
+    weekly = forms.BooleanField()
+    atday = forms.BooleanField()
+    atweek = forms.BooleanField()
+    atweek = forms.BooleanField()
+    yearly = forms.BooleanField()
+    wdays = forms.BooleanField()
+
+    w_monday = forms.BooleanField()
+    w_tuesday = forms.BooleanField()
+    w_wednsday = forms.BooleanField()
+    w_thirsday = forms.BooleanField()
+    w_friday = forms.BooleanField()
+    w_saturday = forms.BooleanField()
+    w_sunday = forms.BooleanField()
+
+    start_time = forms.CharField(max_length=100)
+    end_time = forms.CharField(max_length=100)
+    duration = forms.BooleanField()
+
+    rem_5 = forms.BooleanField()
+    rem_15 = forms.BooleanField()
+    rem_30 = forms.BooleanField()
+    rem_1h = forms.BooleanField()
+    rem_1d = forms.BooleanField()
+'''
+

@@ -460,7 +460,33 @@ def crud_event(request, args=None):
         if form.is_valid(): ## is_valid also makes cleaned_data
             ## take data
             start_date = form.cleaned_data['start_date']
-            logging.info(f'start_date: {start_date}\n')
+            once = form.cleaned_data['start_date']
+            daily = form.cleaned_data['start_date']
+            work = form.cleaned_data['start_date']
+            weekly = form.cleaned_data['start_date']
+            atday = form.cleaned_data['start_date']
+            atweek = form.cleaned_data['start_date']
+            atweek = form.cleaned_data['start_date']
+            yearly = form.cleaned_data['start_date']
+            wdays = form.cleaned_data['start_date']
+
+            w_monday = form.cleaned_data['start_date']
+            w_tuesday = form.cleaned_data['start_date']
+            w_wednsday = form.cleaned_data['start_date']
+            w_thirsday = form.cleaned_data['start_date']
+            w_friday = form.cleaned_data['start_date']
+            w_saturday = form.cleaned_data['start_date']
+            w_sunday = form.cleaned_data['start_date']
+
+            start_time = form.cleaned_data['start_date']
+            end_time = form.cleaned_data['start_date']
+            duration = form.cleaned_data['start_date']
+
+            rem_5 = form.cleaned_data['start_date']
+            rem_15 = form.cleaned_data['start_date']
+            rem_30 = form.cleaned_data['start_date']
+            rem_1h = form.cleaned_data['start_date']
+            rem_1d = form.cleaned_data['start_date'] 
 
             if request.POST.get('set'):
                 
@@ -469,6 +495,7 @@ def crud_event(request, args=None):
                 logging.info(f'exit by set\n')
                 return redirect('/')
             elif request.POST.get('delete'):
+                ## delete skill from current project
                 ## !!! FIRST check parents (project, contract) state !!!
                 ## skill._event = None
                 ## skill._state = 'template'
@@ -477,7 +504,7 @@ def crud_event(request, args=None):
                 return redirect('/')
                 
     else:
-        form = EventForm(request.POST)
+       form = EventForm()
         
 
     def_context.update({"form": form})

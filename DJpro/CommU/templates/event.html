@@ -94,16 +94,16 @@
             <div class="items">
                 <fieldset>
                     <legend>Repeating</legend>
-                        <label><input type="checkbox" name="check" onclick="onlyOne(this, 'once')" checked> Once </label>
-                        <label><input type="checkbox" name="check" onclick="onlyOne(this, 'daily')">Daily</label>
-                        <label><input type="checkbox" name="check" onclick="onlyOne(this, 'work')"> Work days </label>
-                        <label><input type="checkbox" name="check" onclick="onlyOne(this, 'weekly')"> Weekly </label>
-                        <label><input type="checkbox" name="check" onclick="onlyOne(this, 'atday')"> Monthly on day </label>
-                        <label><input type="checkbox" name="check" onclick="onlyOne(this, 'atweek')" disabled> Monthly weekday </label>
-                        <label><input type="checkbox" name="check" onclick="onlyOne(this, 'yearly')"> Annually </label>
+                        <label><input type="checkbox" class="check" name="once"  onclick="onlyOne(this, 'once')" checked>Once</label>
+                        <label><input type="checkbox" class="check" name="daily" onclick="onlyOne(this, 'daily')">Daily</label>
+                        <label><input type="checkbox" class="check" name="work"  onclick="onlyOne(this, 'work')">Work days</label>
+                        <label><input type="checkbox" class="check" name="weekly"  onclick="onlyOne(this, 'weekly')">Weekly</label>
+                        <label><input type="checkbox" class="check" name="atday"   onclick="onlyOne(this, 'atday')">Monthly on day</label>
+                        <label><input type="checkbox" class="check" name="atweek" onclick="onlyOne(this, 'atweek')" disabled>Monthly weekday</label>
+                        <label><input type="checkbox" class="check" name="yearly" onclick="onlyOne(this, 'yearly')">Annually</label>
                     <div>
                         <hr>
-                        <label><input type="checkbox" name="check" onclick="onlyOne(this, 'weekdays')">Week days</label>
+                        <label><input type="checkbox" class="check" name="wdays"  onclick="onlyOne(this, 'weekdays')">Week days</label>
                         <fieldset>
                             
                             <label><input type="checkbox" class="w_days" name="w_monday"   onclick="addwday()" disabled>Monday</label>
@@ -123,22 +123,22 @@
             <div class="items">
                 <fieldset>
                     <legend>Start time</legend>
-                    <input type="time" id="start_time" value={{start_time}} oninput="set_event_string()">
+                    <input type="time" id="start_time" name="start_time" value={{start_time}} oninput="set_event_string()">
                 </fieldset>
                 <fieldset>
                     <legend>End time</legend>
-                    <input type="time" id="end_time" value={{end_time}} oninput="set_event_string()" disabled>
-                    <label><input type="checkbox" onclick="addendtime(this)"> duration </label>
+                    <input type="time" id="end_time" name="end_time" value={{end_time}} oninput="set_event_string()" disabled>
+                    <label><input type="checkbox" name="duration" onclick="addendtime(this)"> duration </label>
                  </fieldset>
             </div>            
             <div class="items">
                <fieldset>
                     <legend>Remind</legend>
-                    <label><input type="checkbox" > 5 Min</label>
-                    <label><input type="checkbox" > 15 Min</label>
-                    <label><input type="checkbox" > 30 Min</label>
-                    <label><input type="checkbox" > 1 Hour</label>
-                   <label><input type="checkbox" > 1 Day</label>
+                    <label><input type="checkbox" name="rem_5"> 5 Min</label>
+                    <label><input type="checkbox" name="rem_15"> 15 Min</label>
+                    <label><input type="checkbox" name="rem_30"> 30 Min</label>
+                    <label><input type="checkbox" name="rem_1h"> 1 Hour</label>
+                    <label><input type="checkbox" name="rem_1d"> 1 Day</label>
                 </fieldset>
             </div>
         </div>
@@ -243,14 +243,18 @@
     }
 
     function onlyOne(checkbox, type) {
+        console.log('onlyOne...', type)
+
         if (checkbox.checked == false) { checkbox.checked = true } // one at least must be checked
         else {
                 if (type != 'weekdays') closewday()
 
-                var checkboxes = document.getElementsByName("check")
-                checkboxes.forEach((item) => {
-                    if (item !== checkbox) item.checked = false;
-                })
+                var checkboxes = document.getElementsByClassName("check")
+                console.log('onlyOne...', checkboxes)
+                console.log('onlyOne...', checkboxes.length)
+                for (let i = 0; i < checkboxes.length; i++) {
+                    if (checkboxes[i] !== checkbox) checkboxes[i].checked = false;
+                }
             }
         event_type = type
         set_event_string()
