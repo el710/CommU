@@ -15,16 +15,14 @@ The composition of Homo representatives will never change. This is the basis of 
 Mankind will always represent a mixture of individuals of different levels of consciousness from Buddha to Hitler.
 None level of civilization will change this!**
 
-Here is the one vision of solve:
+Here is the one vision:
 An effective unification model is the coexistence of multiple business groups of people.
 And it is much better if the groups are smaller and the number of groups is larger.
 In a smaller group, people are more free
 
 
-*Now the Time for information technologies!!!*
-
 **Main task: Make helpfull tools to manage men own daily bussiness, community bussiness, mankind bussiness & projects - "DEAL conception":**
-- there are no just 'events' - there are paces in businesses (exemple: go to shop -> make order, ...; go to cinema -> buy movie session, ...; park walking -> health project step, ...)
+- there are no just 'events' - there are paces in businesses (example: go to shop -> make order, ...; go to cinema -> buy movie session, ...; park walking -> health project step, ...)
 - "customer", "hired worker", "partner" models (business partner, idea partner, life parther...)
 - help to manage tasks and resourses,
 - help to cooperate in solving problems,
@@ -122,7 +120,7 @@ TODO:
 ### 5. Source menegment
    - money menegment
      - simple accounting with contacts
-     - monetary system (e-bank) in time units: min., hour, (exchange 1 hour = xxx $)
+     - monetary system (e-bank) 
    - staff menegment
      - stock in/out
      - synchronize buys/exchange/throw out

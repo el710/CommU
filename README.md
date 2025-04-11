@@ -26,7 +26,7 @@ Human! Protect the Flame of Prometheus from the darkness of ignorance.
 
    1.4 Make directory: 'p-CommU'
 
-   1.5 Make Git repository:
+   1.5 Make Git repository in 'p-CommU':
    ```
    git init
    ```

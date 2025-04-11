@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .djforms import (SignUpForm, TaskForm, SkillForm)
+from .djforms import (SignUpForm, TaskForm, SkillForm, EventForm)
 
 from django.contrib.staticfiles import finders
 
@@ -404,7 +404,7 @@ def crud_event(request, args=None):
     global local_user
 
     logging.info(f'open skill: {args}\n')
-    logging.info(f'local user: {local_user}\n')
+    logging.info(f'local user: {local_user.nickname}\n')
 
     if local_user.commu_id==None:
         return redirect("/")
@@ -435,6 +435,7 @@ def crud_event(request, args=None):
 
     elif args == 'edit': ## read & edit event 
         logging.info(f'read event\n')
+        ## !!! take from user
         now = datetime(year=2025, month=1, day=1, hour=8, minute=0, tzinfo=local_user.timezone)
 
         start_date_day = f"{now.day:02d}"
@@ -451,21 +452,32 @@ def crud_event(request, args=None):
 
     logging.info(f"request.method {request.method} \n")
     if request.method == "POST":
-        form = SkillForm(request.POST)
+        form = EventForm(request.POST)
 
         logging.info(f"valid POST {form.is_valid()} \n")
         logging.info(f'data: {form.cleaned_data}\n')
 
         if form.is_valid(): ## is_valid also makes cleaned_data
             ## take data
+            start_date = form.cleaned_data['start_date']
+            logging.info(f'start_date: {start_date}\n')
 
             if request.POST.get('set'):
-                pass
+                
+
+                
+                logging.info(f'exit by set\n')
+                return redirect('/')
             elif request.POST.get('delete'):
-                pass
+                ## !!! FIRST check parents (project, contract) state !!!
+                ## skill._event = None
+                ## skill._state = 'template'
+
+                logging.info(f'exit by delete\n')
+                return redirect('/')
                 
     else:
-        form = SkillForm(request.POST)
+        form = EventForm(request.POST)
         
 
     def_context.update({"form": form})
