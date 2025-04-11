@@ -1,119 +1,53 @@
+Copyright (c) 2024 Kim Oleg <theel710@gmail.com>
+
 # Project "CommU"
-*Human!
-       Protect the Flame of Prometheus from the darkness of ignorance.*
-
-## Prolog
-The needs to unite humans in one community passed test of time with main results:
-- Humans never change
-- Any life management model can be effective only for the small groups, where all the processes are obvious for everyone.
-
-```
-Large group can't be managed effectively
-```
-**Main problem:
-The composition of Homo representatives will never change. This is the basis of nature's genetics.
-Mankind will always represent a mixture of individuals of different levels of consciousness from Buddha to Hitler.
-None level of civilization will change this!**
-
-Here is the one vision of solve:
-An effective unification model is the coexistence of multiple business groups of people.
-And it is much better if the groups are smaller and the number of groups is larger.
-In a smaller group, people are more free
-
-
-*Now the Time for information technologies!!!*
-
-**Main task: Make helpfull tools to manage men own daily bussiness, community bussiness, mankind bussiness & projects - "DEAL conception":**
-- there are no just 'events' - there are paces in businesses (exemple: go to shop -> make order, ...; go to cinema -> buy movie session, ...; park walking -> health project step, ...)
-- "customer", "hired worker", "partner" models (business partner, idea partner, life parther...)
-- help to manage tasks and resourses,
-- help to cooperate in solving problems,
-- C.R.U.D. patterns of solvings
-- give an understanding, that nobody but only human itself can solve his problems in right ways,
-- give an understanding, that only human itself must choice & set the rules,
-
-
-*"All I want to say is that: they don't really care about us..."*
-*Michael Jackson*
-
-*"Imagine there's no countries..."*
-*John Lennon*
-
-## Technical tasks (TT)
-### 1. Interface
-1.1 Web Site
-- geo location
-- geo socium
-- date, time, timezone
-- about
-- rules
-- contacts
-- sign up/ log in/ log out
-  
-1.1.1 Welcome page
-- query for public skills, projects, dealers
-- lists of public skills, projects, dealers for reading only
-- 
-1.1.2 User's page
-- query for public skills, projects, dealers
-- tree of user's active projects - contracts - paces
-- user's today agenda (schedule)
-- lists of public skills, projects, dealers for getting
-
-1.2 Telegramm
-
-### 2. Dial menegment
-- default user's project - Life
+Human! Protect the Flame of Prometheus from the darkness of ignorance.
 
 ---
-TODO:
-- all user data must be scrambled
+## CommU - Life-service
+ - make & manage your projects;
+ - interface: Web-site, telegram bot, mobile application;
 
-### 1. Interface
-    - settings
+---
 
 
-### 2. Link menegment
-    - Base of contacts (User class)
-    - "deal" cooperation only (no promises)
-    - business communities
-     -- <partner> - <hired worker> - <customer> deals (no any cheif or general e.t.c.)
-     -- online mandat (for residencial / functionality ...) on/off by realtime votes of funcional members
-     -- membership in project (mandat) by:
-       ---- invitation
-       ---- accepting the laws
-              - access by passing through the Test as anonimous: 
-                there are questions with answers of candidat.
-                answers should correspond to laws.
-                Confirm by func memebers
-                Question & answers - is a passport of member
-       ---- laws - set of tabus (Don't ...)
-         - common and local
-       ---- rules - "how to do"
+  [1. Setup & run ](#Setup-&-run)
+  [2. How it works ](#How-it-works)
+    [- Создание события](#создание-события)
 
-### 3. Dial menegment
-    - Base of skills/projects templates
-    - control time, credit/debet of dial with Bases
-    - base of process makets (reglaments, typical solves, technologies)
+---
+## Setup & run
+   1.1 Setup Python interpreter 3.11.9 (https://www.python.org/)
+   1.2 Setup git 2.38.0 (https://git-scm.com/)
+   1.3 Setup VS Code (https://code.visualstudio.com)
+   1.4 Make directory: 'p-CommU'
+   1.5 Make Git repository:
+   ```
+   > git init
+   ```
+   1.6 Pull project from GitHub.com:
+   ```
+  > git remote add origin https://github.com/el710/CommU
+  > git pull --set-upstream origin main
+   ```
+   1.7 Setup Telegram token in 'id_bot.py'
+   ```
+      tel_token = "xxxxxxxxxxx:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+   ```
+   1.5 Open directory 'DJPRO' in VSCode.
+   1.6 Choose python interpreter: 'p-CommU\DJpro\.venv\Scripts\python.exe'
+   ```
+    - ctrl + shift + p - python select interpreter
+   ```
+  
+   1.7 Start Commu.py
+  
+ ---
+  ## How it works
+  
+  >main process: Commu.py
 
-### 4. Time menegment
-4.1 Planing ( S.M.A.R.T.)
-    - calendar of events (event - part of deal with someone else)
-    - daily event list
-    - dials events
-
-    - no dealer events
-    - bases for week days
-    - location referance
-    - route & navigation
-4.2 Control
-    - alarms
-    - combination plans between people
-
-### 5. Source menegment
-   - money menegment
-     - simple accounting with contacts
-     - monetary system (e-bank) in time units: min., hour, (exchange 1 hour = xxx $)
-   - staff menegment
-     - stock in/out
-     - synchronize buys/exchange/throw out
+There are Utems:
+- skill: one man process, skill + schedule = event;
+- contract: dial of two users - credit skills + debet skills;
+- project: partners, hired workers, customers, events, contracts, budget, store.
