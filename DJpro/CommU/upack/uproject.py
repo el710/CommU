@@ -21,8 +21,6 @@ from datetime import datetime
 '''
     Data constants
 '''
-UTYPE_SKILL = 'skill'
-
 GUEST_USER = 'Guest'
 
 
@@ -196,17 +194,16 @@ def utemname_parse(args):
             ## find out type & name of Uitem
             item = str.split(args,'=')
             logging.info(f"args: {item} size: {len(item)}\n")
-            if item[0] in ['skill', 'contract', 'project']:
-                return item[0], item[1]
-            
+            if item[0] =='skill': return type(USkill), item[1]
+            if item[0] =='contract': return type(UContract), item[1]
+            if item[0] =='project': return type(UProject), item[1]            
         except Exception as exc:
             logging.info(f" wrong args: {args} {exc}\n")
-            
-    logging.info(f" wrong args: {args}\n")
+
     return None, None
 
 
-def isthere_utem(type, key_name, path=None):
+def isthere_utem(key_name, path=None):
     '''
         Search for urtems by name
     '''
@@ -277,15 +274,15 @@ def get_utem_info(utem):
     if isinstance(utem, USkill):
         for key, value in utem.json().items():
             if (value != None) and (isinstance(value, str) and len(value) or not isinstance(value, str)):
-                logging.info(f"make dict of object: {key} : {value}")
+                # logging.info(f"make dict of object: {key} : {value}")
                 if key != 'name' and key[:1] != '_' :
                     info.append(f"{key}: {value}")
-        utem_type = UTYPE_SKILL
+        utem_type = 'skill'
 
     elif isinstance(utem, UContract):
-        pass
+        utem_type = 'contract'
     elif isinstance(utem, UProject):
-        pass
+        utem_type = 'project'
     else:
         logging.info(f"wrong utem {utem}\n")
         
@@ -427,7 +424,7 @@ class UProject(UObject):
         but there are always default project - life project
     """
 
-    def __init__(self, project_name, owner_id=None):
+    def __init__(self, project_name):
         """ 
             initialisation project with:
             - project_name
@@ -440,7 +437,8 @@ class UProject(UObject):
         self.project_laws = {} ## 'Do not" laws
         
         """Lists of user contracts"""
-        self.partner_contracts = None ## list of class UContract() objects
+        self.partner_contracts = None ## ??? list of class UContract() objects
+        
         self.customer_contracts = None ## list of class UContract() objects
         self.worker_contracts = None ## list of class UContract() objects
 

@@ -74,7 +74,12 @@
                 <input type="submit" value="Add to..." name="set">
             </div>            
             <div class="items">
-                project "{{user_project}}" skill "{{user_skill}}": <label id="status">once {{start_date_day}} {{start_month_name}} {{start_date_year}} at {{start_time}}</label>
+                {% if user_contract %}
+                    contract "{{user_contract}}" skill "{{user_skill}}": 
+                {% else %}
+                    project "{{user_project}}" skill "{{user_skill}}": 
+                {% endif %}
+                <label id="status">once {{start_date_day}} {{start_month_name}} {{start_date_year}} at {{start_time}}</label>
             </div>
         </div>
         <div class="center">
@@ -128,17 +133,17 @@
                 <fieldset>
                     <legend>End time</legend>
                     <input type="time" id="end_time" name="end_time" value={{end_time}} oninput="set_event_string()" disabled>
-                    <label><input type="checkbox" name="duration" onclick="addendtime(this)"> duration </label>
+                    <label><input type="checkbox" name="duration" onclick="addendtime(this)">Duration</label>
                  </fieldset>
             </div>            
             <div class="items">
                <fieldset>
                     <legend>Remind</legend>
-                    <label><input type="checkbox" name="rem_5"> 5 Min</label>
-                    <label><input type="checkbox" name="rem_15"> 15 Min</label>
-                    <label><input type="checkbox" name="rem_30"> 30 Min</label>
-                    <label><input type="checkbox" name="rem_1h"> 1 Hour</label>
-                    <label><input type="checkbox" name="rem_1d"> 1 Day</label>
+                    <label><input type="checkbox" name="rem_5">5 Min</label>
+                    <label><input type="checkbox" name="rem_15">15 Min</label>
+                    <label><input type="checkbox" name="rem_30">30 Min</label>
+                    <label><input type="checkbox" name="rem_1h">1 Hour</label>
+                    <label><input type="checkbox" name="rem_1d">1 Day</label>
                 </fieldset>
             </div>
         </div>

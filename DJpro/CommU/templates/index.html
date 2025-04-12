@@ -71,7 +71,7 @@
             border-radius: 5px;
             */
         }
-
+/*
         .ul {
             list-style-type: circle;
             padding: 0;
@@ -86,7 +86,7 @@
             color: #333;
             font-size: 18px;
         }        
-
+*/
         .left-sidebar {
             /*
             background-color: #f4f4f4;
@@ -241,7 +241,7 @@
         }
 
         #menu-tree {
-            margin: 0;
+            margin: 15px;
             padding: 0;
         } /**/
 
@@ -262,7 +262,7 @@
             transform: rotate(90deg);
         }
 
-/*        .nested {
+        .nested {
             display: none; /* Hide the nested list */
         }/**/
 
@@ -291,7 +291,7 @@
 {% block application %}
     {% if local_user %}
         <div class="menutitle links">
-            <a href="#">[my projects] [my bank] [my store (needs, sale, exchange)] [my services (contracts)]  !new offer !new message</a>
+            <b>Projects</b> <a href="#">[Bank]</a> <a href="#">[Store]</a> <a href="#">[Offers]</a>
         </div>
     {% endif %}
 {% endblock %}
@@ -329,7 +329,7 @@
             {% block make_new %}
             {% if local_user %}
                 <div class="make-new">
-                    <p>Make new:</p>
+                    <p>Make:</p>
                     <form method="post">
                     {% csrf_token %}
                         <a href="/skill/" class="linkbt">New skill</a>
@@ -430,8 +430,9 @@
                             <a href="{{add_link}}">Add to plan</a>
                             <a href="{{edit_link}}">Edit</a>
                         {% else %}
-                            <a href="{{edit_link}}">parameters</a>
+                            <a href="{{edit_link}}">Parameters</a>
                         {% endif%}
+                        <a href="/close">Close</a>
                         <hr>
                     {% endif %}
                 </div> <!-- center-top-->
@@ -441,9 +442,29 @@
             {% if local_user %}
                 <div class="center-bottom">
                     Project: {{user_project}}>
-                    <ul class="project_list">
-                        <li class="project_item"><a href="#">Life</a></li>
-                    </ul>
+                    
+                    <ul id="menu-tree">
+                        <li><span><a href="/pro_project=Life">Life</a></span>
+                            <ul >
+                                <li><span class="caret">SubProjects</span>
+                                    <ul class="nested">
+                                        <li>Project 1</li>
+                                        <li>Project 2</li>
+                                    </ul>
+                                </li>
+                                <li><span class="caret">Contracts</span>
+                                    <ul class="nested">
+                                        <li>Contract 1</li>
+                                        <li>Contract 2</li>
+                                    </ul>
+                                </li> 
+
+                                <li><a href="/event/edit"> Event1</a></li>
+                                <li>Event2</li>
+                                <li>Event3</li>
+                            </ul>
+                        </li><!-- Life -->
+                    </ul> <!-- menu-tree -->
                 </div> <!-- center-bottom -->
             {% endif %}
             {%endblock%}

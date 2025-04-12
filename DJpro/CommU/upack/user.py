@@ -30,17 +30,22 @@ class UUser():
         self.partners = None
 
         ## list of all user's projects, include 'life' as default 
-        self.projects = [UProject("Life", self.nickname), ]
+        self.projects = [UProject("Life"), ]
 
         '''
             Working context
         '''
-        self.work_utem = None
-        ## index of project user is working with - def as Life
-        self.work_project = 0
+        ## pointer on template utem - to make new, to load, to watch parameters, to add to project, work on index page
+        self.temp_utem = None ## 
+
+        ## pointer on current project user is working with - def as Life
+        self.pro_project = 0
+
+        ## pointer to current contract from projects user is working with
+        self.pro_contract = None
         
-        ## skill user is working with (making, loading, adding ...)
-        self.work_skill = None
+        ## pointer to current skill from projects user is working with
+        self.pro_skill = None
 
         ## searching utems
         self.search = None

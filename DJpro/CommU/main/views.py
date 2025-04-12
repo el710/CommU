@@ -24,7 +24,6 @@ public_dealers = None
 
 WORK_PATH = os.path.join(os.getcwd(), "static")
 
-
 def show_index(request, args=None):
     '''
         Make index.html
@@ -41,38 +40,46 @@ def show_index(request, args=None):
     ## if real user
     if local_user.commu_id:
         def_context = {"local_user": local_user.nickname,
-                       "user_project": local_user.projects[local_user.work_project].name
+                       "user_project": local_user.projects[local_user.pro_project].name
                     }
     '''
         perform args
     '''
-    logging.info(f'local user utem: {local_user.work_utem}\n')
-    if args == None and local_user.work_utem:
-        utem_type = local_user.work_utem[0]
-        utem_name = local_user.work_utem[1]
-    else:
+    logging.info(f'local user utem: {local_user.temp_utem}\n')
+
+    if args == "close":
+        local_user.temp_utem = None
+        return redirect("/")
+
+    if args: ## new utem has choosen
         utem_type, utem_name = utemname_parse(args)
-        
-    if utem_type == UTYPE_SKILL:
-        if isthere_utem(UTYPE_SKILL, utem_name, WORK_PATH):
-            local_user.work_skill = USkill(utem_name)
-            local_user.work_skill.load_template(WORK_PATH)
-            def_context.update({"edit_link": "/skill/edit"})
-            if local_user.commu_id:
-                def_context.update({"add_link": "/event/"})
-            
-            ## add data of choosen utem
-            def_context.update(get_utem_info(local_user.work_skill))
+
+        logging.info(f'{utem_type}: {type(USkill)} {type(UContract)} {type(UProject)} \n')
+
+        if utem_type == type(USkill):
+            local_user.temp_utem = USkill(utem_name)
+        elif utem_type == type(UContract):
+            local_user.temp_utem = UContract(utem_name)
+        elif utem_type == type(UProject):
+            local_user.temp_utem = UProject(utem_name)            
     
-    elif utem_type == "contract":
-        pass
-    
-    elif utem_type == "project":
-        pass
-              
-    ## save what we work with
-    if utem_type and utem_name:
-        local_user.work_utem = [utem_type, utem_name]              
+        logging.info(f'local user utem: {local_user.temp_utem}\n')
+
+        if not local_user.temp_utem.load_template(WORK_PATH):
+            local_user.temp_utem = None
+
+    ## add data of choosen utem
+    if local_user.temp_utem:
+        def_context.update(get_utem_info(local_user.temp_utem))
+        if isinstance(local_user.temp_utem, USkill):
+            def_context.update({"edit_link": "/skill/temp"})
+            def_context.update({"add_link": "/event/"})
+
+        if isinstance(local_user.temp_utem, UContract):
+            pass
+        if isinstance(local_user.temp_utem, UProject):
+            pass
+
 
     ## Make list of public skills
     USkill.load_public_skills("static")
@@ -282,7 +289,9 @@ def logout(request):
 def crud_skill(request, args=None):
     '''
         make Skill's page for C.R.U.D. in skill.html 
-        args: 'edit' or None
+        args: None - create new skill
+              'temp' - work with local_user.temp_  skill
+              'event' - open event(skill+schedule) from user's project
     '''
     global local_user
 
@@ -299,16 +308,17 @@ def crud_skill(request, args=None):
         def_context.update({"local_user": local_user.nickname})
 
 
-    if args: ## there is only one argument - 'edit'
-        def_context.update(local_user.work_skill.json())
+    if args == 'temp': 
+        def_context.update(local_user.temp_utem.json())
         logging.info(f"load template {def_context}\n")
-    # else:
-    #     local_user.work_skill = None
+    elif args == "event":
+        def_context.update(local_user.pro_skill.json())
+    
     
     if request.method == "POST":
         if request.POST.get('delete'):
-            local_user.work_skill.delete_template(WORK_PATH)
-            local_user.work_skill = None
+            local_user.temp_utem.delete_template(WORK_PATH)
+            local_user.temp_utem = None
 
         elif request.POST.get('save'):
             form = SkillForm(request.POST)
@@ -328,14 +338,14 @@ def crud_skill(request, args=None):
                                    description=skill_desc,
                                    goal=skill_goal)
                 
-                if local_user.work_skill == None or local_user.work_skill != new_skill:
-                    local_user.work_skill = new_skill
-                    local_user.work_skill.update(author=local_user.nickname,
+                if local_user.temp_utem == None or local_user.work_skill != new_skill:
+                    local_user.temp_utem = new_skill
+                    local_user.temp_utem.update(author=local_user.nickname,
                                                  geosocium=local_user.geosocium,
                                                  public=skill_public
                                                 )
-                    logging.info(f"new skill {local_user.work_skill}")
-                    local_user.work_skill.save_as_template(True, WORK_PATH)
+                    logging.info(f"new skill {local_user.temp_utem}")
+                    local_user.temp_utem.save_as_template(True, WORK_PATH)
             
         return redirect("/")
     else:
@@ -416,12 +426,17 @@ def crud_event(request, args=None):
     
     if local_user.commu_id:
         def_context.update({"local_user": local_user.nickname,
-                            "user_project": local_user.projects[local_user.work_project].name,
-                            "user_skill": local_user.work_skill.name
+                            "user_project": local_user.projects[local_user.pro_project].name
                           })
+        if local_user.pro_contract:
+            def_context.update({"user_contract": local_user.pro_contract})
+
     
-    if args == None: ## create event
+    if args == None: ## create(add) event
         logging.info(f'create event\n')
+
+        def_context.update({"user_skill": local_user.temp_utem.name})
+
         now = datetime.now(tz=local_user.timezone)
         
         start_date_day = f"{now.day:02d}"
@@ -436,6 +451,9 @@ def crud_event(request, args=None):
     elif args == 'edit': ## read & edit event 
         logging.info(f'read event\n')
         ## !!! take from user
+        if local_user.pro_skill:
+            def_context.update({"user_skill": local_user.pro_skill.name})
+
         now = datetime(year=2025, month=1, day=1, hour=8, minute=0, tzinfo=local_user.timezone)
 
         start_date_day = f"{now.day:02d}"
