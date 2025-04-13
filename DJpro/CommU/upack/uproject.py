@@ -305,18 +305,6 @@ class USkill(UObject):
     public_skills = None
     find_static = None
 
-    def load_public_skills(subdir=None):
-        if USkill.find_static == None:
-            os.chdir(subdir)
-            USkill.find_static = os.curdir
-        
-        ## logging.info(f"dir {os.listdir()}")
-        files = [f for f in os.listdir() if os.path.isfile(f) and ".stp" in os.path.splitext(f)]
-        USkill.public_skills = [os.path.splitext(f)[0] for f in files]
-    
-    def get_public_skills():
-        return USkill.public_skills
-
     def __init__(self, name:str, description:str = None, resources:str = None, goal:str = None):
         super().__init__(name)
         
@@ -341,11 +329,12 @@ class USkill(UObject):
 
     
     def update(self, author, geosocium = None, public = None):
-        self.author = author
+        self.executor = author
 
         if geosocium:
             self.geosocium = geosocium
 
+        ## should to save it in templates library
         if public:
             self.public = public
 
@@ -374,37 +363,44 @@ class USkill(UObject):
 
     def get_slug_name(self):
         return f"{slugify(self.name)}"
+    
+    def load_public_skills(subdir=None):
+        if USkill.find_static == None:
+            os.chdir(subdir)
+            USkill.find_static = os.curdir
+        
+        ## logging.info(f"dir {os.listdir()}")
+        files = [f for f in os.listdir() if os.path.isfile(f) and ".stp" in os.path.splitext(f)]
+        USkill.public_skills = [os.path.splitext(f)[0] for f in files]
+    
+    def get_public_skills():
+        return USkill.public_skills
+    
 
 class UContract(UObject):
     """
-        Deal structure with other dealer
+        Deal structure for dealers
     """
-    def __init__(self, contract_name, owner_id=None, owner_type:str="partner", dealer_id=None):
+    def __init__(self, contract_name, customer_id, provider_id):
         super().__init__(contract_name)
         
+        ## should to save it in templates library
+        self.public = False
 
-        if dealer_id == None:
-            self.dealer_id = owner_id
-        else:
-            self.dealer_id = dealer_id
-
-        self.owner_part = owner_type ## "partner", "customer", "worker"
+        self.customer = customer_id
+        self.provider = provider_id
 
         self.state = "template" ## "offer", "deal", "closed"
 
-        """owner owe to dealer"""
-        self.credit_offers = [] ## offers are waiting for acception
-        self.credit_skills = [] ## 
+        ## Dealers skills
+        self.customer_credit = []
+        self.customer_debet = []
 
-        """owner demand from dealer"""
-        self.debet_offers = [] ## offers are waiting for acception
-        self.debet_skills = []
+        self.provider_credit = []
+        self.provider_debet = []
 
         """deals history"""
         self.history = []
-
-        self.public = False
-
 
 
 class UProject(UObject):
@@ -424,30 +420,39 @@ class UProject(UObject):
         but there are always default project - life project
     """
 
-    def __init__(self, project_name):
+    def __init__(self, starter_user, project_name=None):
         """ 
             initialisation project with:
             - project_name
             - user_id
             other attributes are None
         """
-        super().__init__(project_name)
-        
-        self.target = "The point of project is: ..."
+        if project_name:
+            super().__init__(project_name)
+        else:
+            super().__init__(f"{starter_user.nickname}'s project")
+
+        self.target = "Project's point:..."
         self.project_laws = {} ## 'Do not" laws
-        
-        """Lists of user contracts"""
-        self.partner_contracts = None ## ??? list of class UContract() objects
-        
-        self.customer_contracts = None ## list of class UContract() objects
-        self.worker_contracts = None ## list of class UContract() objects
 
         """Lists of other Users in project"""
-        self.partners = None
-        self.customers = None
-        self.workers = None
+        self.partners = [starter_user]
+        self.customers = []
+        self.workers = []
+        
+        """Lists of subprojects"""
+        self.subprojects = [] ## list of class UProject() objects
 
+        """Lists of contracts"""
+        self.contracts = [] ## list of class UContract() objects
+        
+        """Lists of skills"""
+        self.skills = [] ## list of class USkill() objects
+
+        ## should to save it in templates library
         self.public = False
+
+        
 
     def add_(self):
         """

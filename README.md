@@ -52,17 +52,18 @@ Human! Protect the Flame of Prometheus from the darkness of ignorance.
  
 ## How it works
 
-### Enter point
->main process: Commu.py
+>### Enter point
+main process: Commu.py
 
-### Definitions
+>### Definitions
 There are Utems:
 - skill: one man process, skill + schedule = event;
 - contract: dial of two users - credit events + debet events;
 - project: partners, hired workers, customers, events, contracts, subprojects, budget, store.
 
-### User's properties
+>### User's properties
 
 temp_utem: pointer on template utem - to make new, to load, to watch parameters, to add to project
 pro_project: pointer on current project
-pro_contrat
+pro_contract: pointer on current contract
+pro_skill: pointer on current event

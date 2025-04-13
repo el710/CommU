@@ -23,16 +23,13 @@ from django.contrib import admin
 from django.urls import path
 
 from main.views import (show_index, show_info,
-                        signup, login, logout, show_userpage, 
+                        signup, login, logout, 
                         crud_skill, crud_contract, crud_project, crud_event)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', show_index), ## index page 
     path('<str:args>', show_index), ## index.html page to show choosen user/skill/contract/project
-
-    # path('user/', show_userpage),
-    # path('user/<str:args>', show_userpage),
 
     path('info/', show_info),
     path('info/<str:args>', show_info),

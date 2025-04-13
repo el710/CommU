@@ -2,6 +2,8 @@
     Copyright (c) 2024 Kim Oleg <theel710@gmail.com>
 """
 
+import logging
+
 try:
     from .uproject import UProject
 except:
@@ -27,10 +29,8 @@ class UUser():
         ## list of all user's contacts - phone book
         self.contacts = None
 
-        self.partners = None
-
         ## list of all user's projects, include 'life' as default 
-        self.projects = [UProject("Life"), ]
+        self.projects = [UProject(self.nickname, "Life"), ]
 
         '''
             Working context
@@ -49,6 +49,9 @@ class UUser():
 
         ## searching utems
         self.search = None
+    
+    def save_event(self, kwargs):
+        logging.info(f'data: {kwargs}\n')
 
 
 

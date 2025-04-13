@@ -31,8 +31,8 @@ def show_index(request, args=None):
     '''
     global local_user
 
-    logging.info(f'get utem: {args}\n')
-    logging.info(f'local user: {local_user}\n')
+    # logging.info(f'get utem: {args}\n')
+    # logging.info(f'local user: {local_user}\n')
 
     ## dictionary of args for HTML page
     def_context = {}
@@ -45,7 +45,7 @@ def show_index(request, args=None):
     '''
         perform args
     '''
-    logging.info(f'local user utem: {local_user.temp_utem}\n')
+    # logging.info(f'local user utem: {local_user.temp_utem}\n')
 
     if args == "close":
         local_user.temp_utem = None
@@ -54,7 +54,7 @@ def show_index(request, args=None):
     if args: ## new utem has choosen
         utem_type, utem_name = utemname_parse(args)
 
-        logging.info(f'{utem_type}: {type(USkill)} {type(UContract)} {type(UProject)} \n')
+        # logging.info(f'{utem_type}: {type(USkill)} {type(UContract)} {type(UProject)} \n')
 
         if utem_type == type(USkill):
             local_user.temp_utem = USkill(utem_name)
@@ -63,7 +63,7 @@ def show_index(request, args=None):
         elif utem_type == type(UProject):
             local_user.temp_utem = UProject(utem_name)            
     
-        logging.info(f'local user utem: {local_user.temp_utem}\n')
+        # logging.info(f'local user utem: {local_user.temp_utem}\n')
 
         if not local_user.temp_utem.load_template(WORK_PATH):
             local_user.temp_utem = None
@@ -83,7 +83,7 @@ def show_index(request, args=None):
 
     ## Make list of public skills
     USkill.load_public_skills("static")
-    logging.info(f"loaded {USkill.get_public_skills()}")
+    # logging.info(f"loaded {USkill.get_public_skills()}")
     def_context.update({'public_skills': USkill.get_public_skills()})
     
 
@@ -100,92 +100,12 @@ def show_index(request, args=None):
     ## show new or last searching results
     def_context.update(find_utems(local_user.search, path=WORK_PATH, local_user=local_user, public_dealers=public_dealers))
     
-    logging.info(f"search {local_user.search} ")
+    # logging.info(f"search {local_user.search} ")
     def_context.update({"index_search": local_user.search})
 
-    logging.info(f"Context: {def_context} ")
+    # logging.info(f"Context: {def_context} ")
  
     return render(request, 'index.html', context=def_context)
-
-
-def show_userpage(request, args=None):
-    pass
-    # """
-    #     This function shows user's page
-    # """
-    # global local_user
-
-    # if local_user.commu_id == None: 
-    #     return redirect('/')
-    
-    # logging.info(f'get utem: {args}\n')
-    # logging.info(f'local user: {local_user}\n')
-
-    ## make dictionary of args for page
-    # def_context = {}
-
-    # '''
-    #     perform args
-    # '''
-    # logging.info(f'local user utem: {local_user.work_utem}\n')
-    # if args == None and local_user.work_utem:
-    #     utem_type = local_user.work_utem[0]
-    #     utem_name = local_user.work_utem[1]
-    # else:
-    #     utem_type, utem_name = utemname_parse(args)
-    
-    # if utem_type == UTYPE_SKILL:
-    #     if isthere_utem(UTYPE_SKILL, utem_name, WORK_PATH):
-    #         local_user.work_skill = USkill(utem_name)
-    #         local_user.work_skill.load_template(WORK_PATH)
-    #         def_context.update({"add_link": "/event/",
-    #                             "edit_link": "/skill/edit"
-    #                            })
-    #         ## add 'about' data as searching result
-    #         def_context.update(get_utem_info(local_user.work_skill))
-    # elif utem_type == "contract":
-    #     pass
-    # elif utem_type == "project":
-    #     pass
-
-    # ## save what we work with
-    # if utem_type and utem_name:
-    #     local_user.work_utem = [utem_type, utem_name]
-
-    # USkill.load_public_skills("static")
-    # logging.info(f"{USkill.get_public_skills()}\n")
-    # def_context.update({'public_skills': USkill.get_public_skills()})
-
-    # logging.info(f"method {request.method} ")
-    # if request.method == "POST":
-    #     ## check up searching field
-    #     form = TaskForm(request.POST)
-    #     if form.is_valid():
-    #         ##remember search
-    #         local_user.search = form.cleaned_data['new_task']
-    # else:
-    #     def_context.update({'form': TaskForm()})
-
-    '''
-        Variable part of page constractor
-    '''
-    # logging.info(f"user {local_user.nickname}\n")
-
-    # def_context.update({"local_user": local_user.nickname,
-    #                     "user_project": local_user.projects[local_user.work_project].name
-    #                    })
-    # '''
-    #     End of variable part of page constractor
-    # '''    
-
-    # ## show new or last searching results
-    # def_context.update(find_utems(local_user.search, path=WORK_PATH, local_user=local_user, public_dealers=public_dealers))
-
-    # logging.info(f"search {local_user.search} ")
-    # def_context.update({"index_search": local_user.search})
-
-    # logging.info(f"Context: {def_context} ")
-    # return render(request, 'userpage.html', context=def_context)
 
 
 def show_info(request, args=None):
@@ -211,7 +131,6 @@ def show_info(request, args=None):
         page = 'about.html'
 
     return render(request, page, context=def_context)
-
 
 
 def signup(request):
@@ -247,6 +166,7 @@ def signup(request):
     def_context = {'form': form}
     return render(request, 'signup.html', context=def_context )
 
+
 def login(request):
     global local_user
     """
@@ -277,6 +197,7 @@ def login(request):
         
     def_context = {'form': form}
     return render(request, 'login.html', context=def_context )
+
 
 def logout(request):
     global local_user
@@ -476,35 +397,33 @@ def crud_event(request, args=None):
         logging.info(f'data: {form.cleaned_data}\n')
 
         if form.is_valid(): ## is_valid also makes cleaned_data
-            ## take data
-            start_date = form.cleaned_data['start_date']
-            once = form.cleaned_data['start_date']
-            daily = form.cleaned_data['start_date']
-            work = form.cleaned_data['start_date']
-            weekly = form.cleaned_data['start_date']
-            atday = form.cleaned_data['start_date']
-            atweek = form.cleaned_data['start_date']
-            atweek = form.cleaned_data['start_date']
-            yearly = form.cleaned_data['start_date']
-            wdays = form.cleaned_data['start_date']
-
-            w_monday = form.cleaned_data['start_date']
-            w_tuesday = form.cleaned_data['start_date']
-            w_wednsday = form.cleaned_data['start_date']
-            w_thirsday = form.cleaned_data['start_date']
-            w_friday = form.cleaned_data['start_date']
-            w_saturday = form.cleaned_data['start_date']
-            w_sunday = form.cleaned_data['start_date']
-
-            start_time = form.cleaned_data['start_date']
-            end_time = form.cleaned_data['start_date']
-            duration = form.cleaned_data['start_date']
-
-            rem_5 = form.cleaned_data['start_date']
-            rem_15 = form.cleaned_data['start_date']
-            rem_30 = form.cleaned_data['start_date']
-            rem_1h = form.cleaned_data['start_date']
-            rem_1d = form.cleaned_data['start_date'] 
+            local_user.save_event(form.cleaned_data)
+            ## we  have got it all of these in form.cleaned_data {}
+            # start_date = form.cleaned_data['start_date']
+            # once = form.cleaned_data['start_date']
+            # daily = form.cleaned_data['start_date']
+            # work = form.cleaned_data['start_date']
+            # weekly = form.cleaned_data['start_date']
+            # atday = form.cleaned_data['start_date']
+            # atweek = form.cleaned_data['start_date']
+            # atweek = form.cleaned_data['start_date']
+            # yearly = form.cleaned_data['start_date']
+            # wdays = form.cleaned_data['start_date']
+            # w_monday = form.cleaned_data['start_date']
+            # w_tuesday = form.cleaned_data['start_date']
+            # w_wednsday = form.cleaned_data['start_date']
+            # w_thirsday = form.cleaned_data['start_date']
+            # w_friday = form.cleaned_data['start_date']
+            # w_saturday = form.cleaned_data['start_date']
+            # w_sunday = form.cleaned_data['start_date']
+            # start_time = form.cleaned_data['start_date']
+            # end_time = form.cleaned_data['start_date']
+            # duration = form.cleaned_data['start_date']
+            # rem_5 = form.cleaned_data['start_date']
+            # rem_15 = form.cleaned_data['start_date']
+            # rem_30 = form.cleaned_data['start_date']
+            # rem_1h = form.cleaned_data['start_date']
+            # rem_1d = form.cleaned_data['start_date'] 
 
             if request.POST.get('set'):
                 
