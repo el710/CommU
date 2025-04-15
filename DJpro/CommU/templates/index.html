@@ -222,7 +222,7 @@
 
             margin-top: 5px;
 
-            width: 120px;
+            width: fit-content;
             height: 25px;
 
             color: black;
@@ -329,7 +329,6 @@
             {% block make_new %}
             {% if local_user %}
                 <div class="make-new">
-                    <p>Make:</p>
                     <form method="post">
                     {% csrf_token %}
                         <a href="/skill/" class="linkbt">New skill</a>
@@ -403,7 +402,7 @@
                         </li>
                         <li><span class="caret">Skills</span>
                             {% if public_skills != None %}
-                                <ul class="nested">
+                                <ul class="active">
                                     {% for item in public_skills %}
                                         <li> <a href="skill={{item}}">{{item}}</a> </li>
                                     {% endfor %}
@@ -415,15 +414,17 @@
             {%endblock%}
         </div> <!-- left-sidebar -->
 
+     
+
         <div class="center-content">
-            {% block about %}
+            {% block about %}        
                 <div class="center-top">
                     {% if about_type %}
                         {{about_type}} '{{about_name}}': 
                         <ul>
-                        {% for item in about_value %}
-                            <li>{{item}}</li> 
-                        {% endfor %}
+                            {% for item in about_value %}
+                                <li>{{item}}</li> 
+                            {% endfor %}
                         </ul>
 
                         {% if local_user %}
@@ -433,6 +434,7 @@
                             <a href="{{edit_link}}">Parameters</a>
                         {% endif%}
                         <a href="/close">Close</a>
+
                         <hr>
                     {% endif %}
                 </div> <!-- center-top-->
@@ -458,10 +460,12 @@
                                         <li>Contract 2</li>
                                     </ul>
                                 </li> 
+                                {% if life_skills %}
+                                    {% for item in life_skills %}
+                                        <li><a href="/event/edit={{item.link}}">{{item.name}}</a></li>
 
-                                <li><a href="/event/edit"> Event1</a></li>
-                                <li>Event2</li>
-                                <li>Event3</li>
+                                    {% endfor %}
+                                {% endif %}
                             </ul>
                         </li><!-- Life -->
                     </ul> <!-- menu-tree -->

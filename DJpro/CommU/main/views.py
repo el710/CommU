@@ -31,64 +31,14 @@ def show_index(request, args=None):
     '''
     global local_user
 
-    # logging.info(f'get utem: {args}\n')
-    # logging.info(f'local user: {local_user}\n')
-
     ## dictionary of args for HTML page
     def_context = {}
 
-    ## if real user
-    if local_user.commu_id:
-        def_context = {"local_user": local_user.nickname,
-                       "user_project": local_user.projects[local_user.pro_project].name
-                    }
-    '''
-        perform args
-    '''
-    # logging.info(f'local user utem: {local_user.temp_utem}\n')
-
-    if args == "close":
-        local_user.temp_utem = None
-        return redirect("/")
-
-    if args: ## new utem has choosen
-        utem_type, utem_name = utemname_parse(args)
-
-        # logging.info(f'{utem_type}: {type(USkill)} {type(UContract)} {type(UProject)} \n')
-
-        if utem_type == type(USkill):
-            local_user.temp_utem = USkill(utem_name)
-        elif utem_type == type(UContract):
-            local_user.temp_utem = UContract(utem_name)
-        elif utem_type == type(UProject):
-            local_user.temp_utem = UProject(utem_name)            
-    
-        # logging.info(f'local user utem: {local_user.temp_utem}\n')
-
-        if not local_user.temp_utem.load_template(WORK_PATH):
-            local_user.temp_utem = None
-
-    ## add data of choosen utem
-    if local_user.temp_utem:
-        def_context.update(get_utem_info(local_user.temp_utem))
-        if isinstance(local_user.temp_utem, USkill):
-            def_context.update({"edit_link": "/skill/temp"})
-            def_context.update({"add_link": "/event/"})
-
-        if isinstance(local_user.temp_utem, UContract):
-            pass
-        if isinstance(local_user.temp_utem, UProject):
-            pass
-
-
-    ## Make list of public skills
-    USkill.load_public_skills("static")
-    # logging.info(f"loaded {USkill.get_public_skills()}")
-    def_context.update({'public_skills': USkill.get_public_skills()})
-    
+    # logging.info(f'local user: {local_user}\n')
 
     logging.info(f"method {request.method} ")
     if request.method == "POST":
+        ## POST by search 
         ## check up searching field
         form = TaskForm(request.POST)
         if form.is_valid():
@@ -97,14 +47,76 @@ def show_index(request, args=None):
     else:    
         def_context.update({'form': TaskForm()})
 
-    ## show new or last searching results
-    def_context.update(find_utems(local_user.search, path=WORK_PATH, local_user=local_user, public_dealers=public_dealers))
+    '''
+        Perform args
+    '''
+    # logging.info(f'get utem: {args}\n')
+    ## Close utem's info
+    if args == "close":
+        local_user.temp_utem = None
+        return redirect("/")
+
+    ## load indo of choosen utem
+    if args: ## new utem has choosen
+        utem_type, utem_name = utemname_parse(args)
+
+        logging.info(f'{utem_type}: {type(USkill)} {type(UContract)} {type(UProject)} \n')
+
+        if utem_type == type(USkill):
+            local_user.temp_utem = USkill(utem_name)
+        elif utem_type == type(UContract):
+            local_user.temp_utem = UContract(utem_name)
+        elif utem_type == type(UProject):
+            local_user.temp_utem = UProject(utem_name)
+
+        if not local_user.temp_utem.load_template(WORK_PATH):
+            local_user.temp_utem = None
+    logging.info(f'local user utem: {local_user.temp_utem}\n')            
+
+    ## add data of choosen utem
+    if local_user.temp_utem:
+        def_context.update(get_utem_info(local_user.temp_utem))
+        logging.info(f"Context: {def_context} ")
+
+        if isinstance(local_user.temp_utem, USkill):
+            def_context.update({"edit_link": "/skill/temp"})
+            def_context.update({"add_link": "/event/"})
+
+        if isinstance(local_user.temp_utem, UContract):
+            pass
+        if isinstance(local_user.temp_utem, UProject):
+            pass
     
+
+    '''
+        Fill user's info
+    '''
+    ## if real user
+    if local_user.commu_id:
+        def_context.update({"local_user": local_user.nickname,
+                            "user_project": local_user.get_project().name,
+                            "life_skills": local_user.get_project().skills
+                            })
+
+    '''
+        load search result
+    '''
     # logging.info(f"search {local_user.search} ")
     def_context.update({"index_search": local_user.search})
+    ## show new or last searching results
+    def_context.update(find_utems(local_user.search, path=WORK_PATH, local_user=local_user, public_dealers=public_dealers))
 
-    # logging.info(f"Context: {def_context} ")
- 
+    '''
+        Load public utems
+    '''
+    ## Make list of public skills
+    USkill.load_public_skills("static")
+    # logging.info(f"loaded {USkill.get_public_skills()}")
+    def_context.update({'public_skills': USkill.get_public_skills()})
+
+    
+
+    logging.info(f"Context: {def_context} ")
     return render(request, 'index.html', context=def_context)
 
 
@@ -261,10 +273,10 @@ def crud_skill(request, args=None):
                 
                 if local_user.temp_utem == None or local_user.work_skill != new_skill:
                     local_user.temp_utem = new_skill
-                    local_user.temp_utem.update(author=local_user.nickname,
-                                                 geosocium=local_user.geosocium,
-                                                 public=skill_public
-                                                )
+                    local_user.temp_utem.sign(author=local_user.nickname,
+                                              geosocium=local_user.geosocium,
+                                              public=skill_public
+                                            )
                     logging.info(f"new skill {local_user.temp_utem}")
                     local_user.temp_utem.save_as_template(True, WORK_PATH)
             
@@ -397,38 +409,10 @@ def crud_event(request, args=None):
         logging.info(f'data: {form.cleaned_data}\n')
 
         if form.is_valid(): ## is_valid also makes cleaned_data
-            local_user.save_event(form.cleaned_data)
-            ## we  have got it all of these in form.cleaned_data {}
-            # start_date = form.cleaned_data['start_date']
-            # once = form.cleaned_data['start_date']
-            # daily = form.cleaned_data['start_date']
-            # work = form.cleaned_data['start_date']
-            # weekly = form.cleaned_data['start_date']
-            # atday = form.cleaned_data['start_date']
-            # atweek = form.cleaned_data['start_date']
-            # atweek = form.cleaned_data['start_date']
-            # yearly = form.cleaned_data['start_date']
-            # wdays = form.cleaned_data['start_date']
-            # w_monday = form.cleaned_data['start_date']
-            # w_tuesday = form.cleaned_data['start_date']
-            # w_wednsday = form.cleaned_data['start_date']
-            # w_thirsday = form.cleaned_data['start_date']
-            # w_friday = form.cleaned_data['start_date']
-            # w_saturday = form.cleaned_data['start_date']
-            # w_sunday = form.cleaned_data['start_date']
-            # start_time = form.cleaned_data['start_date']
-            # end_time = form.cleaned_data['start_date']
-            # duration = form.cleaned_data['start_date']
-            # rem_5 = form.cleaned_data['start_date']
-            # rem_15 = form.cleaned_data['start_date']
-            # rem_30 = form.cleaned_data['start_date']
-            # rem_1h = form.cleaned_data['start_date']
-            # rem_1d = form.cleaned_data['start_date'] 
-
+        
             if request.POST.get('set'):
-                
-
-                
+                local_user.save_event(**form.cleaned_data)
+                                
                 logging.info(f'exit by set\n')
                 return redirect('/')
             elif request.POST.get('delete'):

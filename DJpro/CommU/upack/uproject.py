@@ -80,6 +80,13 @@ class UObject():
     
     def set_personal(self):
         self.public = False
+    
+    def get_token(self):
+        return hash(f"{self.name}:{self.author}:{self.create_datetime}:{self.geosocium}")
+
+
+    def make_link(self):
+        return f"{slugify(self.name)}:{self.get_token()}" 
 
 
     def get_file_name(self):
@@ -187,7 +194,7 @@ class UObject():
 def utemname_parse(args):
     '''
         find out is there a utem
-        agrs: <type=nmae>
+        agrs: <type=name>
     '''
     if args:
         try:
@@ -328,8 +335,11 @@ class USkill(UObject):
         self._state = "template" ## "offer" -> "deal" -> "done"
 
     
-    def update(self, author, geosocium = None, public = None):
-        self.executor = author
+    def sign(self, author, geosocium = None, public = None):
+        '''
+            Sign skill at create
+        '''
+        self.author = author
 
         if geosocium:
             self.geosocium = geosocium
@@ -339,6 +349,10 @@ class USkill(UObject):
             self.public = public
 
         self.create_datetime = datetime.now()
+    
+    def set_event(self, user, event):
+        self.executor = user
+        self._event = event
         
     
     ## overload '=='
@@ -447,18 +461,26 @@ class UProject(UObject):
         self.contracts = [] ## list of class UContract() objects
         
         """Lists of skills"""
-        self.skills = [] ## list of class USkill() objects
+        self.skills = None ## list of pair [utem.name, utem.link]
 
         ## should to save it in templates library
         self.public = False
 
         
 
-    def add_(self):
-        """
-            Add deals...
-        """
-        pass
+    def add_skill(self, skill):
+  
+        time_moment = skill._event['start_time']
+
+        new_item = {"name": f"{time_moment} {skill.name}", "link": skill.make_link()}
+
+        if self.skills:
+            self.skills.append(new_item)
+        else:
+            self.skills = [new_item]
+        
+
+        
 
 
 

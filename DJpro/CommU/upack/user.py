@@ -3,6 +3,7 @@
 """
 
 import logging
+import copy
 
 try:
     from .uproject import UProject
@@ -49,11 +50,63 @@ class UUser():
 
         ## searching utems
         self.search = None
+
+
+    def copy_workutem(self):
+        return copy.deepcopy(self.temp_utem)
     
-    def save_event(self, kwargs):
-        logging.info(f'data: {kwargs}\n')
+    def get_project(self):
+        return self.projects[self.pro_project]
 
 
+    def save_event(self, **event):
+        # logging.info(f'data: {event}\n')
+
+        ## make copy of skill
+        skill = self.copy_workutem()
+
+        ## set executor & event
+        skill.set_event(self, event)
+        # logging.info(f" {skill} : {self.temp_utem}")
+
+        current_project = self.get_project()
+        # logging.info(f" {current_project} : {type(current_project)}")
+
+        ## save event to plan as tuple
+        try:
+            current_project.add_skill(skill)
+        except Exception as exc:
+            logging.exception(f"add new event error {exc}")
+
+        logging.info(f"Project skills: {current_project.skills} ")
+
+
+            ## we  have got it all of these in form.cleaned_data {}
+            # start_date = form.cleaned_data['start_date']
+            # once = form.cleaned_data['start_date']
+            # daily = form.cleaned_data['start_date']
+            # work = form.cleaned_data['start_date']
+            # weekly = form.cleaned_data['start_date']
+            # atday = form.cleaned_data['start_date']
+            # atweek = form.cleaned_data['start_date']
+            # atweek = form.cleaned_data['start_date']
+            # yearly = form.cleaned_data['start_date']
+            # wdays = form.cleaned_data['start_date']
+            # w_monday = form.cleaned_data['start_date']
+            # w_tuesday = form.cleaned_data['start_date']
+            # w_wednsday = form.cleaned_data['start_date']
+            # w_thirsday = form.cleaned_data['start_date']
+            # w_friday = form.cleaned_data['start_date']
+            # w_saturday = form.cleaned_data['start_date']
+            # w_sunday = form.cleaned_data['start_date']
+            # start_time = form.cleaned_data['start_date']
+            # end_time = form.cleaned_data['start_date']
+            # duration = form.cleaned_data['start_date']
+            # rem_5 = form.cleaned_data['start_date']
+            # rem_15 = form.cleaned_data['start_date']
+            # rem_30 = form.cleaned_data['start_date']
+            # rem_1h = form.cleaned_data['start_date']
+            # rem_1d = form.cleaned_data['start_date'] 
 
 
         
