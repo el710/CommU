@@ -411,7 +411,7 @@ def crud_event(request, args=None):
         if form.is_valid(): ## is_valid also makes cleaned_data
         
             if request.POST.get('set'):
-                local_user.save_event(**form.cleaned_data)
+                local_user.save_event(form.cleaned_data)
                                 
                 logging.info(f'exit by set\n')
                 return redirect('/')

@@ -59,8 +59,8 @@ class UUser():
         return self.projects[self.pro_project]
 
 
-    def save_event(self, **event):
-        # logging.info(f'data: {event}\n')
+    def save_event(self, event):
+        logging.info(f'data: {event}\n')
 
         ## make copy of skill
         skill = self.copy_workutem()
