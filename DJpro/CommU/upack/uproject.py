@@ -455,7 +455,7 @@ class UProject(UObject):
         self.workers = []
         
         """Lists of subprojects"""
-        self.subprojects = [] ## list of class UProject() objects
+        self.subprojects = [] ## list of ID class UProject() objects
 
         """Lists of contracts"""
         self.contracts = [] ## list of class UContract() objects

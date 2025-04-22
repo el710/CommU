@@ -5,16 +5,12 @@
 import logging
 import copy
 
-try:
-    from .uproject import UProject
-except:
-    from uproject import UProject
 
 class UUser():
     '''
         User's data
     '''
-    def __init__(self, nickname):
+    def __init__(self, nickname, main_project=None):
         self.commu_id = None
         self.nickname = nickname
         self.password = None
@@ -31,7 +27,8 @@ class UUser():
         self.contacts = None
 
         ## list of all user's projects, include 'life' as default 
-        self.projects = [UProject(self.nickname, "Life"), ]
+        # self.projects = [UProject(self.nickname, "Life"), ]
+        self.projects = [main_project, ] if main_project else None
 
         '''
             Working context
@@ -130,4 +127,5 @@ class ClientUser(UUser):
 if __name__ == "__main__":
 
     user = UUser("test")
-    print(user.projects[0])
+    print(vars(user))
+    

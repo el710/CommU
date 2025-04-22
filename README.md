@@ -67,3 +67,22 @@ temp_utem: pointer on template utem - to make new, to load, to watch parameters,
 pro_project: pointer on current project
 pro_contract: pointer on current contract
 pro_skill: pointer on current event
+
+
+uproject/
+├── models/
+│   ├── __init__.py
+│   ├── base.py
+│   ├── skill.py
+│   ├── contract.py
+│   └── project.py
+│
+├── storage/
+│   ├── __init__.py
+│   └── storage.py
+│
+├── utils/
+│   ├── __init__.py
+│   └── helpers.py
+│
+└── main.py  (optional CLI/entry point)

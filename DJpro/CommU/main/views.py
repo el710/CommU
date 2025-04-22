@@ -349,7 +349,7 @@ def crud_event(request, args=None):
     logging.info(f'open skill: {args}\n')
     logging.info(f'local user: {local_user.nickname}\n')
 
-    if local_user.commu_id==None:
+    if local_user.commu_id == None:
         return redirect("/")
 
     '''
@@ -381,8 +381,9 @@ def crud_event(request, args=None):
         end_date = f"{now.year}-{now.month:02d}-{now.day:02d}"
         start_time = f"{now.hour:02d}:{now.minute:02d}"
 
-    elif args == 'edit': ## read & edit event 
+    else:  ## read & edit event 
         logging.info(f'read event\n')
+        
         ## !!! take from user
         if local_user.pro_skill:
             def_context.update({"user_skill": local_user.pro_skill.name})
@@ -397,8 +398,8 @@ def crud_event(request, args=None):
 
         end_date = f"{now.year}-{now.month:02d}-{now.day:02d}"
         start_time = f"{now.hour:02d}:{now.minute:02d}"
-    else:
-        logging.info(f"wrong args to crud_event {args}\n")
+    # else:
+        # logging.info(f"wrong args to crud_event {args}\n")
 
 
     logging.info(f"request.method {request.method} \n")

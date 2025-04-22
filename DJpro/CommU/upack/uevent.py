@@ -19,7 +19,7 @@ class UEvent():
     def __init__(self):
         """ 
             Moments of event
-            'None' means 'does not metter
+            'None' means 'does not matter
             initialize as "every day"
         """
 
@@ -40,8 +40,8 @@ class UEvent():
         self.end_second = None
 
         """how to repeat"""
-        ## {"once|None", "daily", "at work days", "weekly", "mounthly day", "mounth first week day", "yearly", "special"}
-        self.repeat = None
+        ## {"once", "daily", "at work days", "weekly", "mounthly day", "mounth first week day", "yearly", "special"}
+        self.repeat = "once"
 
         """when to remind"""
         ## {None, "5min, "15min", "30min", "1hour", "1day", }

@@ -1,0 +1,16 @@
+<h2>Skill: {{ skill.name }}</h2>
+<ul>
+  <li><strong>Description:</strong> {{ skill.description }}</li>
+  <li><strong>Resources:</strong> {{ skill.resources }}</li>
+  <li><strong>Goal:</strong> {{ skill.goal }}</li>
+  <li><strong>Public:</strong> {{ skill.public }}</li>
+  <li><strong>Author:</strong> {{ skill.author }}</li>
+</ul>
+
+<a href="/skills/{{ skill.name }}/edit">Edit</a>
+<form action="/skills/{{ skill.name }}/delete" method="post" style="margin-top: 10px;">
+  <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
+</form>
+
+<br>
+<a href="/skills">Back to Skills</a>

@@ -1,0 +1,8 @@
+<h2>Edit Skill: {{ skill.name }}</h2>
+<form action="/skills/{{ skill.name }}/edit" method="post">
+  <label>Description: <input type="text" name="description" value="{{ skill.description }}"></label><br>
+  <label>Resources: <input type="text" name="resources" value="{{ skill.resources }}"></label><br>
+  <label>Goal: <input type="text" name="goal" value="{{ skill.goal }}"></label><br>
+  <button type="submit">Save Changes</button>
+</form>
+<a href="/skills/{{ skill.name }}">Cancel</a>
