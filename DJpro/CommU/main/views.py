@@ -8,7 +8,10 @@ from django.contrib.staticfiles import finders
 
 
 from upack.uproject import *
-from upack.user import UUser
+from uproject.models.user import UUser
+from uproject.models.bases import EventBase
+
+from uproject.utils.utils import parse_utemname
 
 
 import logging
@@ -18,6 +21,7 @@ from datetime import datetime
 
 """ Operating Data"""
 ## There is always a user - by define 'Guest'
+
 local_user = UUser(GUEST_USER)
 
 public_dealers = None
@@ -50,7 +54,7 @@ def show_index(request, args=None):
     '''
         Perform args
     '''
-    # logging.info(f'get utem: {args}\n')
+    logging.info(f'get utem: {args}\n')
     ## Close utem's info
     if args == "close":
         local_user.temp_utem = None
@@ -58,19 +62,17 @@ def show_index(request, args=None):
 
     ## load indo of choosen utem
     if args: ## new utem has choosen
-        utem_type, utem_name = utemname_parse(args)
+        utem_type, utem_name = parse_utemname(args)
 
-        logging.info(f'{utem_type}: {type(USkill)} {type(UContract)} {type(UProject)} \n')
+        logging.info(f'{utem_type}: {utem_name}\n')
+        for cls, label in [(USkill, "skill"), (UContract, "contract"), (UProject, "project")]:
+            if utem_type == label:
+                local_user.temp_utem = cls(utem_name)
 
-        if utem_type == type(USkill):
-            local_user.temp_utem = USkill(utem_name)
-        elif utem_type == type(UContract):
-            local_user.temp_utem = UContract(utem_name)
-        elif utem_type == type(UProject):
-            local_user.temp_utem = UProject(utem_name)
+        if local_user.temp_utem:
+            if not local_user.temp_utem.load_template(WORK_PATH):
+                local_user.temp_utem = None
 
-        if not local_user.temp_utem.load_template(WORK_PATH):
-            local_user.temp_utem = None
     logging.info(f'local user utem: {local_user.temp_utem}\n')            
 
     ## add data of choosen utem
@@ -93,10 +95,12 @@ def show_index(request, args=None):
     '''
     ## if real user
     if local_user.commu_id:
+
         def_context.update({"local_user": local_user.nickname,
-                            "user_project": local_user.get_project().name,
-                            "life_skills": local_user.get_project().skills
+                            "user_project": local_user.get_project_name(),
+                            "life_events": local_user.get_project().event_list
                             })
+
 
     '''
         load search result
@@ -167,7 +171,11 @@ def signup(request):
             
             # if password == repassword:
             local_user = UUser(name)
+            local_user.add_project(UProject(local_user, "Life"))
             local_user.commu_id = hash(local_user.nickname)
+            logging.info(f'new user: {local_user}')
+            
+            local_user.add_eventbase(EventBase())
             return redirect('/') 
             # else:
             #     def_context.update({'passstate': "... passwords is not equal. Try again."})
@@ -199,6 +207,7 @@ def login(request):
             
             # if password == repassword:
             local_user = UUser(name)
+            local_user.add_project(UProject(local_user, "Life"))
             local_user.commu_id = hash(local_user.nickname)
             return redirect('/') 
             # else:
@@ -381,12 +390,14 @@ def crud_event(request, args=None):
         end_date = f"{now.year}-{now.month:02d}-{now.day:02d}"
         start_time = f"{now.hour:02d}:{now.minute:02d}"
 
-    else:  ## read & edit event 
-        logging.info(f'read event\n')
+    else:  ## read & edit event
+        utem_type, utem_id = parse_utemname(args)
+        logging.info(f'read event {utem_type}, {utem_id}\n')
         
         ## !!! take from user
-        if local_user.pro_skill:
-            def_context.update({"user_skill": local_user.pro_skill.name})
+        local_user.pro_event = local_user.events.read_event(utem_id)
+        if local_user.pro_event:
+            def_context.update({"user_skill": local_user.pro_event.name})
 
         now = datetime(year=2025, month=1, day=1, hour=8, minute=0, tzinfo=local_user.timezone)
 

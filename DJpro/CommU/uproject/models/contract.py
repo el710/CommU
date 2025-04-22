@@ -1,6 +1,9 @@
-# --- file: models/contract.py ---
+"""
+    Copyright (c) 2025 Kim Oleg <theel710@gmail.com>
+"""
+
 from slugify import slugify
-from models.base import UObject
+from .uobject import UObject
 
 class UContract(UObject):
     def __init__(self, name, customer_id=None, provider_id=None):

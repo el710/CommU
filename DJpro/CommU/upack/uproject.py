@@ -86,7 +86,7 @@ class UObject():
 
 
     def make_link(self):
-        return f"{slugify(self.name)}:{self.get_token()}" 
+        return f"{self.__class__.__name__}={self.get_token()}" 
 
 
     def get_file_name(self):
@@ -191,23 +191,23 @@ class UObject():
             logging.info(f"can't delete file {_name} {exc}")
             return False
 
-def utemname_parse(args):
-    '''
-        find out is there a utem
-        agrs: <type=name>
-    '''
-    if args:
-        try:
-            ## find out type & name of Uitem
-            item = str.split(args,'=')
-            logging.info(f"args: {item} size: {len(item)}\n")
-            if item[0] =='skill': return type(USkill), item[1]
-            if item[0] =='contract': return type(UContract), item[1]
-            if item[0] =='project': return type(UProject), item[1]            
-        except Exception as exc:
-            logging.info(f" wrong args: {args} {exc}\n")
+# def utemname_parse(args):
+#     '''
+#         find out is there a utem
+#         agrs: <type=name>
+#     '''
+#     if args:
+#         try:
+#             ## find out type & name of Uitem
+#             item = str.split(args,'=')
+#             logging.info(f"args: {item} size: {len(item)}\n")
+#             if item[0] =='skill': return type(USkill), item[1]
+#             if item[0] =='contract': return type(UContract), item[1]
+#             if item[0] =='project': return type(UProject), item[1]            
+#         except Exception as exc:
+#             logging.info(f" wrong args: {args} {exc}\n")
 
-    return None, None
+#     return None, None
 
 
 def isthere_utem(key_name, path=None):
@@ -434,7 +434,7 @@ class UProject(UObject):
         but there are always default project - life project
     """
 
-    def __init__(self, starter_user, project_name=None):
+    def __init__(self, starter_user=None, project_name=None):
         """ 
             initialisation project with:
             - project_name
@@ -450,7 +450,7 @@ class UProject(UObject):
         self.project_laws = {} ## 'Do not" laws
 
         """Lists of other Users in project"""
-        self.partners = [starter_user]
+        self.partners = [starter_user] if starter_user else []
         self.customers = []
         self.workers = []
         
@@ -461,7 +461,7 @@ class UProject(UObject):
         self.contracts = [] ## list of class UContract() objects
         
         """Lists of skills"""
-        self.skills = None ## list of pair [utem.name, utem.link]
+        self.event_list = None ## list of pair [utem.name, utem.link]
 
         ## should to save it in templates library
         self.public = False
@@ -474,10 +474,10 @@ class UProject(UObject):
 
         new_item = {"name": f"{time_moment} {skill.name}", "link": skill.make_link()}
 
-        if self.skills:
-            self.skills.append(new_item)
+        if self.event_list:
+            self.event_list.append(new_item)
         else:
-            self.skills = [new_item]
+            self.event_list = [new_item]
         
 
         

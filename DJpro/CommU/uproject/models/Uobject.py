@@ -1,4 +1,7 @@
-# --- file: models/base.py ---
+"""
+    Copyright (c) 2025 Kim Oleg <theel710@gmail.com>
+"""
+
 from abc import ABC, abstractmethod
 from datetime import datetime
 from slugify import slugify

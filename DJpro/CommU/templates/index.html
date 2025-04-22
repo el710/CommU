@@ -460,9 +460,9 @@
                                         <li>Contract 2</li>
                                     </ul>
                                 </li> 
-                                {% if life_skills %}
-                                    {% for item in life_skills %}
-                                        <li><a href="/event/edit={{item.link}}">{{item.name}}</a></li>
+                                {% if life_events %}
+                                    {% for item in life_events %}
+                                        <li><a href="/event/{{item.link}}">{{item.name}}</a></li>
 
                                     {% endfor %}
                                 {% endif %}

@@ -1,8 +1,12 @@
-# --- file: utils/helpers.py ---
-from models.skill import USkill
-from models.contract import UContract
-from models.project import UProject
-from storage.storage import FileStorage
+"""
+    Copyright (c) 2025 Kim Oleg <theel710@gmail.com>
+"""
+import logging
+
+from ..models.skill import USkill
+from ..models.contract import UContract
+from ..models.project import UProject
+from ..storage.storage import FileStorage
 
 
 def parse_utemname(arg: str):
@@ -10,6 +14,7 @@ def parse_utemname(arg: str):
         type_str, name = arg.split("=")
         return type_str.lower(), name
     except ValueError:
+        logging.info(f" wrong args: {arg}\n")
         return None, None
 
 

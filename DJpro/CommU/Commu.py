@@ -23,8 +23,6 @@ from telegram.telebot import telebot_start
 from database.base_dispatcher import start_base_dispatcher
 
 
-from upack.user import UUser
-
 
 def run_thread_agent(target_function, *args, add_link=False):
     """

@@ -10,7 +10,7 @@ class UUser():
     '''
         User's data
     '''
-    def __init__(self, nickname, main_project=None):
+    def __init__(self, nickname):
         self.commu_id = None
         self.nickname = nickname
         self.password = None
@@ -26,34 +26,53 @@ class UUser():
         ## list of all user's contacts - phone book
         self.contacts = None
 
-        ## list of all user's projects, include 'life' as default 
-        # self.projects = [UProject(self.nickname, "Life"), ]
-        self.projects = [main_project, ] if main_project else None
+        ## list of all user's projects
+        self.projects = None
 
         '''
             Working context
         '''
+        ## list of all user's events = skill+time
+        self.events = None
+        ## pointer to current skill from projects user is working with
+        self.pro_event = None        
+
         ## pointer on template utem - to make new, to load, to watch parameters, to add to project, work on index page
         self.temp_utem = None ## 
 
         ## pointer on current project user is working with - def as Life
-        self.pro_project = 0
+        self.pro_project = None
 
         ## pointer to current contract from projects user is working with
         self.pro_contract = None
         
-        ## pointer to current skill from projects user is working with
-        self.pro_skill = None
-
         ## searching utems
         self.search = None
+
+    def add_eventbase(self, event_base):
+        self.events = event_base
+                
+
+    def add_project(self, project):
+        if self.projects == None:
+            self.projects = [project]
+        else:
+            self.projects.append(project)
+        self.pro_project = len(self.projects) - 1
 
 
     def copy_workutem(self):
         return copy.deepcopy(self.temp_utem)
     
     def get_project(self):
+
         return self.projects[self.pro_project]
+    
+    def get_contract(self):
+        return None
+    
+    def get_project_name(self):
+        return self.projects[self.pro_project].name if self.pro_project != None else None 
 
 
     def save_event(self, event):
@@ -62,9 +81,16 @@ class UUser():
         ## make copy of skill
         skill = self.copy_workutem()
 
-        ## set executor & event
+        ## set executor & moment
         skill.set_event(self, event)
         # logging.info(f" {skill} : {self.temp_utem}")
+
+        if self.pro_contract:
+            parent = self.get_contract()
+        else:
+            parent = self.get_project()
+
+        self.events.add_event(skill, skill.get_token(), parent)
 
         current_project = self.get_project()
         # logging.info(f" {current_project} : {type(current_project)}")
@@ -75,7 +101,7 @@ class UUser():
         except Exception as exc:
             logging.exception(f"add new event error {exc}")
 
-        logging.info(f"Project skills: {current_project.skills} ")
+        logging.info(f"Project skills: {current_project.event_list} ")
 
 
             ## we  have got it all of these in form.cleaned_data {}

@@ -1,7 +1,10 @@
-# --- file: models/project.py ---
+"""
+    Copyright (c) 2025 Kim Oleg <theel710@gmail.com>
+"""
+
 from slugify import slugify
-from models.base import UObject
-from models.skill import USkill
+from .uobject import UObject
+from .skill import USkill
 
 class UProject(UObject):
     def __init__(self, starter_user, project_name=None):
