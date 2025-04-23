@@ -21,8 +21,6 @@ from datetime import datetime
 '''
     Data constants
 '''
-GUEST_USER = 'Guest'
-
 
 
 class UObject():
@@ -191,116 +189,36 @@ class UObject():
             logging.info(f"can't delete file {_name} {exc}")
             return False
 
-# def utemname_parse(args):
+
+# def get_utem_info(utem):
 #     '''
-#         find out is there a utem
-#         agrs: <type=name>
+#         Return dict with info about founded skill, contract or project...
 #     '''
-#     if args:
-#         try:
-#             ## find out type & name of Uitem
-#             item = str.split(args,'=')
-#             logging.info(f"args: {item} size: {len(item)}\n")
-#             if item[0] =='skill': return type(USkill), item[1]
-#             if item[0] =='contract': return type(UContract), item[1]
-#             if item[0] =='project': return type(UProject), item[1]            
-#         except Exception as exc:
-#             logging.info(f" wrong args: {args} {exc}\n")
+#     result = {}
+#     info = []
+#     if isinstance(utem, USkill):
+#         for key, value in utem.json().items():
+#             if (value != None) and (isinstance(value, str) and len(value) or not isinstance(value, str)):
+#                 # logging.info(f"make dict of object: {key} : {value}")
+#                 if key != 'name' and key[:1] != '_' :
+#                     info.append(f"{key}: {value}")
+#         utem_type = 'skill'
 
-#     return None, None
-
-
-def isthere_utem(key_name, path=None):
-    '''
-        Search for urtems by name
-    '''
-    match type:
-        case UTYPE_SKILL:
-            return USkill(key_name).load_template(path=path)
+#     elif isinstance(utem, UContract):
+#         utem_type = 'contract'
+#     elif isinstance(utem, UProject):
+#         utem_type = 'project'
+#     else:
+#         logging.info(f"wrong utem {utem}\n")
         
-
-    contract = UContract(key_name)
-    project = UProject(key_name)
-
-    return False
-
-
-def find_utems(key_name, path=None, local_user=None, public_dealers=None):
-    '''
-        Find by <key_name> end return public utems
-    '''
-    context = {}
-
-    logging.info(f"key {key_name}")
-    if key_name:
-        ## find skill templates    
-        skill = USkill(key_name)
-        if skill.load_template(path):
-            context.update({"find_skills": [skill.get_slug_name()] })
-            logging.info(f"has found skill {skill.get_slug_name()}")
-        else:
-            context.update({"find_skills": None})
-
-        ## find project templates
-        project = UProject(key_name)
-        if project.load_template(path):
-            context.update({"find_projects": project.get_file_name()})
-        else:
-            context.update({"find_projects": None})
-
-        ## find contract templates
-        contract = UContract(key_name)
-        if contract.load_template(path):
-            context.update({"find_contracts": contract.get_file_name()})
-        else:
-            context.update({"find_contracts": None})
-
-        ## find public contacts
-        user_dealers_list = []
-        if local_user != None:
-            # if isinstance(local_user, UUser):
-            user_dealers_list.append(local_user.partners)
-                
-        if public_dealers:
-            user_dealers_list.append(public_dealers)
-                
-        if len(user_dealers_list):
-            context.update({"find_dealers": user_dealers_list})
-        else: 
-            context.update({"find_dealers": None})    
+#     logging.info(f"add object's info: {info}")
+#     if len(info):
+#         result = {"about_type": utem_type,
+#                   "about_name": utem.name,
+#                   "about_value": info
+#                 }
         
-    return context
-
-
-def get_utem_info(utem):
-    '''
-        Return dict with info about founded skill, contract or project...
-    '''
-    result = {}
-    info = []
-    if isinstance(utem, USkill):
-        for key, value in utem.json().items():
-            if (value != None) and (isinstance(value, str) and len(value) or not isinstance(value, str)):
-                # logging.info(f"make dict of object: {key} : {value}")
-                if key != 'name' and key[:1] != '_' :
-                    info.append(f"{key}: {value}")
-        utem_type = 'skill'
-
-    elif isinstance(utem, UContract):
-        utem_type = 'contract'
-    elif isinstance(utem, UProject):
-        utem_type = 'project'
-    else:
-        logging.info(f"wrong utem {utem}\n")
-        
-    logging.info(f"add object's info: {info}")
-    if len(info):
-        result = {"about_type": utem_type,
-                  "about_name": utem.name,
-                  "about_value": info
-                }
-        
-    return result    
+#     return result    
     
 
 
@@ -434,7 +352,7 @@ class UProject(UObject):
         but there are always default project - life project
     """
 
-    def __init__(self, starter_user=None, project_name=None):
+    def __init__(self, starter_user, project_name=None):
         """ 
             initialisation project with:
             - project_name

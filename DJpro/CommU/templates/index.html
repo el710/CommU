@@ -417,6 +417,10 @@
      
 
         <div class="center-content">
+            {% if not local_user and not about_type %}
+                <p><b>No one will make your dreams come true. Do it yourself...</b></p>
+            {% endif %}
+
             {% block about %}        
                 <div class="center-top">
                     {% if about_type %}

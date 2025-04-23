@@ -5,7 +5,7 @@
 import logging
 import copy
 
-
+GUEST_USER = 'Guest'
 class UUser():
     '''
         User's data

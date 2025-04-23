@@ -2,9 +2,11 @@
     Copyright (c) 2025 Kim Oleg <theel710@gmail.com>
 """
 
+import logging
 from slugify import slugify
-from .uobject import UObject
 from datetime import datetime
+
+from .uobject import UObject
 
 class USkill(UObject):
     def __init__(self, name, description=None, resources=None, goal=None):
@@ -17,6 +19,7 @@ class USkill(UObject):
         self._state = "template"
 
     def get_file_name(self):
+        # logging.info(f"Skill name: {self.name}")
         return f"{slugify(self.name)}.stp"
 
     def get_slug_name(self):

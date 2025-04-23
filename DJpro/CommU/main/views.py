@@ -8,10 +8,10 @@ from django.contrib.staticfiles import finders
 
 
 from upack.uproject import *
-from uproject.models.user import UUser
+from uproject.models.user import *
 from uproject.models.bases import EventBase
 
-from uproject.utils.utils import parse_utemname
+from uproject.utils.utils import (parse_utemname, find_utems, get_utem_info)
 
 
 import logging
@@ -108,7 +108,8 @@ def show_index(request, args=None):
     # logging.info(f"search {local_user.search} ")
     def_context.update({"index_search": local_user.search})
     ## show new or last searching results
-    def_context.update(find_utems(local_user.search, path=WORK_PATH, local_user=local_user, public_dealers=public_dealers))
+    if local_user.search:
+        def_context.update(find_utems(key_name=local_user.search, path=WORK_PATH))
 
     '''
         Load public utems
@@ -119,7 +120,6 @@ def show_index(request, args=None):
     def_context.update({'public_skills': USkill.get_public_skills()})
 
     
-
     logging.info(f"Context: {def_context} ")
     return render(request, 'index.html', context=def_context)
 

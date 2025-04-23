@@ -18,16 +18,19 @@ def parse_utemname(arg: str):
         return None, None
 
 
-def find_utems(key_name, path=".", user=None, public_dealers=None):
+def find_utems(key_name, path="."):
     storage = FileStorage(path)
     context = {}
 
     for cls, label in [(USkill, "find_skills"), (UContract, "find_contracts"), (UProject, "find_projects")]:
         utem = cls(key_name)
+        # logging.info(f"find {utem} {key_name}")
         found = storage.load(utem)
-        context[label] = utem.get_file_name() if found else None
+        
+        context[label] = [utem.name] if found else None
 
-    context["find_dealers"] = [user.partners] if user else public_dealers
+    # context["find_dealers"] = [user.partners] if user else public_dealers
+    logging.info(f" return context {context}")
     return context
 
 

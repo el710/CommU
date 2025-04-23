@@ -19,6 +19,7 @@ class FileStorage:
         return True
 
     def load(self, obj) -> bool:
+        # logging.info(f"load {obj}")
         filename = obj.get_file_name()
         path = os.path.join(self.base_path, filename)
 
