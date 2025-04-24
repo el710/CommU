@@ -5,6 +5,8 @@
 import logging
 import copy
 
+from .bases import EventBase
+
 GUEST_USER = 'Guest'
 class UUser():
     '''
@@ -32,13 +34,15 @@ class UUser():
         '''
             Working context
         '''
-        ## list of all user's events = skill+time
-        self.events = None
+        ## pointer on template utem - to make new, to load, to watch parameters, to add to project, work on index page
+        self.temp_utem = None 
+
+        ## base of all user's events = skill+time
+        self.events = None ## EventBase()
         ## pointer to current skill from projects user is working with
         self.pro_event = None        
 
-        ## pointer on template utem - to make new, to load, to watch parameters, to add to project, work on index page
-        self.temp_utem = None ## 
+        
 
         ## pointer on current project user is working with - def as Life
         self.pro_project = None
@@ -49,7 +53,7 @@ class UUser():
         ## searching utems
         self.search = None
 
-    def add_eventbase(self, event_base):
+    def add_eventbase(self, event_base:EventBase):
         self.events = event_base
                 
 
@@ -63,14 +67,7 @@ class UUser():
 
     def copy_workutem(self):
         return copy.deepcopy(self.temp_utem)
-    
-    def get_project(self):
-
-        return self.projects[self.pro_project]
-    
-    def get_contract(self):
-        return None
-    
+        
     def get_project_name(self):
         return self.projects[self.pro_project].name if self.pro_project != None else None 
 
@@ -85,14 +82,9 @@ class UUser():
         skill.set_event(self, event)
         # logging.info(f" {skill} : {self.temp_utem}")
 
-        if self.pro_contract:
-            parent = self.get_contract()
-        else:
-            parent = self.get_project()
+        self.events.add_event(skill, skill.get_token(), self.projects[self.pro_project])
 
-        self.events.add_event(skill, skill.get_token(), parent)
-
-        current_project = self.get_project()
+        current_project = self.projects[self.pro_project]
         # logging.info(f" {current_project} : {type(current_project)}")
 
         ## save event to plan as tuple
@@ -101,36 +93,7 @@ class UUser():
         except Exception as exc:
             logging.exception(f"add new event error {exc}")
 
-        logging.info(f"Project skills: {current_project.event_list} ")
-
-
-            ## we  have got it all of these in form.cleaned_data {}
-            # start_date = form.cleaned_data['start_date']
-            # once = form.cleaned_data['start_date']
-            # daily = form.cleaned_data['start_date']
-            # work = form.cleaned_data['start_date']
-            # weekly = form.cleaned_data['start_date']
-            # atday = form.cleaned_data['start_date']
-            # atweek = form.cleaned_data['start_date']
-            # atweek = form.cleaned_data['start_date']
-            # yearly = form.cleaned_data['start_date']
-            # wdays = form.cleaned_data['start_date']
-            # w_monday = form.cleaned_data['start_date']
-            # w_tuesday = form.cleaned_data['start_date']
-            # w_wednsday = form.cleaned_data['start_date']
-            # w_thirsday = form.cleaned_data['start_date']
-            # w_friday = form.cleaned_data['start_date']
-            # w_saturday = form.cleaned_data['start_date']
-            # w_sunday = form.cleaned_data['start_date']
-            # start_time = form.cleaned_data['start_date']
-            # end_time = form.cleaned_data['start_date']
-            # duration = form.cleaned_data['start_date']
-            # rem_5 = form.cleaned_data['start_date']
-            # rem_15 = form.cleaned_data['start_date']
-            # rem_30 = form.cleaned_data['start_date']
-            # rem_1h = form.cleaned_data['start_date']
-            # rem_1d = form.cleaned_data['start_date'] 
-
+        logging.info(f"Project skills: {current_project.events} ")
 
         
 class ClientUser(UUser):

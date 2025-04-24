@@ -116,7 +116,12 @@ class UObject():
                 ## make dictionary from subobject 'event'
                 temp["_event"] = vars(temp["_event"])
         return temp
-    
+
+    def to_dict(self):
+        data = self.__dict__.copy()
+        if isinstance(data.get("create_datetime"), datetime):
+            data["create_datetime"] = data["create_datetime"].isoformat()
+        return data    
 
     def save_as_template(self, over:bool=False, path=None):
         """
@@ -203,21 +208,18 @@ class UObject():
 #                 if key != 'name' and key[:1] != '_' :
 #                     info.append(f"{key}: {value}")
 #         utem_type = 'skill'
-
 #     elif isinstance(utem, UContract):
 #         utem_type = 'contract'
 #     elif isinstance(utem, UProject):
 #         utem_type = 'project'
 #     else:
 #         logging.info(f"wrong utem {utem}\n")
-        
 #     logging.info(f"add object's info: {info}")
 #     if len(info):
 #         result = {"about_type": utem_type,
 #                   "about_name": utem.name,
 #                   "about_value": info
-#                 }
-        
+#                 }     
 #     return result    
     
 
@@ -335,118 +337,113 @@ class UContract(UObject):
         self.history = []
 
 
-class UProject(UObject):
-    """
-        Class of user's projects store
-        Here are its deals where user is:
-        - partner
-        - customer
-        - hired worker
-        and lists of its:
-            - partners
-            - customers
-            - hired workers
-        in every project
+# class UProject(UObject):
+#     """
+#         Class of user's projects stock
+#         There are here its deals where user is:
+#         - partner
+#         - customer
+#         - hired worker
+#         and lists of its:
+#             - partners
+#             - customers
+#             - hired workers
+#         in every project
 
-        User can have many CommUProject() objects
-        but there are always default project - life project
-    """
+#         User can have many Projects, 
+#         but there are always default project - "Life" project
+#     """
 
-    def __init__(self, starter_user, project_name=None):
-        """ 
-            initialisation project with:
-            - project_name
-            - user_id
-            other attributes are None
-        """
-        if project_name:
-            super().__init__(project_name)
-        else:
-            super().__init__(f"{starter_user.nickname}'s project")
+#     def __init__(self, starter_user, project_name=None):
+#         """ 
+#             initialisation project with:
+#             - project_name
+#             - user_id
+#             other attributes are None
+#         """
+#         if project_name:
+#             super().__init__(project_name)
+#         else:
+#             super().__init__(f"{starter_user.nickname}'s project")
 
-        self.target = "Project's point:..."
-        self.project_laws = {} ## 'Do not" laws
+#         self.target = "Project's point:..."
+#         self.project_laws = {} ## 'Do not" laws
 
-        """Lists of other Users in project"""
-        self.partners = [starter_user] if starter_user else []
-        self.customers = []
-        self.workers = []
+#         """Lists of other Users in project"""
+#         self.partners = [starter_user] if starter_user else []
+#         self.customers = []
+#         self.workers = []
         
-        """Lists of subprojects"""
-        self.subprojects = [] ## list of ID class UProject() objects
+#         """Lists of subprojects"""
+#         self.subprojects = [] ## list of ID class UProject() objects
 
-        """Lists of contracts"""
-        self.contracts = [] ## list of class UContract() objects
+#         """Lists of contracts"""
+#         self.contracts = [] ## list of class UContract() objects
         
-        """Lists of skills"""
-        self.event_list = None ## list of pair [utem.name, utem.link]
+#         """Lists of skills"""
+#         self.event_list = None ## list of pair [utem.name, utem.link]
 
-        ## should to save it in templates library
-        self.public = False
+#         ## should to save it in templates library
+#         self.public = False
 
         
 
-    def add_skill(self, skill):
+#     def add_skill(self, skill):
   
-        time_moment = skill._event['start_time']
+#         time_moment = skill._event['start_time']
 
-        new_item = {"name": f"{time_moment} {skill.name}", "link": skill.make_link()}
+#         new_item = {"name": f"{time_moment} {skill.name}", "link": skill.make_link()}
 
-        if self.event_list:
-            self.event_list.append(new_item)
-        else:
-            self.event_list = [new_item]
+#         if self.event_list:
+#             self.event_list.append(new_item)
+#         else:
+#             self.event_list = [new_item]
         
-
-        
-
-
-
 ##-----------------------------------------------------
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    import os
-    os.system('cls')
+#     import os
+#     os.system('cls')
 
-    logging.basicConfig(level=logging.INFO,
-                        format="%(levelname)s: | %(module)s  %(funcName)s():   %(message)s") ##, filename="log.log")
+#     logging.basicConfig(level=logging.INFO,
+#                         format="%(levelname)s: | %(module)s  %(funcName)s():   %(message)s") ##, filename="log.log")
 
-    print("Testing class Comm UProject()...\n")
+#     print("Testing class Comm UProject()...\n")
 
-    user = "Me"
-    user_project = UProject(user, "Daily health mode")
-    print(user_project)
+#     user = "Me"
+#     user_project = UProject(user, "Daily health mode")
+#     print(user_project)
 
-    user_contract = UContract(user)
-    print(user_contract)
+#     user_contract = UContract(user)
+#     print(user_contract)
 
     
     
-    def termmake(user):
-        print("Terminal maker of skills\n")
-        name = input("Input name of skill: ")
+#     def termmake(user):
+#         print("Terminal maker of skills\n")
+#         name = input("Input name of skill: ")
             
-        new_skill = USkill(name=name)
-        new_skill.description = input(f"Describe skill '{new_skill.name}' in simple words: ")
-        new_skill.goal = input(f"What goal(result) of skill '{new_skill.name}': ")
-        new_skill._event = UEvent()
+#         new_skill = USkill(name=name)
+#         new_skill.description = input(f"Describe skill '{new_skill.name}' in simple words: ")
+#         new_skill.goal = input(f"What goal(result) of skill '{new_skill.name}': ")
+#         new_skill._event = UEvent()
 
-        return new_skill
+#         return new_skill
 
-    new_skill = termmake(user)
-    print(new_skill)
+#     new_skill = termmake(user)
+#     print(new_skill)
     
 
-    new_skill.save_as_template()
-    load_skill = USkill("anyone", new_skill.name)
+#     new_skill.save_as_template()
+#     load_skill = USkill("anyone", new_skill.name)
 
 
-    if load_skill.load_template():
-        print(load_skill)
+#     if load_skill.load_template():
+#         print(load_skill)
 
-    # USkill.load_public_skills()
-    # print(USkill.get_public_skills())
+#     # USkill.load_public_skills()
+#     # print(USkill.get_public_skills())
 
 
 

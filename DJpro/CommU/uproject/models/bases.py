@@ -12,6 +12,19 @@ class EventBase():
     '''
     def __init__(self):
         self._base = []
+    
+    def __iter__(self):
+        self.counter = 0
+        return self
+    
+    def __next__(self):
+        if self.counter < len(self._base):
+            ind = self.counter
+            self.counter += 1
+            return self._base[ind]
+                
+        raise StopIteration() ## method 'for' will catch this exception
+
 
     def add_event(self, event:USkill, id_hash, parent=None):
         '''
@@ -19,7 +32,7 @@ class EventBase():
         '''
         item = {"id": str(id_hash),
                 "event": copy.deepcopy(event),
-                'parent': parent if parent else None
+                'parent': parent
                 }
         self._base.append(item)
 

@@ -447,25 +447,33 @@
             {% block user-project-list %}
             {% if local_user %}
                 <div class="center-bottom">
-                    Project: {{user_project}}>
+                    Project: {{user_staff.user_project}}>
                     
                     <ul id="menu-tree">
                         <li><span><a href="/pro_project=Life">Life</a></span>
-                            <ul >
-                                <li><span class="caret">SubProjects</span>
-                                    <ul class="nested">
-                                        <li>Project 1</li>
-                                        <li>Project 2</li>
-                                    </ul>
-                                </li>
-                                <li><span class="caret">Contracts</span>
-                                    <ul class="nested">
-                                        <li>Contract 1</li>
-                                        <li>Contract 2</li>
-                                    </ul>
-                                </li> 
-                                {% if life_events %}
-                                    {% for item in life_events %}
+                            <ul>
+                                {% if user_staff.life_projects %}
+                                    <li><span class="caret">Projects</span>
+                                        <ul class="nested">
+                                            {% for item in user_staff.life_projects %}
+                                                <li><a href="/utem/{{item.link}}">{{item.name}}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                {% endif %}                               
+
+                                {% if user_staff.life_contracts %}
+                                    <li><span class="caret">Contracts</span>
+                                        <ul class="nested">
+                                            {% for item in user_staff.life_contracts %}
+                                                <li><a href="/utem/{{item.link}}">{{item.name}}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                {% endif %}
+                                
+                                {% if user_staff.life_events %}
+                                    {% for item in user_staff.life_events %}
                                         <li><a href="/event/{{item.link}}">{{item.name}}</a></li>
 
                                     {% endfor %}

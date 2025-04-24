@@ -7,16 +7,33 @@ from .uobject import UObject
 from .skill import USkill
 
 class UProject(UObject):
+    """
+        Class of user's projects stock
+        There are here its deals where user is:
+        - partner
+        - customer
+        - hired worker
+        and lists of its:
+            - partners
+            - customers
+            - hired workers
+        in every project
+
+        User can have many Projects, 
+        but there are always default project - "Life" project
+    """    
     def __init__(self, starter_user, project_name=None):
         super().__init__(project_name or f"{starter_user}'s project")
-        self.target = "Project's point:..."
-        self.project_laws = {}
+        self.target = "Project's point"
+        ## 'Do not" laws
+        self.project_laws = {"base": "CommU laws", }
         self.partners = [starter_user]
         self.customers = []
         self.workers = []
         self.subprojects = []
         self.contracts = []
-        self.skills = []
+        ## events = skill + time
+        self.events = []
 
     def get_file_name(self):
         return f"{slugify(self.name)}.ptp"

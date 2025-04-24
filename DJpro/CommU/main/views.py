@@ -10,8 +10,9 @@ from django.contrib.staticfiles import finders
 from upack.uproject import *
 from uproject.models.user import *
 from uproject.models.bases import EventBase
+from uproject.models.project import UProject
 
-from uproject.utils.utils import (parse_utemname, find_utems, get_utem_info)
+from uproject.utils.utils import (parse_utemname, find_utems, get_utem_info, get_life_tree)
 
 
 import logging
@@ -95,11 +96,10 @@ def show_index(request, args=None):
     '''
     ## if real user
     if local_user.commu_id:
-
-        def_context.update({"local_user": local_user.nickname,
-                            "user_project": local_user.get_project_name(),
-                            "life_events": local_user.get_project().event_list
-                            })
+        def_context.update({"local_user": local_user.nickname})
+    
+        print(get_life_tree(local_user))
+        def_context.update({"user_staff": get_life_tree(local_user)})
 
 
     '''
