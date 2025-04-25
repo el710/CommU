@@ -9,7 +9,7 @@ from django.contrib.staticfiles import finders
 
 from upack.uproject import *
 from uproject.models.user import *
-from uproject.models.bases import EventBase
+from uproject.models.bases import UtemBase
 from uproject.models.project import UProject
 
 from uproject.utils.utils import (parse_utemname, find_utems, get_utem_info, get_life_tree)
@@ -175,7 +175,7 @@ def signup(request):
             local_user.commu_id = hash(local_user.nickname)
             logging.info(f'new user: {local_user}')
             
-            local_user.add_eventbase(EventBase())
+            local_user.add_eventbase(UtemBase())
             return redirect('/') 
             # else:
             #     def_context.update({'passstate': "... passwords is not equal. Try again."})
@@ -395,7 +395,7 @@ def crud_event(request, args=None):
         logging.info(f'read event {utem_type}, {utem_id}\n')
         
         ## !!! take from user
-        local_user.pro_event = local_user.events.read_event(utem_id)
+        local_user.pro_event = local_user.events.read(utem_id)
         if local_user.pro_event:
             def_context.update({"user_skill": local_user.pro_event.name})
 

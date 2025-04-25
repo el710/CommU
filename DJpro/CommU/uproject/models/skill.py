@@ -6,7 +6,10 @@ import logging
 from slugify import slugify
 from datetime import datetime
 
-from .uobject import UObject
+try:
+    from uobject import UObject
+except:
+    from .uobject import UObject
 
 class USkill(UObject):
     def __init__(self, name, description=None, resources=None, goal=None):

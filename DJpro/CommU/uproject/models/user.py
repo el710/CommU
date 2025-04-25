@@ -5,7 +5,7 @@
 import logging
 import copy
 
-from .bases import EventBase
+from .bases import UtemBase
 
 GUEST_USER = 'Guest'
 class UUser():
@@ -37,7 +37,7 @@ class UUser():
         ## pointer on template utem - to make new, to load, to watch parameters, to add to project, work on index page
         self.temp_utem = None 
 
-        ## base of all user's events = skill+time
+        ## base of user's events (skill+time) single/from contracts/from projects
         self.events = None ## EventBase()
         ## pointer to current skill from projects user is working with
         self.pro_event = None        
@@ -53,7 +53,7 @@ class UUser():
         ## searching utems
         self.search = None
 
-    def add_eventbase(self, event_base:EventBase):
+    def add_eventbase(self, event_base:UtemBase):
         self.events = event_base
                 
 
@@ -82,7 +82,7 @@ class UUser():
         skill.set_event(self, event)
         # logging.info(f" {skill} : {self.temp_utem}")
 
-        self.events.add_event(skill, skill.get_token(), self.projects[self.pro_project])
+        self.events.add(skill, self.projects[self.pro_project])
 
         current_project = self.projects[self.pro_project]
         # logging.info(f" {current_project} : {type(current_project)}")

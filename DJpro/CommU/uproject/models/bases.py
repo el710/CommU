@@ -4,9 +4,14 @@
 import copy
 import logging
 
-from .skill import USkill
+try:
+    from skill import USkill
+    from uobject import UObject
+except:
+    from .skill import USkill
+    from .uobject import UObject
 
-class EventBase():
+class UtemBase():
     '''
         Operative base of events for user
     '''
@@ -25,44 +30,70 @@ class EventBase():
                 
         raise StopIteration() ## method 'for' will catch this exception
 
-
-    def add_event(self, event:USkill, id_hash, parent=None):
+    def add(self, utem:UObject, parent=None):
         '''
-            Create event 
+            Create & save 
         '''
-        item = {"id": str(id_hash),
-                "event": copy.deepcopy(event),
+        item = {"id": utem.get_token(),
+                "value": copy.deepcopy(utem),
                 'parent': parent
                 }
         self._base.append(item)
 
-    def read_event(self, id_hash):
+    def read(self, id_hash):
         '''
-            Find and return event
+            Find and return
         '''
         for item in self._base:
             if item["id"] == str(id_hash):
                 # logging.info(f"found : {item}\n")
-                return item["event"]
+                return item["value"]
         return None
 
-    def edit_event(self, id_hash, event:USkill, newid_hash, parent=None):
-        utem = self.read_event(id_hash)
-        if utem:
-            utem["id"] = str(newid_hash)
-            utem["event"] = copy.deepcopy(event)
-            utem["parent"] = parent if parent else None
+    def edit(self, id_hash, new_utem:UObject, parent=None):
+        for item in self._base:
+            if item["id"] == id_hash:
+                item["id"] = new_utem.get_token()
+                item["value"] = copy.deepcopy(new_utem)
+                item["parent"] = parent if parent else None
 
-    def del_event(self, id_hash):
-
-        utem = self.read_event(id_hash)
-        if utem:
-            self._base.remove(utem)
-        
+    def delete(self, id_hash=None, link=None): ## !!! recursive
+        if id_hash or link:
+            for item in self._base:
+                if item["id"] == id_hash or item["parent"] == link:
+                    link = item["value"].make_link()
+                    self.delete(self, link=link)
+                    self._base.remove(item)
         return None
 
 
+if __name__ == "__main__":
+    '''
+        Using annotation
+    '''
+    base = UtemBase()
+    event_1 = USkill("test 1")
+    event_2 = USkill("test 2")
+    event_3 = USkill("test 3")
+    
+    base.add(event_1)
+    base.add(event_2, event_1.make_link())
+    base.add(event_3)
+    for item in base: print(f"{item}")    
 
+    ev = base.read(event_2.get_token())
+    print(f" get item info: {ev.info()}\n")
+
+    hash = ev.get_token()
+    new_attr = {"name": "new name"}
+    ev.set_attributes(**new_attr) 
+    base.edit(hash, ev, event_1.make_link())
+    ev = base.read(ev.get_token())
+    print(f" get item info: {ev.info()}")    
+
+    base.delete (event_1.get_token())
+
+    for item in base: print(f"{item} - {item['value']}")
 
 
 

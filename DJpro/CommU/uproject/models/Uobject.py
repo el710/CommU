@@ -32,10 +32,10 @@ class UObject(Persistable):
                 setattr(self, key, datetime.fromisoformat(value) if key == "create_datetime" else value)
 
     def get_token(self):
-        return hash(f"{self.name}:{self.author}:{self.create_datetime}:{self.geosocium}")
+        return str(hash(f"{self.name}:{self.author}:{self.create_datetime}:{self.geosocium}"))
 
     def make_link(self):
-        return f"{slugify(self.name)}:{self.get_token()}"
+        return f"{self.__class__.__name__}={self.get_token()}".lower()
 
     def to_dict(self):
         data = self.__dict__.copy()
@@ -48,3 +48,6 @@ class UObject(Persistable):
 
     def __str__(self):
         return f"{self.__class__.__name__}({self.name})"
+    
+    def info(self):
+        return f"{self} staff: {vars(self)}\n"

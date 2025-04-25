@@ -84,7 +84,7 @@ class UObject():
 
 
     def make_link(self):
-        return f"{self.__class__.__name__}={self.get_token()}" 
+        return f"{self.__class__.__name__}={self.get_token()}".lower() 
 
 
     def get_file_name(self):
