@@ -13,7 +13,8 @@ class UUser():
         User's data
     '''
     def __init__(self, nickname):
-        self.commu_id = None
+        self.commu_id = hash(nickname) if nickname != GUEST_USER else None
+
         self.nickname = nickname
         self.password = None
         self.email = None
@@ -24,45 +25,43 @@ class UUser():
 
         self.geosocium = 'Earth'
         self.timezone = None
-
-        ## list of all user's contacts - phone book
-        self.contacts = None
-
-        ## list of all user's projects
-        self.projects = None
+     
 
         '''
             Working context
         '''
-        ## pointer on template utem - to make new, to load, to watch parameters, to add to project, work on index page
-        self.temp_utem = None 
-
-        ## base of user's events (skill+time) single/from contracts/from projects
-        self.events = None ## EventBase()
-        ## pointer to current skill from projects user is working with
-        self.pro_event = None        
-
-        
-
-        ## pointer on current project user is working with - def as Life
-        self.pro_project = None
-
-        ## pointer to current contract from projects user is working with
-        self.pro_contract = None
-        
-        ## searching utems
+        ## searching utem
         self.search = None
 
-    def add_eventbase(self, event_base:UtemBase):
+        ## pointer on template utem - to make new, to load, to watch parameters, to add to project, work on index page
+        self.temp_utem = None 
+      
+         ## list of all user's contacts - phone book
+        self.contacts = None
+
+
+    def init_event_base(self, event_base:UtemBase):
+        ## base of user's events (skill+time) single/from contracts/from projects
         self.events = event_base
-                
+        ## pointer to current skill from projects user is working with
+        self.pro_event = None
+    
+    def init_contract_base(self, contract_base:UtemBase):
+        self.contracts = contract_base
+        ## pointer to current contract from projects user is working with
+        self.pro_contract = None
+    
+    def init_project_base(self, project_base:UtemBase):
+        self.projects = project_base
+        ## pointer on current project user is working with - def as Life
+        self.pro_project = None ## :UProject
 
     def add_project(self, project):
-        if self.projects == None:
-            self.projects = [project]
-        else:
-            self.projects.append(project)
-        self.pro_project = len(self.projects) - 1
+        if hasattr(self, "projects"):
+            parent = self.pro_project.make_link() if self.pro_project else None
+            self.pro_project = copy.deepcopy(project)
+            self.projects.add(project, parent)
+        
 
 
     def copy_workutem(self):
@@ -82,18 +81,15 @@ class UUser():
         skill.set_event(self, event)
         # logging.info(f" {skill} : {self.temp_utem}")
 
-        self.events.add(skill, self.projects[self.pro_project])
-
-        current_project = self.projects[self.pro_project]
-        # logging.info(f" {current_project} : {type(current_project)}")
+        self.events.add(skill, self.pro_project.make_link())
 
         ## save event to plan as tuple
         try:
-            current_project.add_skill(skill)
+            self.pro_project.add_event(skill)
         except Exception as exc:
             logging.exception(f"add new event error {exc}")
 
-        logging.info(f"Project skills: {current_project.events} ")
+        logging.info(f"Project skills: {self.pro_project.events} ")
 
         
 class ClientUser(UUser):

@@ -12,7 +12,7 @@ from uproject.models.user import *
 from uproject.models.bases import UtemBase
 from uproject.models.project import UProject
 
-from uproject.utils.utils import (parse_utemname, find_utems, get_utem_info, get_life_tree)
+from uproject.utils.utils import (parse_utemname, find_utems, get_utem_info, get_project_tree)
 
 
 import logging
@@ -97,9 +97,7 @@ def show_index(request, args=None):
     ## if real user
     if local_user.commu_id:
         def_context.update({"local_user": local_user.nickname})
-    
-        print(get_life_tree(local_user))
-        def_context.update({"user_staff": get_life_tree(local_user)})
+        def_context.update({"user_staff": get_project_tree(local_user)})
 
 
     '''
@@ -167,15 +165,28 @@ def signup(request):
             # repassword = request.POST.get("user_repassword")
             # email = form.cleaned_data['email']
 
-            # print(f"ext_post(): POST: {name} {email} {password} {repassword} ")
-            
+            '''
+                In base we looking for user by hash - no passwords
+
+            '''
             # if password == repassword:
+            ## if no such user
             local_user = UUser(name)
-            local_user.add_project(UProject(local_user, "Life"))
+            ## hash for real user
             local_user.commu_id = hash(local_user.nickname)
+            '''
+                Save In base user by hash - no passwords
+
+            '''            
             logging.info(f'new user: {local_user}')
+
+            local_user.init_event_base(UtemBase())
+            local_user.init_contract_base(UtemBase())
+            local_user.init_project_base(UtemBase())
+            ## default project - "Life"
+            local_user.add_project(UProject(local_user, "Life"))
             
-            local_user.add_eventbase(UtemBase())
+            
             return redirect('/') 
             # else:
             #     def_context.update({'passstate': "... passwords is not equal. Try again."})
@@ -335,7 +346,7 @@ def crud_project(request, args=None):
 
     if local_user:
         def_context.update({"local_user": local_user.nickname,
-                            "user_project": local_user.work_project
+                            "user_project": local_user.pro_project
                         })
 
     if args:
@@ -368,7 +379,7 @@ def crud_event(request, args=None):
     
     if local_user.commu_id:
         def_context.update({"local_user": local_user.nickname,
-                            "user_project": local_user.projects[local_user.pro_project].name
+                            "user_project": local_user.pro_project.name
                           })
         if local_user.pro_contract:
             def_context.update({"user_contract": local_user.pro_contract})
@@ -392,14 +403,17 @@ def crud_event(request, args=None):
 
     else:  ## read & edit event
         utem_type, utem_id = parse_utemname(args)
-        logging.info(f'read event {utem_type}, {utem_id}\n')
+        logging.info(f'get event {utem_type}, {utem_id}\n')
         
         ## !!! take from user
-        local_user.pro_event = local_user.events.read(utem_id)
-        if local_user.pro_event:
+        item = local_user.events.read(utem_id)
+        if item:
+            logging.info(f'find event {item}\n')
+            
+            local_user.pro_event = item
             def_context.update({"user_skill": local_user.pro_event.name})
 
-        now = datetime(year=2025, month=1, day=1, hour=8, minute=0, tzinfo=local_user.timezone)
+            now = datetime(year=2025, month=1, day=1, hour=8, minute=0, tzinfo=local_user.timezone)
 
         start_date_day = f"{now.day:02d}"
         start_date_month = f"{now.month:02d}"

@@ -10,7 +10,7 @@ class UContract(UObject):
         super().__init__(name)
         self.customer = customer_id
         self.provider = provider_id
-        self.state = "template"
+        self.state = "template" ## "offer", "deal", "closed"
         self.customer_credit = []
         self.customer_debet = []
         self.provider_credit = []

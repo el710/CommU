@@ -47,12 +47,12 @@ def get_utem_info(utem):
                    "about_value": info})
     return result
 
-def get_life_tree(user: UUser):
+def get_project_tree(user: UUser):
 
     root_path = "recursive by tree"
-    root = {"name": user.projects[user.pro_project].name, "link": user.projects[user.pro_project].make_link()}
+    root = {"name": user.pro_project.name, "link": user.pro_project.make_link()}
 
-    event_list = [{"name": event["value"].name, "link": event["value"].make_link()} for event in user.events]
+    event_list = [{"name": event["name"], "link": event["link"]} for event in user.pro_project.events]
 
 
     context = { "root_path": root_path,

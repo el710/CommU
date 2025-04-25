@@ -17,6 +17,7 @@ class UtemBase():
     '''
     def __init__(self):
         self._base = []
+        self.counter = 0
     
     def __iter__(self):
         self.counter = 0
@@ -29,6 +30,7 @@ class UtemBase():
             return self._base[ind]
                 
         raise StopIteration() ## method 'for' will catch this exception
+
 
     def add(self, utem:UObject, parent=None):
         '''
@@ -45,7 +47,7 @@ class UtemBase():
             Find and return
         '''
         for item in self._base:
-            if item["id"] == str(id_hash):
+            if item["id"] == id_hash:
                 # logging.info(f"found : {item}\n")
                 return item["value"]
         return None
@@ -79,7 +81,7 @@ if __name__ == "__main__":
     base.add(event_1)
     base.add(event_2, event_1.make_link())
     base.add(event_3)
-    for item in base: print(f"{item}")    
+    print(f"{base.__next__()}")    
 
     ev = base.read(event_2.get_token())
     print(f" get item info: {ev.info()}\n")

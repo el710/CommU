@@ -32,13 +32,14 @@ class UProject(UObject):
         self.workers = []
         self.subprojects = []
         self.contracts = []
-        ## events = skill + time
+
+        ## list of links to events(skill + time)
         self.events = []
 
     def get_file_name(self):
         return f"{slugify(self.name)}.ptp"
 
-    def add_skill(self, skill: USkill):
+    def add_event(self, skill: USkill):
         time_moment = skill._event['start_time'] if skill._event else 'unknown-time'
         new_item = {"name": f"{time_moment} {skill.name}", "link": skill.make_link()}
-        self.skills.append(new_item)
+        self.events.append(new_item)

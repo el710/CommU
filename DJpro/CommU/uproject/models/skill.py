@@ -12,6 +12,10 @@ except:
     from .uobject import UObject
 
 class USkill(UObject):
+    """
+        A simple skill that depends only on one person.
+        The person do it by itself
+    """    
     def __init__(self, name, description=None, resources=None, goal=None):
         super().__init__(name)
         self.description = description

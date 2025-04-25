@@ -80,7 +80,7 @@ class UObject():
         self.public = False
     
     def get_token(self):
-        return hash(f"{self.name}:{self.author}:{self.create_datetime}:{self.geosocium}")
+        return str(hash(f"{self.name}:{self.author}:{self.create_datetime}:{self.geosocium}"))
 
 
     def make_link(self):
@@ -311,30 +311,30 @@ class USkill(UObject):
         return USkill.public_skills
     
 
-class UContract(UObject):
-    """
-        Deal structure for dealers
-    """
-    def __init__(self, contract_name, customer_id, provider_id):
-        super().__init__(contract_name)
+# class UContract(UObject):
+#     """
+#         Deal structure for dealers
+#     """
+#     def __init__(self, contract_name, customer_id, provider_id):
+#         super().__init__(contract_name)
         
-        ## should to save it in templates library
-        self.public = False
+#         ## should to save it in templates library
+#         self.public = False
 
-        self.customer = customer_id
-        self.provider = provider_id
+#         self.customer = customer_id
+#         self.provider = provider_id
 
-        self.state = "template" ## "offer", "deal", "closed"
+#         self.state = "template" ## "offer", "deal", "closed"
 
-        ## Dealers skills
-        self.customer_credit = []
-        self.customer_debet = []
+#         ## Dealers skills
+#         self.customer_credit = []
+#         self.customer_debet = []
 
-        self.provider_credit = []
-        self.provider_debet = []
+#         self.provider_credit = []
+#         self.provider_debet = []
 
-        """deals history"""
-        self.history = []
+#         """deals history"""
+#         self.history = []
 
 
 # class UProject(UObject):
