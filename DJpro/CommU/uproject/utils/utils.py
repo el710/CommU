@@ -1,6 +1,7 @@
 """
     Copyright (c) 2025 Kim Oleg <theel710@gmail.com>
 """
+import os
 import logging
 
 from ..models.skill import USkill
@@ -10,7 +11,7 @@ from ..models.user import UUser
 from ..storage.storage import FileStorage
 
 
-def parse_utemname(arg: str):
+def parse_link(arg: str):
     try:
         type_str, name = arg.split("=")
         return type_str.lower(), name
@@ -18,6 +19,32 @@ def parse_utemname(arg: str):
         logging.info(f" wrong args: {arg}\n")
         return None, None
 
+def find_skills(subdir=None):
+    os.chdir(subdir)
+    # match type:
+    #     case 'skill': ext = '.stp'
+    #     case 'contract': ext = '.ctp'
+    #     case 'project': ext = '.ptp'
+    #     __: ext = ''
+
+    files = [f for f in os.listdir() if os.path.isfile(f) and '.stp' in os.path.splitext(f)]
+    os.chdir('..')
+    return [os.path.splitext(f)[0] for f in files]
+
+def make_skill_context(skills: list):
+    context = []
+    storage = FileStorage('static')
+    for name in skills:
+        utem = USkill(name)
+        storage.load(utem)
+        context.append({"name": utem.name, "link": (f"{utem.__class__.__name__}={utem.get_slug_name()}").lower()})
+    
+    return context
+
+        
+
+
+    
 
 def find_utems(key_name, path="."):
     storage = FileStorage(path)

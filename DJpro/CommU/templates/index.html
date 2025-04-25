@@ -401,10 +401,10 @@
                         <li><span class="caret">Contracts</span>
                         </li>
                         <li><span class="caret">Skills</span>
-                            {% if public_skills != None %}
+                            {% if public_skills %}
                                 <ul class="active">
                                     {% for item in public_skills %}
-                                        <li> <a href="skill={{item}}">{{item}}</a> </li>
+                                        <li> <a href="{{item.link}}">{{item.name}}</a> </li>
                                     {% endfor %}
                                 </ul>
                             {% endif %}

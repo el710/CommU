@@ -224,91 +224,91 @@ class UObject():
     
 
 
-class USkill(UObject):
-    """
-        A simple skill that depends only on one person.
-        The person do it by itself
-    """
-    public_skills = None
-    find_static = None
+# class USkill(UObject):
+#     """
+#         A simple skill that depends only on one person.
+#         The person do it by itself
+#     """
+#     public_skills = None
+#     find_static = None
 
-    def __init__(self, name:str, description:str = None, resources:str = None, goal:str = None):
-        super().__init__(name)
+#     def __init__(self, name:str, description:str = None, resources:str = None, goal:str = None):
+#         super().__init__(name)
         
-        ## how to do skill
-        self.description = description 
+#         ## how to do skill
+#         self.description = description 
 
-        ## resources
-        self.resources = resources
+#         ## resources
+#         self.resources = resources
 
-        ## object of process
-        self.goal = goal ## "time"
+#         ## object of process
+#         self.goal = goal ## "time"
 
-        ## -advanced parameters
+#         ## -advanced parameters
 
-        """moment to do """
-        self._event = None ## at 5:00 AM....
+#         """moment to do """
+#         self._event = None ## at 5:00 AM....
 
-        """average duration"""
-        self._duration = None
+#         """average duration"""
+#         self._duration = None
         
-        self._state = "template" ## "offer" -> "deal" -> "done"
+#         self._state = "template" ## "offer" -> "deal" -> "done"
 
     
-    def sign(self, author, geosocium = None, public = None):
-        '''
-            Sign skill at create
-        '''
-        self.author = author
+#     def sign(self, author, geosocium = None, public = None):
+#         '''
+#             Sign skill at create
+#         '''
+#         self.author = author
 
-        if geosocium:
-            self.geosocium = geosocium
+#         if geosocium:
+#             self.geosocium = geosocium
 
-        ## should to save it in templates library
-        if public:
-            self.public = public
+#         ## should to save it in templates library
+#         if public:
+#             self.public = public
 
-        self.create_datetime = datetime.now()
+#         self.create_datetime = datetime.now()
     
-    def set_event(self, user, event):
-        self.executor = user
-        self._event = event
+#     def set_event(self, user, event):
+#         self.executor = user
+#         self._event = event
         
     
-    ## overload '=='
-    def __eq__(self, value):
-        if value: 
-            return (self.name == value.name and
-                    self.resources == value.resources and
-                    self.description == value.description and
-                    self.goal == value.goal
-                   )
-        return False
+#     ## overload '=='
+#     def __eq__(self, value):
+#         if value: 
+#             return (self.name == value.name and
+#                     self.resources == value.resources and
+#                     self.description == value.description and
+#                     self.goal == value.goal
+#                    )
+#         return False
     
-    ## overload '!='
-    def __ne__(self, value):
-        if value:
-            return (self.name != value.name or
-                    self.resources != value.resources or
-                    self.description != value.description or
-                    self.goal != value.goal
-                    )
-        return True
+#     ## overload '!='
+#     def __ne__(self, value):
+#         if value:
+#             return (self.name != value.name or
+#                     self.resources != value.resources or
+#                     self.description != value.description or
+#                     self.goal != value.goal
+#                     )
+#         return True
 
-    def get_slug_name(self):
-        return f"{slugify(self.name)}"
+#     def get_slug_name(self):
+#         return f"{slugify(self.name)}"
     
-    def load_public_skills(subdir=None):
-        if USkill.find_static == None:
-            os.chdir(subdir)
-            USkill.find_static = os.curdir
+#     def load_public_skills(subdir=None):
+#         if USkill.find_static == None:
+#             os.chdir(subdir)
+#             USkill.find_static = os.curdir
         
-        ## logging.info(f"dir {os.listdir()}")
-        files = [f for f in os.listdir() if os.path.isfile(f) and ".stp" in os.path.splitext(f)]
-        USkill.public_skills = [os.path.splitext(f)[0] for f in files]
+#         ## logging.info(f"dir {os.listdir()}")
+#         files = [f for f in os.listdir() if os.path.isfile(f) and ".stp" in os.path.splitext(f)]
+#         USkill.public_skills = [os.path.splitext(f)[0] for f in files]
     
-    def get_public_skills():
-        return USkill.public_skills
+#     def get_public_skills():
+#         return USkill.public_skills
     
 
 # class UContract(UObject):

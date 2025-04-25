@@ -11,8 +11,11 @@ from upack.uproject import *
 from uproject.models.user import *
 from uproject.models.bases import UtemBase
 from uproject.models.project import UProject
+from uproject.models.contract import UContract
+from uproject.models.skill import USkill
 
-from uproject.utils.utils import (parse_utemname, find_utems, get_utem_info, get_project_tree)
+
+from uproject.utils.utils import (parse_link, find_utems, get_utem_info, get_project_tree, find_skills, make_skill_context)
 
 
 import logging
@@ -24,8 +27,10 @@ from datetime import datetime
 ## There is always a user - by define 'Guest'
 
 local_user = UUser(GUEST_USER)
+public_skills = None
+public_contracts = None
+public_projects = None
 
-public_dealers = None
 
 WORK_PATH = os.path.join(os.getcwd(), "static")
 
@@ -63,10 +68,10 @@ def show_index(request, args=None):
 
     ## load indo of choosen utem
     if args: ## new utem has choosen
-        utem_type, utem_name = parse_utemname(args)
+        utem_type, utem_name = parse_link(args)
 
         logging.info(f'{utem_type}: {utem_name}\n')
-        for cls, label in [(USkill, "skill"), (UContract, "contract"), (UProject, "project")]:
+        for cls, label in [(USkill, "uskill"), (UContract, "ucontract"), (UProject, "uproject")]:
             if utem_type == label:
                 local_user.temp_utem = cls(utem_name)
 
@@ -113,9 +118,10 @@ def show_index(request, args=None):
         Load public utems
     '''
     ## Make list of public skills
-    USkill.load_public_skills("static")
-    # logging.info(f"loaded {USkill.get_public_skills()}")
-    def_context.update({'public_skills': USkill.get_public_skills()})
+    public_skills = find_skills("static")
+    print(f"skills: {public_skills}\n")
+    # print(make_skill_context(public_skills))
+    def_context.update({'public_skills': make_skill_context(public_skills)})
 
     
     logging.info(f"Context: {def_context} ")
@@ -402,7 +408,7 @@ def crud_event(request, args=None):
         start_time = f"{now.hour:02d}:{now.minute:02d}"
 
     else:  ## read & edit event
-        utem_type, utem_id = parse_utemname(args)
+        utem_type, utem_id = parse_link(args)
         logging.info(f'get event {utem_type}, {utem_id}\n')
         
         ## !!! take from user
