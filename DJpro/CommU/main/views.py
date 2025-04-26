@@ -7,15 +7,16 @@ from django.contrib.staticfiles import finders
 # Create your views here.
 
 
-from upack.uproject import *
+# from upack.uproject import *
 from uproject.models.user import *
 from uproject.models.bases import UtemBase
 from uproject.models.project import UProject
 from uproject.models.contract import UContract
 from uproject.models.skill import USkill
 
+from uproject.utils.utils import *
 
-from uproject.utils.utils import (parse_link, find_utems, get_utem_info, get_project_tree, find_skills, make_skill_context)
+from uproject.storage.filestorage import FileStorage
 
 
 import logging
@@ -66,7 +67,7 @@ def show_index(request, args=None):
         local_user.temp_utem = None
         return redirect("/")
 
-    ## load indo of choosen utem
+    ## load info of choosen utem
     if args: ## new utem has choosen
         utem_type, utem_name = parse_link(args)
 
@@ -76,7 +77,9 @@ def show_index(request, args=None):
                 local_user.temp_utem = cls(utem_name)
 
         if local_user.temp_utem:
-            if not local_user.temp_utem.load_template(WORK_PATH):
+            load = FileStorage(WORK_PATH).load(local_user.temp_utem)
+            logging.info(f"Load utem: {load} ")
+            if not load:
                 local_user.temp_utem = None
 
     logging.info(f'local user utem: {local_user.temp_utem}\n')            
@@ -118,7 +121,7 @@ def show_index(request, args=None):
         Load public utems
     '''
     ## Make list of public skills
-    public_skills = find_skills("static")
+    public_skills = find_public_skills("static")
     print(f"skills: {public_skills}\n")
     # print(make_skill_context(public_skills))
     def_context.update({'public_skills': make_skill_context(public_skills)})
@@ -191,6 +194,8 @@ def signup(request):
             local_user.init_project_base(UtemBase())
             ## default project - "Life"
             local_user.add_project(UProject(local_user, "Life"))
+
+            local_user.init_storage(FileStorage(WORK_PATH))
             
             
             return redirect('/') 
@@ -258,8 +263,7 @@ def crud_skill(request, args=None):
     logging.info(f'local user: {local_user}\n')
 
     ## don't open skill page for none
-    if args == None and local_user.commu_id == None:
-        return redirect("/")
+    # if args == None: return redirect("/")
 
     def_context = {}
 
@@ -268,15 +272,19 @@ def crud_skill(request, args=None):
 
 
     if args == 'temp': 
-        def_context.update(local_user.temp_utem.json())
+        if local_user.temp_utem:
+            def_context.update(local_user.temp_utem.to_dict())
         logging.info(f"load template {def_context}\n")
     elif args == "event":
-        def_context.update(local_user.pro_skill.json())
+        if hasattr(local_user, 'pro_event') and local_user.pro_event:
+            def_context.update(local_user.pro_event.to_dict())
+        
     
     
     if request.method == "POST":
         if request.POST.get('delete'):
-            local_user.temp_utem.delete_template(WORK_PATH)
+            if hasattr(local_user, 'storage'):
+                local_user.storage.delete(local_user.temp_utem)
             local_user.temp_utem = None
 
         elif request.POST.get('save'):
@@ -292,19 +300,19 @@ def crud_skill(request, args=None):
                 skill_goal = form.cleaned_data['skill_goal']
                 skill_public = form.cleaned_data['skill_public']
 
-                new_skill = USkill(name=skill_name,
-                                   resources=skill_resources,
-                                   description=skill_desc,
-                                   goal=skill_goal)
+                local_user.temp_utem = USkill(name=skill_name,
+                                              resources=skill_resources,
+                                              description=skill_desc,
+                                              goal=skill_goal)
                 
-                if local_user.temp_utem == None or local_user.work_skill != new_skill:
-                    local_user.temp_utem = new_skill
-                    local_user.temp_utem.sign(author=local_user.nickname,
-                                              geosocium=local_user.geosocium,
-                                              public=skill_public
-                                            )
-                    logging.info(f"new skill {local_user.temp_utem}")
-                    local_user.temp_utem.save_as_template(True, WORK_PATH)
+                local_user.temp_utem.sign(author=local_user.nickname,
+                                          geosocium=local_user.geosocium,
+                                          public=skill_public
+                                         )
+                logging.info(f"new skill {local_user.temp_utem}")
+                
+                if hasattr(local_user, 'storage'):
+                    local_user.storage.save(local_user.temp_utem)
             
         return redirect("/")
     else:
@@ -323,21 +331,21 @@ def crud_contract(request, args=None):
 
     def_context = {}
 
-    if local_user:
-        def_context.update({"local_user": local_user.nickname,
-                            "user_project": local_user.work_project
-                        })
+    # if local_user:
+    #     def_context.update({"local_user": local_user.nickname,
+    #                         "user_project": local_user.work_project
+    #                     })
 
-    if args:
-        logging.info(f"\ncrud_skill(): load template {def_context} ")
+    # if args:
+    #     logging.info(f"\ncrud_skill(): load template {def_context} ")
 
     
-    if request.method == "POST":
+    # if request.method == "POST":
         
-        if local_user:
-            return redirect("/user/")
-        else:
-            return redirect("/")
+    #     if local_user:
+    #         return redirect("/user/")
+    #     else:
+    #         return redirect("/")
     
     return render(request, "index_temp.html", context=def_context)
 

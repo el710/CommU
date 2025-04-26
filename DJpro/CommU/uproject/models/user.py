@@ -40,6 +40,9 @@ class UUser():
         self.contacts = None
 
 
+    def init_storage(self, storage):
+        self.storage = storage
+
     def init_event_base(self, event_base:UtemBase):
         ## base of user's events (skill+time) single/from contracts/from projects
         self.events = event_base
@@ -55,6 +58,7 @@ class UUser():
         self.projects = project_base
         ## pointer on current project user is working with - def as Life
         self.pro_project = None ## :UProject
+
 
     def add_project(self, project):
         if hasattr(self, "projects"):

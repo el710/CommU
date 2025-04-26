@@ -3,7 +3,7 @@ import logging
 import os
 from models.skill import USkill
 from models.project import UProject
-from storage.storage import FileStorage
+from CommU.uproject.storage.filestorage import FileStorage
 
 def create_and_save_skill():
     print("Create a new skill")

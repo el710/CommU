@@ -8,7 +8,7 @@ import os
 import sys
 from models.skill import USkill
 from models.project import UProject
-from storage.storage import FileStorage
+from CommU.uproject.storage.filestorage import FileStorage
 
 app = FastAPI()
 storage = FileStorage()

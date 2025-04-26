@@ -8,7 +8,7 @@ from ..models.skill import USkill
 from ..models.contract import UContract
 from ..models.project import UProject
 from ..models.user import UUser
-from ..storage.storage import FileStorage
+from ..storage.filestorage import FileStorage
 
 
 def parse_link(arg: str):
@@ -19,7 +19,7 @@ def parse_link(arg: str):
         logging.info(f" wrong args: {arg}\n")
         return None, None
 
-def find_skills(subdir=None):
+def find_public_skills(subdir=None):
     os.chdir(subdir)
     # match type:
     #     case 'skill': ext = '.stp'
@@ -64,15 +64,16 @@ def find_utems(key_name, path="."):
 
 def get_utem_info(utem):
     '''
-        Return dict with info about founded skill, contract or project...
+        Return dict with info about founded utem
     '''    
-    result = {}
+    context = {}
     info = [f"{k}: {v}" for k, v in utem.to_dict().items() if k != 'name' and not k.startswith('_') and v]
     
-    result.update({"about_type": utem.__class__.__name__.lower(), 
+    context.update({"about_type": utem.__class__.__name__.lower(), 
                    "about_name": utem.name, 
                    "about_value": info})
-    return result
+    return context
+
 
 def get_project_tree(user: UUser):
 
