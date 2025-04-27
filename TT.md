@@ -23,7 +23,7 @@ In a smaller group, people are more free
 
 **Main task: Make helpfull tools to manage men own daily bussiness, community bussiness, mankind bussiness & projects - "DEAL conception":**
 - there are no just 'events' - there are paces in businesses (example: go to shop -> make order, ...; go to cinema -> buy movie session, ...; park walking -> health project step, ...)
-- "customer", "hired worker", "partner" models (business partner, idea partner, life parther...)
+- "customer", "contractor (employee, hired worker)", "partner" models (business partner, idea partner, life parther...)
 - help to manage tasks and resourses,
 - help to cooperate in solving problems,
 - C.R.U.D. patterns of solvings

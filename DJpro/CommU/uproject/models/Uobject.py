@@ -17,6 +17,10 @@ class Persistable(ABC):
     @abstractmethod
     def get_file_name(self) -> str: pass
 
+    @abstractmethod
+    def get_title(self) -> str: pass
+
+
 
 class UObject(Persistable):
     def __init__(self, name: str):
@@ -51,3 +55,8 @@ class UObject(Persistable):
     
     def info(self):
         return f"{self} staff: {vars(self)}\n"
+    
+    def get_title(self):
+        return super().get_title()
+    
+

@@ -11,11 +11,11 @@ class UContract(UObject):
         self.customer = customer_id
         self.provider = provider_id
         self.state = "template" ## "offer", "deal", "closed"
-        self.customer_credit = []
-        self.customer_debet = []
-        self.provider_credit = []
-        self.provider_debet = []
+        self.eventchain = [] ## :  {event, customer, provider, dependence}
         self.history = []
 
     def get_file_name(self):
         return f"{slugify(self.name)}.ctp"
+    
+    def get_title(self, contragent:str):
+        return f"{contragent if contragent else ''} {self.name}"

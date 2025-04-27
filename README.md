@@ -52,37 +52,42 @@ Human! Protect the Flame of Prometheus from the darkness of ignorance.
  
 ## How it works
 
->### Enter point
-main process: Commu.py
-
->### Definitions
-There are Utems:
-- skill: one man process, skill + schedule = event;
-- contract: dial of two users - credit events + debet events;
-- project: partners, hired workers, customers, events, contracts, subprojects, budget, store.
-
->### User's properties
-
-temp_utem: pointer on template utem - to make new, to load, to watch parameters, to add to project
-pro_project: pointer on current project
-pro_contract: pointer on current contract
-pro_skill: pointer on current event
+  The "Guest" user can simply view public skills, contracts & projects.
+  To become a real user, you need to be a Human and register.
 
 
-uproject/
-├── models/
-│   ├── __init__.py
-│   ├── base.py
-│   ├── skill.py
-│   ├── contract.py
-│   └── project.py
-│
-├── storage/
-│   ├── __init__.py
-│   └── storage.py
-│
-├── utils/
-│   ├── __init__.py
-│   └── helpers.py
-│
-└── main.py  (optional CLI/entry point)
+>### Skill
+  A skill is a simple action that a person can perform independently.
+  All you need is to set a time to turn a skill into an event.
+
+  Create your own skill or choose one from the public ones and add it as an event in your Life.
+  You have the option to change the skill (event) or delete it.
+
+>### Contract
+  A contract is a deal between two people whereby each person must perform some action(event) for the other person.
+
+  An event for one person is a credit, and for another person it is a debit.
+
+  Create your own contract or choose one of the public ones and offer it to your contact.
+  If your contact accepts your offer, the contract will be added to each other's projects.
+```
+  Love is a contract without obligations.
+```
+
+>### Project
+  Your main project is your Life.
+
+ Create your own project or choose one of the public ones and add it to your Life.
+ Add partners to your project and the offer will be sent to them.
+ If your partners accept your offer, the project will exist until the last partner leaves. (even without you)
+
+
+
+TODO:
+- utem functionality
+- testing (Unit)
+- database (MySQL, Postgre)
+- UEngine
+- telebot (Aiogram)
+- multyuser 
+- hosting

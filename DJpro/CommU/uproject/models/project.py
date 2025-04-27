@@ -5,6 +5,7 @@
 from slugify import slugify
 from .uobject import UObject
 from .skill import USkill
+from .contract import UContract
 
 class UProject(UObject):
     """
@@ -28,9 +29,8 @@ class UProject(UObject):
         ## 'Do not" laws
         self.project_laws = {"base": "CommU laws", }
         self.partners = [starter_user]
-        self.customers = []
-        self.workers = []
-        self.subprojects = []
+
+        self.projects = []
         self.contracts = []
 
         ## list of links to events(skill + time)
@@ -38,8 +38,15 @@ class UProject(UObject):
 
     def get_file_name(self):
         return f"{slugify(self.name)}.ptp"
+    
+    def get_title(self):
+        return f"pro {self.name}"
 
     def add_event(self, skill: USkill):
-        time_moment = skill._event['start_time'] if skill._event else 'unknown-time'
-        new_item = {"name": f"{time_moment} {skill.name}", "link": skill.make_link()}
-        self.events.append(new_item)
+        self.events.append({"name": skill.get_title(), "link": skill.make_link()})
+
+    def add_contract(self, contract: UContract, contragent: str = None):
+        self.contracts.append({"name": contract.get_title(contragent), "link": contract.make_link()})
+
+    def add_project(self, project: UObject):
+        self.projects.append({"name": project.get_title(), "link": project.make_link()})

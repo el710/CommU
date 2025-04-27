@@ -41,4 +41,8 @@ class USkill(UObject):
     def set_event(self, user, event):
         self.executor = user
         self._event = event
+    
+    def get_title(self):
+        time_moment = self._event['start_time'] if self._event else 'in plan'
+        return f"{time_moment} {self.name}"
 
