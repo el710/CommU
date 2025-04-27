@@ -74,10 +74,8 @@
                 <input type="submit" value="Add to..." name="set">
             </div>            
             <div class="items">
-                {% if user_contract %}
-                    contract "{{user_contract}}" skill "{{user_skill}}": 
-                {% else %}
-                    project "{{user_project}}" skill "{{user_skill}}": 
+                {% if user_root %}
+                    {{user_root}} skill "{{user_skill}}": 
                 {% endif %}
                 <label id="status">once {{start_date_day}} {{start_month_name}} {{start_date_year}} at {{start_time}}</label>
             </div>

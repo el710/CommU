@@ -15,7 +15,7 @@ class Persistable(ABC):
     def from_dict(self, data: dict): pass
 
     @abstractmethod
-    def get_file_name(self) -> str: pass
+    def get_file_name(self, user:str=None) -> str: pass
 
     @abstractmethod
     def get_title(self) -> str: pass
@@ -40,6 +40,12 @@ class UObject(Persistable):
 
     def make_link(self):
         return f"{self.__class__.__name__}={self.get_token()}".lower()
+    
+    def get_file_name(self, user:str=None):
+        if user:
+            return f"{user}-{slugify(self.name)}"
+        else:
+            return f"{slugify(self.name)}"
 
     def to_dict(self):
         data = self.__dict__.copy()

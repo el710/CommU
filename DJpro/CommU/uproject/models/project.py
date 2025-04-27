@@ -36,9 +36,9 @@ class UProject(UObject):
         ## list of links to events(skill + time)
         self.events = []
 
-    def get_file_name(self):
-        return f"{slugify(self.name)}.ptp"
-    
+    def get_file_name(self, user:str=None):
+        return f"{super().get_file_name(user)}.ptp"
+        
     def get_title(self):
         return f"pro {self.name}"
 

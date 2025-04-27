@@ -452,28 +452,28 @@
                     <ul id="menu-tree">
                         <li><span><a href="/proj/{{user_staff.root.link}}">{{user_staff.root.name}}</a></span>
                             <ul>
-                                {% if user_staff.life_projects %}
+                                {% if user_staff.projects %}
                                     <li><span class="caret">Projects</span>
                                         <ul class="nested">
-                                            {% for item in user_staff.life_projects %}
+                                            {% for item in user_staff.projects %}
                                                 <li><a href="/proj/{{item.link}}">{{item.name}}</a></li>
                                             {% endfor %}
                                         </ul>
                                     </li>
                                 {% endif %}                               
 
-                                {% if user_staff.life_contracts %}
+                                {% if user_staff.contracts %}
                                     <li><span class="caret">Contracts</span>
                                         <ul class="nested">
-                                            {% for item in user_staff.life_contracts %}
+                                            {% for item in user_staff.contracts %}
                                                 <li><a href="/deal/{{item.link}}">{{item.name}}</a></li>
                                             {% endfor %}
                                         </ul>
                                     </li>
                                 {% endif %}
                                 
-                                {% if user_staff.life_events %}
-                                    {% for item in user_staff.life_events %}
+                                {% if user_staff.events %}
+                                    {% for item in user_staff.events %}
                                         <li><a href="/event/{{item.link}}">{{item.name}}</a></li>
 
                                     {% endfor %}

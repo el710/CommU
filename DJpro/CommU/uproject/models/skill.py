@@ -25,9 +25,8 @@ class USkill(UObject):
         self._duration = None
         self._state = "template"
 
-    def get_file_name(self):
-        # logging.info(f"Skill name: {self.name}")
-        return f"{slugify(self.name)}.stp"
+    def get_file_name(self, user:str=None):
+        return f"{super().get_file_name(user)}.stp"
 
     def get_slug_name(self):
         return slugify(self.name)

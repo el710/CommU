@@ -6,6 +6,7 @@ import logging
 import copy
 
 from .bases import UtemBase
+from .uobject import UObject
 
 GUEST_USER = 'Guest'
 class UUser():
@@ -43,57 +44,21 @@ class UUser():
     def init_storage(self, storage):
         self.storage = storage
 
-    def init_event_base(self, event_base:UtemBase):
-        ## base of user's events (skill+time) single/from contracts/from projects
-        self.events = event_base
-        ## pointer to current skill from projects user is working with
-        self.pro_event = None
+    def init_utem_base(self, base:UtemBase, root:UObject=None):
+        ## base of user's utems
+        self.utems = base
+        if isinstance(root, UObject):
+            self.utems.add(copy.deepcopy(root))
+            ## pointer to current skill from projects user is working with
+            self.root_utem = self.utems.read(root.get_token())
+        else:
+            self.root_utem = None
     
-    def init_contract_base(self, contract_base:UtemBase):
-        self.contracts = contract_base
-        ## pointer to current contract from projects user is working with
-        self.pro_contract = None
-    
-    def init_project_base(self, project_base:UtemBase):
-        self.projects = project_base
-        ## pointer on current project user is working with - def as Life
-        self.pro_project = None ## :UProject
 
+    def add_utem(self, utem):
+        if hasattr(self, "utems"):
+            self.utems.add(copy.deepcopy(utem), self.root_utem.get_token())
 
-    def add_project(self, project):
-        if hasattr(self, "projects"):
-            parent = self.pro_project.make_link() if self.pro_project else None
-            self.pro_project = copy.deepcopy(project)
-            self.projects.add(project, parent)
-        
-
-
-    def copy_workutem(self):
-        return copy.deepcopy(self.temp_utem)
-        
-    def get_project_name(self):
-        return self.projects[self.pro_project].name if self.pro_project != None else None 
-
-
-    def save_event(self, event):
-        logging.info(f'data: {event}\n')
-
-        ## make copy of skill
-        skill = self.copy_workutem()
-
-        ## set executor & moment
-        skill.set_event(self, event)
-        # logging.info(f" {skill} : {self.temp_utem}")
-
-        self.events.add(skill, self.pro_project.make_link())
-
-        ## save event to plan as tuple
-        try:
-            self.pro_project.add_event(skill)
-        except Exception as exc:
-            logging.exception(f"add new event error {exc}")
-
-        logging.info(f"Project skills: {self.pro_project.events} ")
 
         
 class ClientUser(UUser):

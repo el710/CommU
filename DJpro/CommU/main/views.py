@@ -122,9 +122,9 @@ def show_index(request, args=None):
     '''
     ## Make list of public skills
     public_skills = find_public_skills("static")
-    print(f"skills: {public_skills}\n")
+    logging.info(f"founded skills: {public_skills}\n")
     # print(make_skill_context(public_skills))
-    def_context.update({'public_skills': make_skill_context(public_skills)})
+    def_context.update({'public_skills': make_skill_context(public_skills, WORK_PATH)})
 
     
     logging.info(f"Context: {def_context} ")
@@ -189,11 +189,11 @@ def signup(request):
             '''            
             logging.info(f'new user: {local_user}')
 
-            local_user.init_event_base(UtemBase())
-            local_user.init_contract_base(UtemBase())
-            local_user.init_project_base(UtemBase())
-            ## default project - "Life"
-            local_user.add_project(UProject(local_user, "Life"))
+            local_user.init_utem_base(UtemBase(), root=UProject(local_user, "Life"))
+            # local_user.init_contract_base(UtemBase())
+            # local_user.init_project_base(UtemBase())
+            # ## default project - "Life"
+            # local_user.add_project(UProject(local_user, "Life"))
 
             local_user.init_storage(FileStorage(WORK_PATH))
             
@@ -393,10 +393,10 @@ def crud_event(request, args=None):
     
     if local_user.commu_id:
         def_context.update({"local_user": local_user.nickname,
-                            "user_project": local_user.pro_project.name
+                            "user_root": local_user.root_utem.get_title()
                           })
-        if local_user.pro_contract:
-            def_context.update({"user_contract": local_user.pro_contract})
+        # if local_user.pro_contract:
+        #     def_context.update({"user_contract": local_user.pro_contract})
 
     
     if args == None: ## create(add) event
@@ -420,7 +420,7 @@ def crud_event(request, args=None):
         logging.info(f'get event {utem_type}, {utem_id}\n')
         
         ## !!! take from user
-        item = local_user.events.read(utem_id)
+        item = local_user.utems.read(utem_id)
         if item:
             logging.info(f'find event {item}\n')
             
@@ -451,7 +451,9 @@ def crud_event(request, args=None):
         if form.is_valid(): ## is_valid also makes cleaned_data
         
             if request.POST.get('set'):
-                local_user.save_event(form.cleaned_data)
+                local_user.temp_utem.set_event(local_user, form.cleaned_data)
+                local_user.add_utem(local_user.temp_utem)
+                
                                 
                 logging.info(f'exit by set\n')
                 return redirect('/')

@@ -13,9 +13,9 @@ class UContract(UObject):
         self.state = "template" ## "offer", "deal", "closed"
         self.eventchain = [] ## :  {event, customer, provider, dependence}
         self.history = []
-
-    def get_file_name(self):
-        return f"{slugify(self.name)}.ctp"
+    
+    def get_file_name(self, user:str=None):
+        return f"{super().get_file_name(user)}.ctp"
     
     def get_title(self, contragent:str):
         return f"{contragent if contragent else ''} {self.name}"

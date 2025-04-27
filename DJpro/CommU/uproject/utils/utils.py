@@ -31,9 +31,9 @@ def find_public_skills(subdir=None):
     os.chdir('..')
     return [os.path.splitext(f)[0] for f in files]
 
-def make_skill_context(skills: list):
+def make_skill_context(skills: list, path="."):
     context = []
-    storage = FileStorage('static')
+    storage = FileStorage(path)
     for name in skills:
         utem = USkill(name)
         storage.load(utem)
@@ -78,9 +78,10 @@ def get_utem_info(utem):
 def get_project_tree(user: UUser):
 
     root_path = "recursive by tree"
-    root = {"name": user.pro_project.name, "link": user.pro_project.make_link()}
+    root = {"name": user.root_utem.get_title(), "link": user.root_utem.make_link()}
 
-    event_list = [{"name": event["name"], "link": event["link"]} for event in user.pro_project.events]
+    event_list = [{"name": event["utem"].get_title(), "link": event["utem"].make_link()} for event in user.utems 
+                  if isinstance(event["utem"], USkill) and event["parent"] == user.root_utem.get_token()]
 
 
     context = { "root_path": root_path,
@@ -88,17 +89,17 @@ def get_project_tree(user: UUser):
                
                ## elements type annotation: {"name": , "link": }
                ## list of projects with "parent" = "Life"
-               "life_projects": [{"name": "pro_1", "link": "pro_1"},
+               "projects": [{"name": "pro_1", "link": "pro_1"},
                                  {"name": "pro_2", "link": "pro_2"},
                                 ],  
                 
                 ## list of contracts with "parent" = "Life" 
-               "life_contracts": [{"name": "deal_1", "link": "deal_1"},
+               "contracts": [{"name": "deal_1", "link": "deal_1"},
                                   {"name": "deal_2", "link": "deal_2"},
                                  ],
                 
                 ## list of events with "parent" = "Life"                                 
-               "life_events": event_list                      
+               "events": event_list                      
                }
 
             
