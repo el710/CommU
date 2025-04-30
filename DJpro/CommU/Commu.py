@@ -18,7 +18,7 @@ import queue
 
 from django.core.management import execute_from_command_line
 
-from telegram.telebot import telebot_start
+from telegram.utelebot import telebot_start
 
 from database.base_dispatcher import start_base_dispatcher
 

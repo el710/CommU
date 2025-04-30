@@ -29,6 +29,8 @@ class UtemBase():
                 
         raise StopIteration() ## method 'for' will catch this exception
 
+    def len(self):
+        return len(self._base)
 
     def add(self, utem:UObject, parent_id=None):
         '''

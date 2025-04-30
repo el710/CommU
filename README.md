@@ -1,12 +1,11 @@
 Copyright (c) 2024 Kim Oleg <theel710@gmail.com>
+>Human! Protect the Flame of Prometheus from the darkness of ignorance.
 
 # Project "CommU"
-Human! Protect the Flame of Prometheus from the darkness of ignorance.
-
 ---
-## CommU - Life-service
- - make & manage your projects;
- - interface: Web-site, telegram bot, mobile application;
+## CommU
+It is a Life-service project that helps to make & manage your projects. Community oriented.
+Interface: Web-site, telegram bot, mobile application.
 
 ---
 
@@ -55,6 +54,7 @@ Human! Protect the Flame of Prometheus from the darkness of ignorance.
   The "Guest" user can simply view public skills, contracts & projects.
   To become a real user, you need to be a Human and register.
 
+Here are some utems:
 
 >### Skill
   A skill is a simple action that a person can perform independently.
@@ -66,7 +66,7 @@ Human! Protect the Flame of Prometheus from the darkness of ignorance.
 >### Contract
   A contract is a deal between two people whereby each person must perform some action(event) for the other person.
 
-  An event for one person is a credit, and for another person it is a debit.
+  An event for one person is a 'credit', and for another person it is a 'debit'.
 
   Create your own contract or choose one of the public ones and offer it to your contact.
   If your contact accepts your offer, the contract will be added to each other's projects.
@@ -86,7 +86,7 @@ Human! Protect the Flame of Prometheus from the darkness of ignorance.
 TODO:
 - utem functionality
 - testing (Unit)
-- database (MySQL, Postgre)
+- database (MySQL, PostgreSQL)
 - UEngine
 - telebot (Aiogram)
 - multyuser 

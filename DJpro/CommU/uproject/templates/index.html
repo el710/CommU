@@ -1,6 +1,582 @@
-<h1>Welcome to UProject Web</h1>
-<ul>
-  <li><a href="/skills">View Skills</a></li>
-  <li><a href="/skills/new">Create New Skill</a></li>
-  <li><a href="/projects">View Projects</a></li>
-</ul>
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    {% block meta %}
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% endblock %}
+
+    {% block title %}
+    <title>CommU</title>
+    {% endblock %}
+
+    {% block relation %}
+    <link rel="icon" type="icon"  href="{% static 'favicon.ico' %}">
+    {% endblock %}
+
+    
+    <link rel="stylesheet" href="{% static 'main.css' %}">
+
+</head>
+
+{% block style %}
+    <style>
+        .exit-bar {
+            height: 20px;
+            display: flex;
+            justify-items: center;
+            justify-content: space-around;
+        }
+    
+        .exit-bar img{
+            height: 25px;
+            margin-left: 10px;
+        }
+
+        .input-container {
+            display: flex;
+            justify-content: center;
+            margin: 5px;
+            text-align: center;
+            /* border: 2px solid #ccc;  */
+        }
+
+        .search-label {
+            margin: 10px;
+        }
+
+        input[type="text"] {
+            padding: 5px;
+            font-size: 14px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            width: 700px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        
+        input[type="text"]:focus {
+            border-color: #4CAF50;
+        }
+    
+        .workplace {
+            display: flex;
+            justify-content: space-around;
+            margin: 5px;
+            
+            /*
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            */
+        }
+/*
+        .ul {
+            list-style-type: circle;
+            padding: 0;
+        }
+        
+        .ul li {
+            margin-bottom: 10px;
+        }
+
+        .ul li a {
+            text-decoration: none;
+            color: #333;
+            font-size: 18px;
+        }        
+*/
+        .left-sidebar {
+            /*
+            background-color: #f4f4f4;
+            */
+            text-align: left;
+            
+            width: 25%;
+            /*
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            */
+        }
+
+        .right-sidebar {
+            /*background-color: #f4f4f4;*/
+            text-align: left;
+
+            width: 25%;
+            /*
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            */
+        }
+
+
+
+        .center-content {
+            /*
+            display: flex;
+            flex-direction: column;
+           /*justify-content: left;
+            align-items: ;
+            */
+            background-color: #f4f4f4;
+            width: 50%;
+            /* background-color: cyan; */
+            padding: 0;
+
+            /*
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            */
+            
+        }
+
+        .center-top {
+            /* background-color: #e9e9e9; */
+            
+            justify-content: left;
+           /* margin: 5px; /*outfit*/
+           /* padding: 10px; */
+           /* width: 50%; */
+
+            /*
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            */
+        }
+
+        .center-middle {
+            display: flex;
+            flex-direction: row;
+            /*
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            */
+        }
+
+        .center-bottom {
+            justify-content: left;
+            text-align: left;
+            /*
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            */
+        }
+
+        .right-top {
+            /*background-color: #e9e9e9;*/
+            
+            justify-content: left;
+            text-align: left;
+
+            /*
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            */
+        }
+
+        .right-bottom {
+    
+            justify-content: left;
+            text-align: left;
+
+            /*
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            */
+        }
+
+        .linkbt {
+       /*
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            
+
+            height: 20px;
+
+            color: black;
+            
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            
+            box-sizing: border-box;
+        */
+
+            text-align: center;
+            /*
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            */
+            width: 150px;
+            height: 20px;
+            margin: 5px;
+        }
+        
+        .linkback{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            margin-top: 5px;
+
+            width: fit-content;
+            height: 25px;
+
+            color: black;
+            background-color: #ccc;
+            
+            font-size: 14px;
+            
+            border: 1px solid black;
+            border-radius: 4px;
+        }
+
+        //-----------------------------------------
+        // Menu-TREE of Utems
+        ul, #menu-tree {
+            list-style-type: none;
+        }
+
+        #menu-tree {
+            margin: 15px;
+            padding: 0;
+        } /**/
+
+        .caret {
+            cursor: pointer;
+            user-select: none; /* Prevent text selection */
+        }
+        
+        /* Create the caret/arrow with a unicode, and style it */
+        .caret::before {
+            content: "\25B6";
+            color: black;
+            display: inline-block;
+            margin-right: 6px;
+        }
+        /* Rotate the caret/arrow icon when clicked on (using JavaScript) */
+        .caret-down::before {
+            transform: rotate(90deg);
+        }
+
+        .nested {
+            display: none; /* Hide the nested list */
+        }/**/
+
+        /* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
+        .active {
+            display: block;
+        }
+        //-----------------------------------------
+
+    </style>        
+{% endblock %}
+
+<body>
+
+    <div class="top-bar"> <!-- Верхняя полоса -->
+        <div class="logo">
+            <img class="icon"  src="{% static 'CommU.png' %}" alt="Icon"> 
+            
+            <span>
+                <div class="logotext">
+                    <a href="/">CommU</a>
+                </div>
+            </span>
+        </div>
+
+{% block application %}
+    {% if local_user %}
+        <div class="menutitle links">
+            <b>Projects</b> <a href="#">[Bank]</a> <a href="#">[Store]</a> <a href="#">[Offers]</a>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block user %}
+    {% if local_user %}
+        <div class="exit-bar">   
+            <div> {{local_user}} </div>
+                <a href="/logout/"><img src="{% static 'logout.png' %}" alt="log out"></a> 
+            </div>
+    {% else %}
+        <div class="auth-buttons">
+            <a href="/login/">Log In</a>
+            <a href="/signup/">Sign Up</a>
+        </div>
+    {% endif %}      
+{% endblock %}
+
+    </div> <!-- top-bar Верхняя полоса -->
+
+{% block query %}
+    <div class="input-container">
+        <form method="post" >
+            {% csrf_token %}
+            <label class="search-label" for="new_idea">Query: </label>
+            <input type="text" name="new_task" placeholder="Type name of skill, project or dealer..." id="new_idea">
+        </form>
+    </div>
+{% endblock %}
+
+{% block perform %}
+    <div class="workplace">
+        <div class="left-sidebar">
+
+            {% block make_new %}
+            {% if local_user %}
+                <div class="make-new">
+                    <form method="post">
+                    {% csrf_token %}
+                        <a href="/skill/" class="linkbt">New skill</a>
+                        <a href="/contract/" class="linkbt">New contract</a>
+                        <a href="/project/" class="linkbt">New project</a>
+                    </form>
+                    <hr>
+                </div> <!-- make_new -->
+            {% endif %}
+            {% endblock %} <!-- make_new -->
+
+            {% block search-result %}
+                <div class="search-result">
+                    {% if find_projects != None or find_skills != None or find_dealers != None %}
+                    {% if index_search != None %}
+                        <p>Founded: <b>'{{index_search}}'</b>...</p>
+                        <ul> <!-- list of templates-->
+                            {% if find_projects != None %}
+                                <li>there are project templates:</li>
+                                <ul>
+                                    <li>  <a href="projects/">{{find_projects}}</a>  </li>
+                                </ul>
+                            {% endif %}
+
+                            {% if find_skills != None %}
+                                <li>there are skills:</li>
+                                <ul>
+                                    {% for item in find_skills %}
+                                        <li> <a href="skill={{item}}">{{item}}</a> </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                    
+                            {% if find_dealers != None %}
+                                <li>there are dealers:</li>
+                                <ul>
+                                    {% for item in find_dealers %}
+                                        <li> <a href="dealers/">{{item}}</a>  </li>
+                                    {% endfor%}
+                                </ul>
+                            {% endif %}
+                        </ul>  <!-- list of templates-->
+                        
+                    {% endif %} <!-- task -->
+                    <hr>
+                    {% endif %}
+                </div> <!-- search-result-->
+            {%endblock%} <!-- search-result-->
+            
+            {% block most-used %}
+            {% if local_user %}
+                <div class="most-used">
+                    <p>Most used:</p>
+                    <hr>
+                </div> <!-- most-used -->
+            {% endif %}
+            {%endblock%} <!-- most-used -->
+
+            {% block public-list %}
+                <div class="public-list">
+                    <ul id="menu-tree">
+                        <li><span class="caret"">Contacts</span>
+                            <ul class="nested">
+                                <li>User1</li>
+                                <li>User2</li>
+                            </ul>
+                        </li>
+                        <li><span class="caret">Projects</span>
+                        </li>
+                        <li><span class="caret">Contracts</span>
+                        </li>
+                        <li><span class="caret">Skills</span>
+                            {% if public_skills %}
+                                <ul class="active">
+                                    {% for item in public_skills %}
+                                        <li> <a href="{{item.link}}">{{item.name}}</a> </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+            {%endblock%}
+        </div> <!-- left-sidebar -->
+
+     
+
+        <div class="center-content">
+            {% if not local_user and not about_type %}
+                <p><b>No one will make your dreams come true. Do it yourself...</b></p>
+            {% endif %}
+
+            {% block about %}        
+                <div class="center-top">
+                    {% if about_type %}
+                        {{about_type}} '{{about_name}}': 
+                        <ul>
+                            {% for item in about_value %}
+                                <li>{{item}}</li> 
+                            {% endfor %}
+                        </ul>
+
+                        {% if local_user %}
+                            <a href="{{add_link}}">Add to plan</a>
+                            <a href="{{edit_link}}">Edit</a>
+                        {% else %}
+                            <a href="{{edit_link}}">Parameters</a>
+                        {% endif%}
+                        <a href="/close">Close</a>
+
+                        <hr>
+                    {% endif %}
+                </div> <!-- center-top-->
+            {%endblock%}
+
+            {% block user-project-list %}
+            {% if local_user %}
+                <div class="center-bottom">
+                    Path: {{user_staff.root_path}}
+                    
+                    <ul id="menu-tree">
+                        <li><span><a href="/proj/{{user_staff.root.link}}">{{user_staff.root.name}}</a></span>
+                            <ul>
+                                {% if user_staff.projects %}
+                                    <li><span class="caret">Projects</span>
+                                        <ul class="nested">
+                                            {% for item in user_staff.projects %}
+                                                <li><a href="/proj/{{item.link}}">{{item.name}}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                {% endif %}                               
+
+                                {% if user_staff.contracts %}
+                                    <li><span class="caret">Contracts</span>
+                                        <ul class="nested">
+                                            {% for item in user_staff.contracts %}
+                                                <li><a href="/deal/{{item.link}}">{{item.name}}</a></li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                {% endif %}
+                                
+                                {% if user_staff.events %}
+                                    {% for item in user_staff.events %}
+                                        <li><a href="/event/{{item.link}}">{{item.name}}</a></li>
+
+                                    {% endfor %}
+                                {% endif %}
+                            </ul>
+                        </li><!-- Life -->
+                    </ul> <!-- menu-tree -->
+                </div> <!-- center-bottom -->
+            {% endif %}
+            {%endblock%}
+        </div> <!-- center-content -->
+
+        <div class="right-sidebar">
+            {% block agenda %}
+            {% if local_user %}
+                <div class="right-bottom">
+                    Today agenda:
+                    <ul>
+                        <li>05:00 AM:  raise up [Health] </li>
+                        <li>11:00 AM Sunday: lesson [GoncharClub] {till: 13:00} </li>
+                        <li>13:30 PM Sunday: lesson [IT-TOP] {till: 14:30}</li>
+                    </ul> 
+                </div> <!-- right-bottom -->
+            {% endif %}
+            {%endblock%} <!-- agenda-->
+        </div> <!-- right-sidebar -->
+    </div> <!-- workplace -->
+{%endblock%} <!-- perform -->
+
+    <div class="bottom">
+        <div class="bottom-bar"> <!-- Первая нижняя полоса -->
+            <div id="geoposition"></div>
+            <div id="geosocium"></div>
+            <div id="datetime"></div>
+        </div>
+
+        <div class="footer-bar"> <!-- Самая нижняя полоса -->
+            <div class="copyright">&copy; 2024 CommU</div>
+            <div class="links">
+                <a href="/info/about">About</a>
+                <a href="/info/terms">Terms</a>
+                Theel710@gmail.com
+            </div>
+        </div>
+    </div>
+
+    {% block point %}
+    <script>
+
+        var toggler = document.getElementsByClassName("caret");
+        var i;
+        
+        for (i = 0; i < toggler.length; i++) {
+            toggler[i].addEventListener("click", function() {
+                this.parentElement.querySelector(".nested").classList.toggle("active");
+                this.classList.toggle("caret-down");
+                });
+        } 
+
+/*
+        function menutree(this) {
+            console.log(this)
+            this.parentElement.querySelector(".nested").classList.toggle("active");
+            this.classList.toggle("caret-down");
+        } 
+*/
+        function clearform() {
+            document.getElementById("dataid").reset()
+        }
+
+    
+        // Скрипт для отображения текущей даты, времени, часового пояса
+        function updateDateTime() {
+            const options = { 
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', 
+                hour: '2-digit', minute: '2-digit', second: '2-digit', 
+                timeZoneName: 'short' 
+            };
+            const now = new Date().toLocaleString('en-EN', options);
+            document.getElementById('datetime').innerHTML = now;
+        }
+
+        // Для получения геопозиции
+        function updateGeoPosition(){
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    document.getElementById('geoposition').innerHTML = ` Geo position: ${lat.toFixed(2)}, ${lon.toFixed(2)}`;
+                    document.getElementById('geosocium').innerHTML = ` Geo socium: Nizhny Novgorod city`;
+                });
+            }
+        }
+                   
+
+        // Обновление времени каждую секунду
+        setInterval(updateDateTime, 1000);
+        //setInterval(updateGeoPosition, 60000);
+        updateDateTime();
+        updateGeoPosition();
+        
+    </script>
+    {% endblock %}
+
+</body>
+</html>

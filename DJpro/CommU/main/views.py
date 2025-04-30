@@ -27,13 +27,17 @@ from datetime import datetime
 """ Operating Data"""
 ## There is always a user - by define 'Guest'
 
-local_user = UUser(GUEST_USER)
+
 public_skills = None
 public_contracts = None
 public_projects = None
 
 
-WORK_PATH = os.path.join(os.getcwd(), "static")
+WORK_PATH = os.path.join(os.getcwd(), "file_store")
+
+local_user = UUser(GUEST_USER)
+local_user.init_storage(FileStorage(WORK_PATH))
+
 
 def show_index(request, args=None):
     '''
@@ -121,7 +125,7 @@ def show_index(request, args=None):
         Load public utems
     '''
     ## Make list of public skills
-    public_skills = find_public_skills("static")
+    public_skills = find_public_skills(WORK_PATH)
     logging.info(f"founded skills: {public_skills}\n")
     # print(make_skill_context(public_skills))
     def_context.update({'public_skills': make_skill_context(public_skills, WORK_PATH)})

@@ -1,10 +1,12 @@
 # --- file: storage/storage.py ---
 import os
+from pathlib import Path
 import json
 import logging
 
 class FileStorage:
     def __init__(self, base_path="."):
+        Path(base_path).mkdir(parents=True, exist_ok=True)
         self.base_path = base_path
 
     def save(self, obj, overwrite: bool = False) -> bool:

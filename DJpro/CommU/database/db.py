@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 
 from slugify import slugify
 
-from upack.data import CreateUser, CreateEvent
+from .data import CreateUser, CreateEvent
 
 from .base_models import UserModel, EventModel
 
