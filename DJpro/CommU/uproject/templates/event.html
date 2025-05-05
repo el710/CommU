@@ -5,10 +5,14 @@
     <title>Set event</title>
 {% endblock %}
 
+{% block application %}
+    Event
+{% endblock %}
+
 {% block style %}
     {{ block.super }}
     <style>
-        .work-field {
+        .event-work-field {
             display: flex;
             flex-direction: row;
             align-items: left;
@@ -21,7 +25,7 @@
             */
         }
 
-        .center {
+        .event-center {
             display: flex;
        
             justify-content: left;
@@ -31,7 +35,7 @@
 
         }
 
-        .items {
+        .event-items {
             padding: 5px;
             padding-left: 20px;
             border: 1px solid #ccc;
@@ -53,35 +57,28 @@
         input:valid + span::after {
             content: " ✓";
         }
-
-
     </style>
 {% endblock %}
 
-{% block query %} 
-    <a href="/" class="linkback">back to Main page</a>
-    <hr>
-{% endblock %}
+{% block workplace %}
 
-
-{% block perform %}
-    <div class="work-field">
+    <div class="event-work-field">
         <form method="POST" id="dataid">
         {% csrf_token %}
 
-        <div class="center">
+        <div class="event-center">
             <div class="items">
                 <input type="submit" value="Add to..." name="set">
             </div>            
-            <div class="items">
+            <div class="event-items">
                 {% if user_root %}
                     {{user_root}} skill "{{user_skill}}": 
                 {% endif %}
                 <label id="status">once {{start_date_day}} {{start_month_name}} {{start_date_year}} at {{start_time}}</label>
             </div>
         </div>
-        <div class="center">
-            <div class="items">
+        <div class="event-center">
+            <div class="event-items">
                 <fieldset>
                     <legend>Date</legend>
                     <input type="date" id="start_date" value="{{start_date_year}}-{{start_date_month}}-{{start_date_day}}" name="start_date" oninput="set_event_string()">
@@ -94,7 +91,7 @@
                  </fieldset>
                 -->
             </div>
-            <div class="items">
+            <div class="event-items">
                 <fieldset>
                     <legend>Repeating</legend>
                         <label><input type="checkbox" class="check" name="once"  onclick="onlyOne(this, 'once')" checked>Once</label>
@@ -122,8 +119,8 @@
          </div>
         </div>
 
-        <div class="center">
-            <div class="items">
+        <div class="event-center">
+            <div class="event-items">
                 <fieldset>
                     <legend>Start time</legend>
                     <input type="time" id="start_time" name="start_time" value={{start_time}} oninput="set_event_string()">
@@ -134,7 +131,7 @@
                     <label><input type="checkbox" name="duration" onclick="addendtime(this)">Duration</label>
                  </fieldset>
             </div>            
-            <div class="items">
+            <div class="event-items">
                <fieldset>
                     <legend>Remind</legend>
                     <label><input type="checkbox" name="rem_5">5 Min</label>
@@ -160,11 +157,13 @@
         </div> <!-- bottom-field -->
 
     </div> <!-- work-field -->
+
 {% endblock %}
 
 
-{% block point %}
+{% block JavaScript %}
     {{ block.super }}
+
 <script>
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const weekdays = ["Sunday", "Monday", "Tuesday", "Wednsday", "Thirsday", "Friday", "Saturday"];
@@ -261,55 +260,9 @@
             }
         event_type = type
         set_event_string()
-            /*
-
-            var start_time = document.getElementById("start_time").value;
-            //console.log(start_time);
-            //console.log(Number(start_time.slice(0, 2)), Number(start_time.slice(3, 6)));
-
-            var start_hour = start_time.slice(0, 2);
-            var start_minute = start_time.slice(3, 6);
-
-            var start_date = new Date(document.getElementById("start_date").value);
-            //start_date.setHours(Number(start_time.slice(0, 2)));
-            //start_date.setMinutes(Number(start_time.slice(3, 6)));
-            //console.log(start_date);
-            
-            var start_year = start_date.getFullYear();
-            //console.log(start_year);
-            var start_day = start_date.getDate();
-            //console.log(start_day);
-            var start_month = start_date.getMonth() + 1;
-            //console.log(start_month);
-            
-            var start_weekday = start_date.getDay();
-            
-            //var start_hour = start_date.getHours();
-            //var start_minute = start_date.getMinutes();
-
-
-            if (type == 'once') {
-                document.getElementById("status").innerHTML = "once " + start_day +' '+ months[start_month-1] +' '+ start_year +" at "+ start_hour+":"+start_minute;
-            }
-            else if (type == 'daily') {
-                document.getElementById("status").innerHTML = "everyday at "+ start_hour+":"+start_minute;
-            }            
-            else if (type == 'work') {
-                document.getElementById("status").innerHTML = "from Monday to Friday at "+ start_hour+":"+start_minute;
-            }
-            else if (type == 'weekly') {
-                document.getElementById("status").innerHTML = "every " + weekdays[start_weekday] +" at "+ start_hour+":"+start_minute;
-            }            
-            else if (type == 'atday') {
-                document.getElementById("status").innerHTML = "every month in " + start_day+"'th" + " at "+ start_hour+":"+start_minute;
-            }            
-            else if (type == 'yearly') {
-                document.getElementById("status").innerHTML = "every year " + start_day +' '+ months[start_month-1] + " at "+ start_hour+":"+start_minute;
-            }
-            else if (type == 'weekdays') { addwday(); }
-              */    
         }
 
     check_week_day()
 </script>
+
 {% endblock %}

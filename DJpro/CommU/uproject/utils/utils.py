@@ -40,10 +40,6 @@ def make_skill_context(skills: list, path="."):
         context.append({"name": utem.name, "link": (f"{utem.__class__.__name__}={utem.get_slug_name()}").lower()})
     
     return context
-
-        
-
-
     
 
 def find_utems(key_name, path="."):
@@ -78,10 +74,18 @@ def get_utem_info(utem):
 def get_project_tree(user: UUser):
 
     root_path = "recursive by tree"
-    root = {"name": user.root_utem.get_title(), "link": user.root_utem.make_link()}
 
-    event_list = [{"name": event["utem"].get_title(), "link": event["utem"].make_link()} for event in user.utems 
-                  if isinstance(event["utem"], USkill) and event["parent"] == user.root_utem.get_token()]
+    if isinstance(user.root_utem, UContract):
+        link = f"/contract/{user.root_utem.make_link()}"
+    elif isinstance(user.root_utem, UProject):
+        link = f"/project/{user.root_utem.make_link()}"
+    else:
+        link = "/"
+
+    root = {"name": user.root_utem.get_title(), "link": link}
+
+    event_list = [{"name": event['utem'].get_title(), "link": f"/event/{event['utem'].make_link()}"} for event in user.utems 
+                  if isinstance(event['utem'], USkill) and event['parent'] == user.root_utem.get_token()]
 
 
     context = { "root_path": root_path,
@@ -89,13 +93,13 @@ def get_project_tree(user: UUser):
                
                ## elements type annotation: {"name": , "link": }
                ## list of projects with "parent" = "Life"
-               "projects": [{"name": "pro_1", "link": "pro_1"},
-                                 {"name": "pro_2", "link": "pro_2"},
+               "projects": [{"name": "pro_1", "link": "/project/pro_1"},
+                                 {"name": "pro_2", "link": "/project/pro_2"},
                                 ],  
                 
                 ## list of contracts with "parent" = "Life" 
-               "contracts": [{"name": "deal_1", "link": "deal_1"},
-                                  {"name": "deal_2", "link": "deal_2"},
+               "contracts": [{"name": "deal_1", "link": "/contract/deal_1"},
+                                  {"name": "deal_2", "link": "/contract/deal_2"},
                                  ],
                 
                 ## list of events with "parent" = "Life"                                 

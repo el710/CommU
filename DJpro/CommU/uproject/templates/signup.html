@@ -1,21 +1,23 @@
 {% extends "index.html" %}
 {% load static %}
 
-
 {% block style %}
+    {{ block.super}}
+
     <style>
-        .context {
+        .signup-context {
             display: flex;
             flex-wrap: nowrap;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             font-style: normal;
-            font-size: 20px;
+            font-size: 18px;
             margin-top: 40px;
         }
  
-        .button {
+    
+        .signup-button {
             border: 1px solid black;
             width: 300px;
             height: 40px;
@@ -29,19 +31,17 @@
             align-items: center;
 
             margin: 15px;
-
             cursor: pointer;
-
             border-radius: 5px;
 
             transition: all 0.3s;
-            
         }
-        .button::before{
+        
+        .signup-button::before{
             content: attr(text);
         }
 
-        .button:hover::before {
+        .signup-button:hover::before {
             color: white;
             background-color: purple;
             text-transform: uppercase;
@@ -49,7 +49,7 @@
             
         }
 
-        .warning {
+        .signup-warning {
             color: red;
             font-style: italic;
             font-weight: bold;
@@ -57,60 +57,52 @@
     </style>
 {% endblock %}
 
-
-
 {% block application %}
-    <div class="menutitle links">
-        Sign up Friend and come in...
+    Sign up Friend and come in...
+{% endblock %}
+
+{% block authorization %}
+    <div class="auth-buttons">
+        <button class="btn btn-login"><a href="/login/">Log In</a></button>
+        <button class="btn btn-login"><a href="/">Back</a></button>
     </div>
-{% endblock %}
+{% endblock %} <!-- authorization -->
 
-{% block user %}
-    <div class="auth-buttons">
-        <a href="/login/">Log In</a>
-    </div>        
-    <div class="auth-buttons">
-        <a href="/">Back</a>
-    </div>        
-{% endblock %}
-
-{% block query %}
-    <div class="context">
+{% block workplace %}
+    <div class="signup-context">
         <form method="post" >
-            {% csrf_token %}
+        {% csrf_token %}
+            <section class="content-section">
+        
             <div>
                 <label for="id_name">Username</label>                                      
                 <input type="text" name="username" maxlength="100" id="id_name"> <!-- 'required' means we can't pass it-->
             </div>
 <!--
-                    <div class="warning">
-                        {{ passstate }}
-                    </div>
-
-                <div>
-                    <label for="id_pass">Password</label>
-                    <input type="password" name="user_password" minlength="8" id="id_pass">
-                </div>
-                <div>
-                    <label for="id_repass">Repeat password</label>
-                    <input type="password" name="user_repassword" minlength="8"  id="id_repass">
-                </div>
-                <div>
-                    <label for="id_email">Email</label>                                      
-                    <input type="email" name="email" maxlength="320" required id="id_email">
-                </div>
--->        
-                <div>
-                    <input type="checkbox"  name="box" id="id_box">
-                    <label for="id_box">I agree with <a href="/info/terms">terms</a> and I do accept the <a href="/info/laws">laws</a></label>
+                <div class="signup-warning">
+                    {{ passstate }}
                 </div>
 
-                <button class="button" type="submit" text="Enter" hover-text=" Do you?"></button>
-                </form>
-            </div>     
+            <div>
+                <label for="id_pass">Password</label>
+                <input type="password" name="user_password" minlength="8" id="id_pass">
+            </div>
+            <div>
+                <label for="id_repass">Repeat password</label>
+                <input type="password" name="user_repassword" minlength="8"  id="id_repass">
+            </div>
+            <div>
+                <label for="id_email">Email</label>                                      
+                <input type="email" name="email" maxlength="320" required id="id_email">
+            </div>
+-->         
+            <div>
+                <input type="checkbox"  name="box" id="id_box">
+                <label for="id_box">I agree with <a href="/info/terms">terms</a> and I do accept the <a href="/info/laws">laws</a></label>
+            </div>
 
-
-{% endblock %}
-
-{% block perform %}
-{% endblock %}
+            <button class="signup-button" type="submit" text="Enter" hover-text=" Do you?"></button>
+            </section>
+        </form>
+    </div>     
+{% endblock %} <!-- workplace -->

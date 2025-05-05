@@ -8,15 +8,17 @@ import unittest
 from unittest import TestCase
 import logging
 
-"""
-    To see neighbors directory
-"""
-import sys
-from pathlib import Path
-sys.path.append(str(Path(__file__).parent.parent /"." ))
+# """
+#     To see neighbors directory
+# """
+# import sys
+# from pathlib import Path
+# sys.path.append(str(Path(__file__).parent.parent /"." ))
+## Made it in main file
 
-from models.bases import UtemBase
-from models.uobject import UObject
+from uproject.models.bases import UtemBase
+from uproject.models.uobject import UObject
+
 class TModuleBases(TestCase):
     ## do use tests of that class
     added = True

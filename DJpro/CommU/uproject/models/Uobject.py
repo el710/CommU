@@ -26,17 +26,17 @@ class UObject(Persistable):
     def __init__(self, name: str):
         self.name = name
         self.author = None
-        self.create_datetime = None
+        self._create_datetime = None
         self.geosocium = None
         self.public = False
 
     def set_attributes(self, **kwargs):
         for key, value in kwargs.items():
             if hasattr(self, key):
-                setattr(self, key, datetime.fromisoformat(value) if key == "create_datetime" else value)
+                setattr(self, key, datetime.fromisoformat(value) if key == "_create_datetime" else value)
 
     def get_token(self):
-        return str(hash(f"{self.name}:{self.author}:{self.create_datetime}:{self.geosocium}"))
+        return str(hash(f"{self.name}:{self.author}:{self._create_datetime}:{self.geosocium}"))
 
     def make_link(self):
         return f"{self.__class__.__name__}={self.get_token()}".lower()
@@ -49,8 +49,8 @@ class UObject(Persistable):
 
     def to_dict(self):
         data = self.__dict__.copy()
-        if isinstance(data.get("create_datetime"), datetime):
-            data["create_datetime"] = data["create_datetime"].isoformat()
+        if isinstance(data.get("_create_datetime"), datetime):
+            data["_create_datetime"] = data["_create_datetime"].isoformat()
         return data
 
     def from_dict(self, data: dict):

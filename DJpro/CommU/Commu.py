@@ -8,6 +8,9 @@
 import os
 import sys
 
+from pathlib import Path
+sys.path.append(str(Path(__file__).parent))
+
 import logging
 
 import asyncio
@@ -21,6 +24,8 @@ from django.core.management import execute_from_command_line
 from telegram.utelebot import telebot_start
 
 from database.base_dispatcher import start_base_dispatcher
+
+
 
 
 

@@ -38,10 +38,21 @@ WORK_PATH = os.path.join(os.getcwd(), "file_store")
 local_user = UUser(GUEST_USER)
 local_user.init_storage(FileStorage(WORK_PATH))
 
+def show_index(request):
+    global local_user
 
-def show_index(request, args=None):
+    ## dictionary of args for HTML page
+    def_context = {}
+
+    if local_user.commu_id:
+        def_context.update({"local_user": local_user.nickname})
+
+    return render(request, 'index.html', context = def_context)
+
+
+def show_user(request, args=None):
     '''
-        Make index.html
+        Make main.html
         args: Utem has taken from list to view info {skill, contract, project}
     '''
     global local_user
@@ -63,7 +74,7 @@ def show_index(request, args=None):
         def_context.update({'form': TaskForm()})
 
     '''
-        Perform args
+        Perform arguments
     '''
     logging.info(f'get utem: {args}\n')
     ## Close utem's info
@@ -71,6 +82,9 @@ def show_index(request, args=None):
         local_user.temp_utem = None
         return redirect("/")
 
+    '''
+        Prepare to show Utem attributes
+    '''
     ## load info of choosen utem
     if args: ## new utem has choosen
         utem_type, utem_name = parse_link(args)
@@ -94,7 +108,7 @@ def show_index(request, args=None):
         logging.info(f"Context: {def_context} ")
 
         if isinstance(local_user.temp_utem, USkill):
-            def_context.update({"edit_link": "/skill/temp"})
+            def_context.update({"edit_link": "/Tskill/temp"})
             def_context.update({"add_link": "/event/"})
 
         if isinstance(local_user.temp_utem, UContract):
@@ -132,7 +146,7 @@ def show_index(request, args=None):
 
     
     logging.info(f"Context: {def_context} ")
-    return render(request, 'index.html', context=def_context)
+    return render(request, 'main.html', context=def_context)
 
 
 def show_info(request, args=None):
@@ -194,15 +208,11 @@ def signup(request):
             logging.info(f'new user: {local_user}')
 
             local_user.init_utem_base(UtemBase(), root=UProject(local_user, "Life"))
-            # local_user.init_contract_base(UtemBase())
-            # local_user.init_project_base(UtemBase())
-            # ## default project - "Life"
-            # local_user.add_project(UProject(local_user, "Life"))
 
             local_user.init_storage(FileStorage(WORK_PATH))
             
             
-            return redirect('/') 
+            return redirect('/user/') 
             # else:
             #     def_context.update({'passstate': "... passwords is not equal. Try again."})
 
@@ -233,9 +243,18 @@ def login(request):
             
             # if password == repassword:
             local_user = UUser(name)
-            local_user.add_project(UProject(local_user, "Life"))
+            ## hash for real user
             local_user.commu_id = hash(local_user.nickname)
-            return redirect('/') 
+            '''
+                Save In base user by hash - no passwords
+
+            '''            
+            logging.info(f'new user: {local_user}')
+
+            local_user.init_utem_base(UtemBase(), root=UProject(local_user, "Life"))
+
+            local_user.init_storage(FileStorage(WORK_PATH))
+            return redirect('/user/') 
             # else:
             #     def_context.update({'passstate': "... passwords is not equal. Try again."})
 
@@ -279,9 +298,9 @@ def crud_skill(request, args=None):
         if local_user.temp_utem:
             def_context.update(local_user.temp_utem.to_dict())
         logging.info(f"load template {def_context}\n")
-    elif args == "event":
-        if hasattr(local_user, 'pro_event') and local_user.pro_event:
-            def_context.update(local_user.pro_event.to_dict())
+    # elif args == "event":
+    #     if hasattr(local_user, 'pro_event') and local_user.pro_event:
+    #         def_context.update(local_user.pro_event.to_dict())
         
     
     
@@ -351,7 +370,7 @@ def crud_contract(request, args=None):
     #     else:
     #         return redirect("/")
     
-    return render(request, "index_temp.html", context=def_context)
+    return render(request, "contract.html", context=def_context)
 
 
 def crud_project(request, args=None):
@@ -460,7 +479,7 @@ def crud_event(request, args=None):
                 
                                 
                 logging.info(f'exit by set\n')
-                return redirect('/')
+                return redirect('/user/')
             elif request.POST.get('delete'):
                 ## delete skill from current project
                 ## !!! FIRST check parents (project, contract) state !!!
@@ -468,7 +487,7 @@ def crud_event(request, args=None):
                 ## skill._state = 'template'
 
                 logging.info(f'exit by delete\n')
-                return redirect('/')
+                return redirect('/user/')
                 
     else:
        form = EventForm()

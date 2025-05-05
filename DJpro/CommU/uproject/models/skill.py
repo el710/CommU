@@ -38,7 +38,7 @@ class USkill(UObject):
         self.create_datetime = datetime.now()
 
     def set_event(self, user, event):
-        self.executor = user
+        self._executor = user
         self._event = event
     
     def get_title(self):

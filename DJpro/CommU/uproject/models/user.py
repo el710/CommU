@@ -5,10 +5,15 @@
 import logging
 import copy
 
+# import sys
+# from pathlib import Path
+# sys.path.append(str(Path(__file__).parent.parent /"." ))
+
 from .bases import UtemBase
 from .uobject import UObject
 
-GUEST_USER = 'Guest'
+from uproject.constants.constants import *
+
 class UUser():
     '''
         User's data
@@ -35,7 +40,10 @@ class UUser():
         self.search = None
 
         ## pointer on template utem - to make new, to load, to watch parameters, to add to project, work on index page
-        self.temp_utem = None 
+        self.temp_utem = None
+
+        ## pointer to work project or contract
+        self.root_utem = None
       
          ## list of all user's contacts - phone book
         self.contacts = None

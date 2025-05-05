@@ -5,17 +5,20 @@
 <title>Terms</title>
 {% endblock %}
 
-{% block query %}
-    <p><a href="/" class="linkback">back to Main page</a></p>
-    <hr>
+{% block application %}
+    There are some terms:
 {% endblock %}
 
-{% block perform %}
-    <p>Terms:</p>
-    <div>
-        <ul>
-            <li>To join CommU you should accept and follow CommU <a href="/info/laws"> Laws </a></li>
-            <li>There are some <a href="/info/rules">rules</a> to use CommU</li>
-        </ul>
-    </div>
-{% endblock %}
+{% block workplace %}
+    <div class="login-context">
+        <form method="post" >
+        {% csrf_token %}
+            <section class="content-section">
+                <ul>
+                    <li>To join CommU you should accept and follow CommU <a href="/info/laws"> Laws </a></li>
+                    <li>There are some <a href="/info/rules">rules</a> to use CommU</li>
+                </ul>
+            </section>
+        </form>
+    </div>     
+{% endblock %} <!-- workplace -->
