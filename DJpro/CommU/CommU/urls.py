@@ -41,8 +41,8 @@ urlpatterns = [
     path('logout/',logout),
 
     ## CRUD template skills
-    path('Tskill/', crud_skill), # create
-    path('Tskill/<str:args>', crud_skill), 
+    path('skill/', crud_skill), # create
+    path('skill/<str:args>', crud_skill), 
 
     path('event/', crud_event),
     path('event/<str:args>', crud_event),

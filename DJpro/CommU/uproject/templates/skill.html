@@ -1,32 +1,40 @@
 {% extends "index.html" %}
 {% load static %}
 
+{% block title %}
+    <title>Skill</title>
+{% endblock %}
+
+{% block application %}
+    Skill
+{% endblock %}
+
+
 {% block style %}
     {{ block.super }}
     <style>
-        .container {
-            
+        .skill-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
 
             font-family: Arial, sans-serif;
-
-
             gap: 20px;
             margin: 0;
             border: 1px solid #ccc;
             border-radius: 8px;
         }
-        .column {
+
+        .skill-column {
             flex: 1;
             padding: 15px;
             border: 1px solid #ccc;
             border-radius: 8px;
             width: 40%
         }
-        .bottom-field {
+
+        .skill-bottom-field {
             display: flex;
             flex-direction: row;
             justify-content: space-around;
@@ -36,49 +44,33 @@
             border-radius: 8px;
             width: 100%
         }
+
+        .skill-button{
+            width: 120px;
+            height: 25px;
+        }
+
         label, input, textarea{
             display: block;
             width: 100%;
             margin-top: 5px;
         }
+
         input[type="checkbox"] {
             width: auto;
             display: inline-block;
         }
+   
 
-        .linkback{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            margin-top: 5px;
-
-            width: 120px;
-            height: 25px;
-
-            color: black;
-            background-color: #ccc;
-            
-            font-size: 14px;
-            
-            border: 1px solid black;
-            border-radius: 4px;
-        }        
-        .button{
-            width: 120px;
-            height: 25px;
-        }
     </style>
 {% endblock %}
 
-{% block query %}
-    <a href="/" class="linkback">back to Main page</a>
-    <hr>
-{% endblock %}
 
-{% block perform %}
-    <div class="container">
-        <div class="column">
+{% block workplace %}
+    <button class="btn btn-back"><a href="/user/">Back</a></button>
+
+    <div class="skill-container">
+        <div class="skill-column">
             
             <form method="POST" id="dataid">
                 {% csrf_token %}
@@ -99,13 +91,13 @@
                     <input type="button" onclick="clearform()" value="Clear">
                 </fieldset>
 
-                <div class="bottom-field">
+                <div class="skill-bottom-field">
                     {% if local_user %}
                         <div>
                             <input type="submit" value="Save" name="save">
                             <label><input type="checkbox" checked> save overwrite</label>
                         </div>
-                        <div class="button">
+                        <div class="skill-button">
                             {% if name %}
                                 <input type="submit" value="Delete" name="delete" onclick="return confirm('Are you sure?')">
                             {% endif %}       

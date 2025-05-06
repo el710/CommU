@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-    <title>Set event</title>
+    <title>Event</title>
 {% endblock %}
 
 {% block application %}
@@ -61,7 +61,7 @@
 {% endblock %}
 
 {% block workplace %}
-
+    <button class="btn btn-back"><a href="/user/">Back</a></button>
     <div class="event-work-field">
         <form method="POST" id="dataid">
         {% csrf_token %}

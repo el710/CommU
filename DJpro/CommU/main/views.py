@@ -60,6 +60,10 @@ def show_user(request, args=None):
     ## dictionary of args for HTML page
     def_context = {}
 
+    ## if no user
+    if not local_user.commu_id:
+        return redirect("/")
+
     # logging.info(f'local user: {local_user}\n')
 
     logging.info(f"method {request.method} ")
@@ -80,7 +84,7 @@ def show_user(request, args=None):
     ## Close utem's info
     if args == "close":
         local_user.temp_utem = None
-        return redirect("/")
+        return redirect("/user/")
 
     '''
         Prepare to show Utem attributes
@@ -108,7 +112,7 @@ def show_user(request, args=None):
         logging.info(f"Context: {def_context} ")
 
         if isinstance(local_user.temp_utem, USkill):
-            def_context.update({"edit_link": "/Tskill/temp"})
+            def_context.update({"edit_link": "/skill/temp"})
             def_context.update({"add_link": "/event/"})
 
         if isinstance(local_user.temp_utem, UContract):
@@ -347,12 +351,19 @@ def crud_skill(request, args=None):
 
 
 def crud_contract(request, args=None):
+    '''
+        Make contract.html
+        args: none - create, UContract
+    '''
     global local_user
 
-    logging.info(f'open skill: {args}\n')
-    logging.info(f'local user: {local_user}\n')
-
+    ## dictionary of args for HTML page
     def_context = {}
+
+    ## if no user
+    if not local_user.commu_id:
+        return redirect("/")
+
 
     # if local_user:
     #     def_context.update({"local_user": local_user.nickname,
