@@ -63,12 +63,21 @@
 
 {% block authorization %}
     <div class="auth-buttons">
-        <button class="btn btn-login"><a href="/login/">Log In</a></button>
-        <button class="btn btn-login"><a href="/">Back</a></button>
+        <button class="index-btn index-btn-login"><a href="/login/">Log In</a></button>
     </div>
 {% endblock %} <!-- authorization -->
 
 {% block workplace %}
+    <div class="speed-bar">
+        <button class="speed-bar-btn speed-bar-back"><a href="/">Back</a></button>
+        <div>
+        <!--
+            <button type="submit" class="speed-bar-btn">Save</button>
+            <button type="submit" class="speed-bar-btn">Delete</button>
+        -->
+        </div>
+    </div>
+
     <div class="signup-context">
         <form method="post" >
         {% csrf_token %}

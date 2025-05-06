@@ -8,6 +8,7 @@ from .uobject import UObject
 class UContract(UObject):
     def __init__(self, name, customer_id=None, provider_id=None):
         super().__init__(name)
+        self.description = None
         self.customer = customer_id
         self.provider = provider_id
         self.state = "template" ## "offer", "deal", "closed"

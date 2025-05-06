@@ -35,7 +35,7 @@ class USkill(UObject):
         self.author = author
         self.geosocium = geosocium
         self.public = public
-        self.create_datetime = datetime.now()
+        self._create_datetime = datetime.now()
 
     def set_event(self, user, event):
         self._executor = user

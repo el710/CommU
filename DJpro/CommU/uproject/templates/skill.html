@@ -50,32 +50,43 @@
             height: 25px;
         }
 
-        label, input, textarea{
+        label, textarea{
             display: block;
             width: 100%;
-            margin-top: 5px;
+            margin-top: 15px;
+        }
+
+        .form-btn{
+            display: block;
+            width: 100%;
+            margin-top: 10px;         
         }
 
         input[type="checkbox"] {
             width: auto;
             display: inline-block;
         }
-   
 
     </style>
 {% endblock %}
 
 
 {% block workplace %}
-    <button class="btn btn-back"><a href="/user/">Back</a></button>
+<form method="POST" id="dataid">
+{% csrf_token %}
+
+<div class="speed-bar">
+    <button class="speed-bar-btn speed-bar-back"><a href="/user/">Back</a></button>
+    <div>       
+    </div> 
+</div>
 
     <div class="skill-container">
         <div class="skill-column">
             
-            <form method="POST" id="dataid">
-                {% csrf_token %}
+
                 <fieldset>
-                    <legend> <h4>Skill's Parameters</h4> </legend>
+                    <legend> <h4>Parameters</h4> </legend>
                     <label>Name: <input type="text" name="skill_name"  maxlength="100" value="{{name}}" ></label>
                     <label>Description: <textarea name="skill_desc" maxlength="300" >{{description}}</textarea></label>
                     <label>Resources: <textarea name="skill_resources" maxlength="300" >{{resources}}</textarea></label>
@@ -88,27 +99,38 @@
                     <!--  
                     <label>Author: <input type="text" name="skill_author" maxlength="100" value="{{author}}"></label> 
                     -->
-                    <input type="button" onclick="clearform()" value="Clear">
+                    <input type="button" class="form-btn" onclick="clearform()" value="Clear">
                 </fieldset>
 
                 <div class="skill-bottom-field">
                     {% if local_user %}
-                        <div>
-                            <input type="submit" value="Save" name="save">
-                            <label><input type="checkbox" checked> save overwrite</label>
+                        <div class="skill-button">
+                            <input type="submit" class="form-btn" value="Save" name="save">
                         </div>
                         <div class="skill-button">
                             {% if name %}
-                                <input type="submit" value="Delete" name="delete" onclick="return confirm('Are you sure?')">
+                                <input type="submit" class="form-btn" value="Delete" name="delete" onclick="return confirm('Are you sure?')">
                             {% endif %}       
                         </div>
                     {% endif %}                 
                 </div>
-            </form> <!-- post -->
+     
+
         </div> <!-- column -->        
     </div> <!-- container -->
+    
+</form> <!-- post -->
 {% endblock %}
 
 
 
+{% block JavaScript %}
+    {{ block.super }}
+    <script>
 
+        function clearform() {
+            document.getElementById("dataid").reset()
+        }
+
+    </script>
+{% endblock %}

@@ -61,7 +61,21 @@
 {% endblock %}
 
 {% block workplace %}
-    <button class="btn btn-back"><a href="/user/">Back</a></button>
+<div class="speed-bar">
+    <button class="speed-bar-btn speed-bar-back"><a href="/user/">Back</a></button>
+    <div>
+
+        {% if local_user %}
+            <input type="submit" class="speed-bar-btn" value="Save" name="save">
+
+            {% if name %}
+                <input type="submit" class="speed-bar-btn" value="Delete" name="delete" onclick="return confirm('Are you sure?')">
+            {% endif %}       
+        {% endif %}  
+    </div> 
+</div>
+
+
     <div class="event-work-field">
         <form method="POST" id="dataid">
         {% csrf_token %}

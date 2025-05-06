@@ -10,10 +10,21 @@
 {% endblock %}
 
 {% block workplace %}
-    <section class="content-section">
+    <div class="speed-bar">
+        <button class="speed-bar-btn speed-bar-back"><a href="/info/terms">Back</a></button>
+        <div>
+        <!--
+        <button type="submit" class="speed-bar-btn">Save</button>
+        <button type="submit" class="speed-bar-btn">Delete</button>
+        -->
+        </div>
+    </div>
+
+    <section class="index-content-section">
         <ul>
             <li>1. <a href="/login/">Log in</a> first</li>
-            <li>2. To join other user's business/projects you must have been invitatated.</li>
+            <li>2. To join other user's projects you must have been invitatated.</li>
+            <li>3. You can send the offer to your contacts to join your projects/contracts.</li>
         </ul>
     </section>  
 {% endblock %} <!-- workplace -->

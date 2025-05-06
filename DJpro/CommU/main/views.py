@@ -341,7 +341,7 @@ def crud_skill(request, args=None):
                 if hasattr(local_user, 'storage'):
                     local_user.storage.save(local_user.temp_utem)
             
-        return redirect("/")
+        return redirect("/user/")
     else:
         form = SkillForm(request.POST)
     
@@ -361,52 +361,59 @@ def crud_contract(request, args=None):
     def_context = {}
 
     ## if no user
-    if not local_user.commu_id:
-        return redirect("/")
+    if not local_user.commu_id: return redirect("/")
+    else:
+        def_context.update({"local_user": local_user.nickname})
+
+    if args == None: ## create(add) 
+        logging.info(f'create contract\n')
 
 
-    # if local_user:
-    #     def_context.update({"local_user": local_user.nickname,
-    #                         "user_project": local_user.work_project
-    #                     })
+    else:  ## read & edit event
+        utem_type, utem_id = parse_link(args)
+        logging.info(f'get contract {utem_type}, {utem_id}\n')
+  
+    logging.info(f"request.method {request.method} \n")
 
-    # if args:
-    #     logging.info(f"\ncrud_skill(): load template {def_context} ")
+    if request.method == "POST":
+        form = EventForm(request.POST)
 
-    
-    # if request.method == "POST":
+        logging.info(f"valid POST {form.is_valid()} \n")
+        logging.info(f'data: {form.cleaned_data}\n')
+
+        if form.is_valid(): ## is_valid also makes cleaned_data
         
-    #     if local_user:
-    #         return redirect("/user/")
-    #     else:
-    #         return redirect("/")
+            if request.POST.get('set'):
+               
+                return redirect('/user/')
+            elif request.POST.get('delete'):
+                
+                return redirect('/user/')
+                
+    else:
+       form = EventForm()
+        
+    def_context.update({"form": form})
+    
+
     
     return render(request, "contract.html", context=def_context)
 
 
 def crud_project(request, args=None):
+    '''
+        Make project.html
+        args: none - create, UContract
+    '''
     global local_user
 
-    logging.info(f'open skill: {args}\n')
-    logging.info(f'local user: {local_user}\n')
-
+    ## dictionary of args for HTML page
     def_context = {}
 
-    if local_user:
-        def_context.update({"local_user": local_user.nickname,
-                            "user_project": local_user.pro_project
-                        })
-
-    if args:
-        logging.info(f"\ncrud_skill(): load template {def_context} ")
-
-    
-    if request.method == "POST":
-        
-        if local_user:
-            return redirect("/user/")
-        else:
-            return redirect("/")
+    ## if no user
+    if not local_user.commu_id: return redirect("/")
+    else:
+        def_context.update({"local_user": local_user.nickname})
     
     return render(request, "index_temp.html", context=def_context)
 

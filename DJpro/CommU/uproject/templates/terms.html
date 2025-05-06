@@ -10,11 +10,20 @@
 {% endblock %}
 
 {% block workplace %}
-    
-    <div class="login-context">
+    <div class="speed-bar">
+        <button class="speed-bar-btn speed-bar-back"><a href="/">Back</a></button>
+        <div>
+        <!--
+         <button type="submit" class="speed-bar-btn">Save</button>
+         <button type="submit" class="speed-bar-btn">Delete</button>
+        -->
+        </div>
+    </div>
+
+    <div class="index-context">
         <form method="post" >
         {% csrf_token %}
-            <section class="content-section">
+            <section class="index-content-section">
                 <ul>
                     <li>To join CommU you should accept and follow CommU <a href="/info/laws"> Laws </a></li>
                     <li>There are some <a href="/info/rules">rules</a> to use CommU</li>
