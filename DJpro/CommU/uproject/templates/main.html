@@ -1,0 +1,316 @@
+{% extends "index.html" %}
+{% load static %}
+
+{% block style %}
+  {{block.super}}
+
+  <style>
+    .user-header-links {
+	    display: flex;
+        justify-content: space-around;
+        flex-grow: 1;
+    }
+
+    .user-input-container {
+        display: flex;
+        justify-content: center;
+        margin: 5px;
+        padding: auto;
+        text-align: center;
+        /*border: 2px solid #ccc;  */
+    }
+
+    .user-search-label {
+        margin: 5px;
+    }
+
+    input[type="text"] {
+        padding: 5px;
+        font-size: 14px;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        width: 600px;
+        outline: none;
+        transition: border-color 0.3s ease;
+    }
+
+    input[type="text"]:focus {
+        border-color: #4CAF50;
+    }
+
+    .user-workplace {
+        display: flex;
+        justify-content: space-between;
+        margin: 5px, 0px;
+        padding: 0, 0;
+        text-align: left;
+
+       /* border: 2px solid blue;
+        border-radius: 5px;
+        */
+    }
+
+    .user-left-sidebar {
+        width: 25%;
+        /*border: 2px solid #ccc;
+        border-radius: 5px;
+        */
+    }
+
+    .user-right-sidebar {
+        width: 25%;
+        padding: 15px;
+
+        /*border: 2px solid #ccc;
+        border-radius: 5px;
+        */
+    }
+
+    .user-center {
+        background-color: white;
+        width: 50%;
+        padding: 5px;      
+    }
+
+    .user-center-top fieldset{   
+        padding-left: 15px;
+        padding-top: 5px;
+    }
+
+    .user-center-bottom {
+        padding-top: 5px;
+    }
+
+    //-----------------------------------------
+    // Menu-TREE of Utems
+    ul, #menu-tree {
+        list-style-type: none;
+    }
+    
+    #menu-tree {
+        margin: 15px;
+        padding: 0;
+    } 
+
+    .caret {
+        cursor: pointer;
+        user-select: none; /* Prevent text selection */
+    }
+    
+    /* Create the caret/arrow with a unicode, and style it */
+    .caret::before {
+        content: "\25B6";
+        color: black;
+        display: inline-block;
+        margin-right: 6px;
+    }
+
+    /* Rotate the caret/arrow icon when clicked on (using JavaScript) */
+    .caret-down::before {
+        transform: rotate(90deg);
+    }
+
+    .nested {
+        display: none; /* Hide the nested list */
+    }
+
+    /* Show the nested list when the user clicks on the caret/arrow (with JavaScript) */
+    .active {
+        display: block;
+    }
+
+    </style>
+{% endblock %}
+
+{% block application %}
+    {% if local_user %}
+        <div class="user-header-links">
+            <b>Projects</b> <a href="#">[Bank]</a> <a href="#">[Store]</a> <a href="#">[Offers]</a>
+        </div>
+    {% endif %} <!-- local user -->
+{% endblock %}
+
+{% block workplace %}
+    <div class="user-input-container">
+        <form method="post" >
+            {% csrf_token %}
+            <label class="user-search-label" for="new_idea">Query: </label>
+            <input type="text" name="new_task" placeholder="Type name of skill, project or dealer..." id="new_idea">
+        </form>
+    </div>
+
+    <div class="user-workplace">
+
+        <div class="user-left-sidebar">
+            <div>
+                <a href="/skill/" class="linkbt">New skill</a>
+                <a href="/contract/" class="linkbt">New contract</a>
+                <a href="/project/" class="linkbt">New project</a>
+                <hr>
+            </div> <!-- make_new -->
+
+            <div>
+                {% if find_projects != None or find_skills != None or find_dealers != None %}
+                {% if index_search != None %}
+                    <p>Founded: <b>'{{index_search}}'</b>...</p>
+                    <ul> <!-- list of templates-->
+                        {% if find_projects != None %}
+                            <li>there are project templates:</li>
+                            <ul>
+                                <li>  <a href="projects/">{{find_projects}}</a>  </li>
+                            </ul>
+                        {% endif %}
+
+                        {% if find_skills != None %}
+                            <li>there are skills:</li>
+                            <ul>
+                                {% for item in find_skills %}
+                                    <li> <a href="skill={{item}}">{{item}}</a> </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                
+                        {% if find_dealers != None %}
+                            <li>there are dealers:</li>
+                            <ul>
+                                {% for item in find_dealers %}
+                                    <li> <a href="dealers/">{{item}}</a>  </li>
+                                {% endfor%}
+                            </ul>
+                        {% endif %}
+                    </ul>  <!-- list of templates-->
+                    
+                {% endif %} <!-- task -->
+                <hr>
+                {% endif %}
+            </div> <!-- search-result-->
+            
+            <div>
+                <p>Most used:</p>
+                <hr>
+            </div> <!-- most-used -->
+
+            <div>
+                <ul id="menu-tree">
+                    <li><span class="caret"">Contacts</span>
+                        <ul class="nested">
+                            <li>User1</li>
+                            <li>User2</li>
+                        </ul>
+                    </li>
+                    <li><span class="caret">Projects</span>
+                    </li>
+                    <li><span class="caret">Contracts</span>
+                    </li>
+                    <li><span class="caret">Skills</span>
+                        {% if public_skills %}
+                            <ul class="active">
+                                {% for item in public_skills %}
+                                    <li> <a href="{{item.link}}">{{item.name}}</a> </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+        </div> <!-- left-sidebar -->
+
+        <div class="user-center">
+
+            <div class="user-center-top">
+                {% if about_type %}
+                    <fieldset> <legend>Template</legend>
+                        {{about_type}} '{{about_name}}': 
+                        <ul>
+                            {% for item in about_value %}
+                                <li>{{item}}</li> 
+                            {% endfor %}
+                        </ul>
+                        <br>
+                        {% if local_user %}
+                            <a href="{{add_link}}">Add to plan</a>
+                            <a href="{{edit_link}}">Edit</a>
+                        {% else %}
+                            <a href="{{edit_link}}">Parameters</a>
+                        {% endif%}
+                        <a href="close">Close</a>
+                    </fieldset>
+                {% endif %}
+            </div> <!-- center-top-->
+
+            <div class="user-center-bottom">
+                Path: {{user_staff.root_path}}
+                
+                <ul id="menu-tree">
+                    <li><span><a href="{{user_staff.root.link}}">{{user_staff.root.name}}</a></span>
+                        <ul>
+                            {% if user_staff.projects %}
+                                <li><span class="caret">Projects</span>
+                                    <ul class="nested">
+                                        {% for item in user_staff.projects %}
+                                            <li><a href="{{item.link}}">{{item.name}}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            {% endif %}                               
+
+                            {% if user_staff.contracts %}
+                                <li><span class="caret">Contracts</span>
+                                    <ul class="nested">
+                                        {% for item in user_staff.contracts %}
+                                            <li><a href="{{item.link}}">{{item.name}}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            {% endif %}
+                            
+                            {% if user_staff.events %}
+                                {% for item in user_staff.events %}
+                                    <li><a href="{{item.link}}">{{item.name}}</a></li>
+
+                                {% endfor %}
+                            {% endif %}
+                        </ul>
+                    </li><!-- Life -->
+                </ul> <!-- menu-tree -->
+            </div> <!-- center-bottom -->
+
+        </div> <!-- center-content -->
+
+        <div class="user-right-sidebar">
+            {% block agenda %}
+            {% if local_user %}
+                <div class="right-bottom">
+                    Today agenda:
+                    <ul>
+                        <li>05:00 AM:  raise up [Health] </li>
+                        <li>11:00 AM Sunday: lesson [GoncharClub] {till: 13:00} </li>
+                        <li>13:30 PM Sunday: lesson [IT-TOP] {till: 14:30}</li>
+                    </ul> 
+                </div> <!-- right-bottom -->
+            {% endif %}
+            {%endblock%} <!-- agenda-->
+        </div> <!-- right-sidebar -->
+
+    </div> <!-- workplace -->
+
+{% endblock %} <!-- workplace -->
+
+
+
+{% block JavaScript %}
+    {{ block.super }}
+
+    <script>
+        var toggler = document.getElementsByClassName("caret");
+        var i;
+        
+        for (i = 0; i < toggler.length; i++) {
+            toggler[i].addEventListener("click", function() {
+                this.parentElement.querySelector(".nested").classList.toggle("active");
+                this.classList.toggle("caret-down");
+                });
+        } 
+
+    </script>
+{% endblock %} <!-- JavaScript -->
