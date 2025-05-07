@@ -63,20 +63,14 @@
 
 {% block authorization %}
     <div class="auth-buttons">
-        <button class="index-btn index-btn-login"><a href="/signup/">Sign Up</a></button>
+        <a href="/signup/" class="index-btn index-btn-login">Sign Up</a>
     </div>
 {% endblock %} <!-- authorization -->
 
 
 {% block workplace %}
     <div class="speed-bar">
-        <button class="speed-bar-btn speed-bar-back"><a href="/">Back</a></button>
-        <div>
-        <!--
-            <button type="submit" class="speed-bar-btn">Save</button>
-            <button type="submit" class="speed-bar-btn">Delete</button>
-        -->
-        </div>
+        <a href="/" class="speed-bar-btn speed-bar-back">Back</a>
     </div>
 
     <div class="login-context">

@@ -1,0 +1,327 @@
+{% extends "index.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Contract</title>
+{% endblock %}
+
+{% block application %}
+    Setup an agreement between two people with credit & debit events
+{% endblock %}
+
+{% block style %}
+    {{ block.super }}
+
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --success-color: #2ecc71;
+        }
+   
+        .cont-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            /*padding: 0;*/
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .form-col {
+            flex: 1;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+        
+        .events-section {
+            margin-top: 30px;
+        }
+        
+        .events-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-danger {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--light-color);
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .event-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: flex-end;
+        }
+        
+        .event-row select, .event-row input {
+            flex: 1;
+        }
+        
+        .event-row .btn {
+            flex: 0 0 auto;
+            padding: 12px 15px;
+        }
+        
+        .summary-section {
+            background-color: var(--light-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .summary-item:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+
+
+    </style>
+{% endblock %}
+
+{% block workplace %}
+<form method="POST" id="dataid">
+    {% csrf_token %}
+
+    <div class="speed-bar">
+        <a href="/user/" class="speed-bar-btn speed-bar-back">Back</a>
+        <div>
+            <button type="submit" class="speed-bar-btn" name="save" value="save">Save</button> <!-- {'name': value} will append to request.POST -->
+            <button type="submit" class="speed-bar-btn" name="send" value="send">Send to...</button>
+            <button type="submit" class="speed-bar-btn" name="send" value="send">Send back</button>
+            <button type="submit" class="speed-bar-btn" name="sign" value="sign">Sign</button>
+
+            {% if name %}
+                <button type="submit" class="speed-bar-btn" name="delete" value="delete"  onclick="return confirm('Are you sure?')">Delete</button>
+            {% endif %}
+
+        </div> 
+    </div>
+
+
+    <div class="cont-container">
+
+            <div class="form-row">
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="contract-name">Contract Name</label>
+                        <input type="text" id="contract-name" name="contract_name" placeholder="e.g. Loan Agreement, Service Contract" value="{{name}}">
+                    </div>
+                </div>
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="contract-name">Dealer:</label>
+                        <input type="text" id="contract-name" name="contract_name" placeholder="Name" value="">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="contract-name">Status: Template (offer / agreement / deal / closed)</label>
+            </div>
+            
+            <div class="form-group">
+                <label for="contract-description">Description</label>
+                <textarea id="contract-description" name="contract_description" rows="3" placeholder="Brief description of the contract terms"></textarea>
+            </div>
+
+            
+            <div class="events-section">
+                <div class="events-header">
+                    <label for="party1-name">Your Events:</label>
+                    <button type="button" class="btn btn-primary" id="add-event">Add Event</button>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Credit (give):</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th>Debet (get):</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th>Date</th>
+                            <th>Action</th>
+                            <th>Amount</th>
+                            <th>State</th>
+                            <th></th>
+                            <th>Date</th>
+                            <th>Action</th>
+                            <th>Amount</th>
+                            <th>State</th>
+                        </tr>
+                    </thead>
+                    <tbody id="events-table">
+                        <!-- Events will be added here dynamically -->
+                    </tbody>
+                </table>
+                
+                <div id="event-form" >
+                    <div class="event-row">
+                        <div class="form-group">
+                            <label for="event-date">Date</label>
+                            <input type="date" id="event-date">
+                        </div>
+                        <div class="form-group">
+                            <label for="event-desc">Action</label>
+                            <input type="text" id="event-desc" placeholder="Payment, Fee, etc.">
+                        </div>
+                        <div class="form-group">
+                            <label for="event-amount">Amount</label>
+                            <input type="number" id="event-amount" placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label for="event-type">Type</label>
+                            <select id="event-type">
+                                <option value="credit">Credit</option>
+                                <option value="debit">Debit</option>
+                            </select>
+                        </div>
+                        <!--
+                        <div class="form-group">
+                            <label for="event-party">Party</label>
+                            <select id="event-party">
+                                <option value="party1">Party 1</option>
+                                <option value="party2">Party 2</option>
+                                <option value="both">Both</option>
+                            </select>
+                        </div>
+                        -->
+                        <button type="button" class="btn btn-success" id="save-event">Save</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="summary-section">
+                <h3>Contract Summary</h3>
+                <div class="summary-item">
+                    <span>Total Credits:</span>
+                    <span id="party1-credits">$0.00</span>
+                </div>
+                <div class="summary-item">
+                    <span>Total Debits:</span>
+                    <span id="party1-debits">$0.00</span>
+                </div>
+
+                <div class="summary-item">
+                    <span>Net Balance (Party 1 - Party 2):</span>
+                    <span id="net-balance">$0.00</span>
+                </div>
+            </div>
+    </div>
+
+</form>
+{% endblock %}

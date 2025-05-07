@@ -296,6 +296,8 @@ def crud_skill(request, args=None):
 
     if local_user.commu_id:
         def_context.update({"local_user": local_user.nickname})
+    else:
+        return redirect("/")
 
 
     if args == 'temp': 
@@ -307,12 +309,13 @@ def crud_skill(request, args=None):
     #         def_context.update(local_user.pro_event.to_dict())
         
     
-    
+    logging.info(f" method: {request.method} cont: {request.POST}\n")
     if request.method == "POST":
         if request.POST.get('delete'):
             if hasattr(local_user, 'storage'):
                 local_user.storage.delete(local_user.temp_utem)
             local_user.temp_utem = None
+            return redirect("/user/")
 
         elif request.POST.get('save'):
             form = SkillForm(request.POST)
@@ -340,10 +343,13 @@ def crud_skill(request, args=None):
                 
                 if hasattr(local_user, 'storage'):
                     local_user.storage.save(local_user.temp_utem)
-            
-        return redirect("/user/")
+                return redirect("/user/")
+        else:
+            form = SkillForm(request.POST)
+            logging.info(f"POST failed\n")
+        
     else:
-        form = SkillForm(request.POST)
+        form = SkillForm(request)
     
     def_context.update({"form": form})
     

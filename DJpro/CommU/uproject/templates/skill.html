@@ -76,8 +76,14 @@
 {% csrf_token %}
 
 <div class="speed-bar">
-    <button class="speed-bar-btn speed-bar-back"><a href="/user/">Back</a></button>
-    <div>       
+   <a href="/user/" class="speed-bar-btn speed-bar-back">Back</a>
+    <div>
+        {% if local_user %}
+            <button type="submit" class="speed-bar-btn" name="save" value="save">Save</button> <!-- {'name': value} will append to request.POST -->
+            {% if name %}
+                <button type="submit" class="speed-bar-btn" name="delete" value="delete"  onclick="return confirm('Are you sure?')">Delete</button>
+            {% endif %}
+        {% endif %}          
     </div> 
 </div>
 
@@ -96,12 +102,9 @@
                     {% else %}
                         <label><input type="checkbox" name="skill_public" >Public</label>
                     {% endif %}
-                    <!--  
-                    <label>Author: <input type="text" name="skill_author" maxlength="100" value="{{author}}"></label> 
-                    -->
                     <input type="button" class="form-btn" onclick="clearform()" value="Clear">
                 </fieldset>
-
+<!--
                 <div class="skill-bottom-field">
                     {% if local_user %}
                         <div class="skill-button">
@@ -114,7 +117,7 @@
                         </div>
                     {% endif %}                 
                 </div>
-     
+-->     
 
         </div> <!-- column -->        
     </div> <!-- container -->

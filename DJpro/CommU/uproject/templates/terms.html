@@ -11,7 +11,7 @@
 
 {% block workplace %}
     <div class="speed-bar">
-        <button class="speed-bar-btn speed-bar-back"><a href="/">Back</a></button>
+        <a href="/" class="speed-bar-btn speed-bar-back">Back</a>
         <div>
         <!--
          <button type="submit" class="speed-bar-btn">Save</button>
@@ -21,14 +21,11 @@
     </div>
 
     <div class="index-context">
-        <form method="post" >
-        {% csrf_token %}
-            <section class="index-content-section">
-                <ul>
-                    <li>To join CommU you should accept and follow CommU <a href="/info/laws"> Laws </a></li>
-                    <li>There are some <a href="/info/rules">rules</a> to use CommU</li>
-                </ul>
-            </section>
-        </form>
+        <section class="index-content-section">
+            <ul>
+                <li>To join CommU you should accept and follow CommU <a href="/info/laws"> Laws </a></li>
+                <li>There are some <a href="/info/rules">rules</a> to use CommU</li>
+            </ul>
+        </section>
     </div>     
 {% endblock %} <!-- workplace -->

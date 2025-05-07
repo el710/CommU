@@ -93,6 +93,7 @@
     .index-btn-login {
         background-color: #3498db;
         color: white;
+        font-size: 14px;
     }
 
     .index-btn:hover {
@@ -210,11 +211,8 @@
       }      
 
       .speed-bar-back {
-        position: sticky;
-        left: 0;
-      }
-
-      .speed-bar-back a{
+            position: sticky;
+            left: 0;
             text-decoration: none;
             color: white;
       }
@@ -243,8 +241,8 @@
                         <a href="/logout/"><img src="{% static 'logout.png' %}" alt="log out"></a>
                     </div>
                 {% else %}
-                    <button class="index-btn index-btn-login"><a href="/login/">Log In</a></button>
-                    <button class="index-btn index-btn-login"><a href="/signup/">Sign Up</a></button>
+                    <a href="/login/" class="index-btn index-btn-login">Log In</a>
+                    <a href="/signup/" class="index-btn index-btn-login">Sign Up</a>                  
                 {% endif %}
             </div>
         {% endblock %} <!-- authorization -->
@@ -310,12 +308,6 @@
 
     {% block JavaScript %}
     <script>
-
-/*
-        function clearform() {
-            document.getElementById("dataid").reset()
-        }
-*/
     
         // Скрипт для отображения текущей даты, времени, часового пояса
         function updateDateTime() {
