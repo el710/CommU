@@ -14,15 +14,15 @@
     <style>
         .event-work-field {
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             align-items: left;
             justify-content: center;
             font-size: large;
 
-            /*
+        /*
             border: 1px solid blue;
             border-radius: 8px;
-            */
+        */
         }
 
         .event-center {
@@ -61,36 +61,42 @@
 {% endblock %}
 
 {% block workplace %}
-<div class="speed-bar">
-    <button class="speed-bar-btn speed-bar-back"><a href="/user/">Back</a></button>
-    <div>
+<form method="POST" id="dataid">
+    {% csrf_token %}
 
-        {% if local_user %}
-            <input type="submit" class="speed-bar-btn" value="Save" name="save">
-
-            {% if name %}
-                <input type="submit" class="speed-bar-btn" value="Delete" name="delete" onclick="return confirm('Are you sure?')">
-            {% endif %}       
-        {% endif %}  
-    </div> 
-</div>
+    <div class="speed-bar">
+        <a href="/user/" class="speed-bar-btn speed-bar-back">Back</a>
+        <div>
+            {% if user_skill %}
+                <button type="submit" class="speed-bar-btn" name="add" value="add">Add</button> <!-- {'name': value} will append to request.POST -->
+            {% elif user_event %}
+                <button type="submit" class="speed-bar-btn" name="save" value="save">Save</button>
+                <button type="submit" class="speed-bar-btn" name="delete" value="delete"  onclick="return confirm('Are you sure?')">Delete</button>
+            {% endif %}
+        </div> 
+    </div>
 
 
     <div class="event-work-field">
-        <form method="POST" id="dataid">
-        {% csrf_token %}
+
 
         <div class="event-center">
-            <div class="items">
-                <input type="submit" value="Add to..." name="set">
-            </div>            
+            <div class="event-items">
+                Context:
+                {% if user_root %}
+                    {{user_root}}
+                {% endif %}
+            </div>
+            
+
             <div class="event-items">
                 {% if user_root %}
-                    {{user_root}} skill "{{user_skill}}": 
+                    Event: "{{user_skill}}": 
                 {% endif %}
                 <label id="status">once {{start_date_day}} {{start_month_name}} {{start_date_year}} at {{start_time}}</label>
             </div>
         </div>
+
         <div class="event-center">
             <div class="event-items">
                 <fieldset>
@@ -156,22 +162,9 @@
                 </fieldset>
             </div>
         </div>
-        </form>
-
-        <form method="POST" id="dataid">
-        {% csrf_token %}
-        <div class="bottom-field">
-            {% if local_user %}
-                <div class="button">
-                    {% if edit_mode %}
-                        <input type="submit" value="Delete" name="delete">
-                    {% endif %}       
-                </div>
-            {% endif %}                 
-        </div> <!-- bottom-field -->
 
     </div> <!-- work-field -->
-
+</form>
 {% endblock %}
 
 

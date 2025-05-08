@@ -44,6 +44,9 @@ class UUser():
 
         ## pointer to work project or contract
         self.root_utem = None
+
+        ## pointer to choosen event
+        self.pro_event = None
       
          ## list of all user's contacts - phone book
         self.contacts = None
@@ -57,7 +60,7 @@ class UUser():
         self.utems = base
         if isinstance(root, UObject):
             self.utems.add(copy.deepcopy(root))
-            ## pointer to current skill from projects user is working with
+            ## pointer to current skill from projects user work with
             self.root_utem = self.utems.read(root.get_token())
         else:
             self.root_utem = None

@@ -14,7 +14,7 @@ class Def(unittest.TestCase):
     @classmethod
     def setUpClass(cls): 
         ## return super().setUpClass()
-        logging.debug(f"Start {cls.__class__()} testing ...")
+        logging.debug(f"Start {cls.__class__} testing ...")
     
     def setUp(self):
         ## return super().setUp()
@@ -27,7 +27,7 @@ class Def(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         ## return super().tearDownClass()
-        logging.debug(f"testing {cls.__class__()} is over")
+        logging.debug(f"testing {cls.__class__} is over")
 
     """
         Tests

@@ -11,10 +11,9 @@ import logging
 # """
 #     To see neighbors directory
 # """
-# import sys
-# from pathlib import Path
-# sys.path.append(str(Path(__file__).parent.parent /"." ))
-## Made it in main file
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).parent /"." ))
 
 from uproject.models.bases import UtemBase
 from uproject.models.uobject import UObject

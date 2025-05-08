@@ -472,7 +472,7 @@ def crud_event(request, args=None):
             logging.info(f'find event {item}\n')
             
             local_user.pro_event = item
-            def_context.update({"user_skill": local_user.pro_event.name})
+            def_context.update({"user_event": local_user.pro_event.name})
 
             now = datetime(year=2025, month=1, day=1, hour=8, minute=0, tzinfo=local_user.timezone)
 
@@ -497,22 +497,25 @@ def crud_event(request, args=None):
 
         if form.is_valid(): ## is_valid also makes cleaned_data
         
-            if request.POST.get('set'):
+            if request.POST.get('add'):
                 local_user.temp_utem.set_event(local_user, form.cleaned_data)
                 local_user.add_utem(local_user.temp_utem)
                 
                                 
-                logging.info(f'exit by set\n')
-                return redirect('/user/')
+                logging.info(f'exit by add\n')
+                
+            elif request.POST.get('save'):
+                # local_user.temp_utem.set_event(local_user, form.cleaned_data)
+                # local_user.add_utem(local_user.temp_utem)
+                          
+                logging.info(f'exit by save\n')
             elif request.POST.get('delete'):
                 ## delete skill from current project
                 ## !!! FIRST check parents (project, contract) state !!!
-                ## skill._event = None
-                ## skill._state = 'template'
 
                 logging.info(f'exit by delete\n')
-                return redirect('/user/')
                 
+            return redirect('/user/')    
     else:
        form = EventForm()
         
