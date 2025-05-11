@@ -12,6 +12,8 @@ class UContract(UObject):
         self.holder_id = holder_id
         self.dealer_id = dealer_id
         self.status = "template" ## "offer", "deal", "closed"
+        
+        ## networkx - graph for dependence ???
         self.holder_credit_events = [] ## :  {event, dependence}
         self.holder_debet_events = [] ## :  {event, dependence}
 
@@ -21,4 +23,4 @@ class UContract(UObject):
         return f"{super().get_file_name(user)}.ctp"
     
     def get_title(self, dealer:str):
-        return f"{dealer if dealer else ''} {self.name}"
+        return f"{dealer if dealer else 'contract'} '{self.name}'"

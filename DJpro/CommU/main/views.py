@@ -21,7 +21,7 @@ from uproject.storage.filestorage import FileStorage
 
 import logging
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 """ Operating Data"""
@@ -427,65 +427,9 @@ def crud_project(request, args=None):
 def crud_event(request, args=None):
     global local_user
 
-    logging.info(f'open skill: {args}\n')
+    if local_user.commu_id == None: return redirect("/")
+
     logging.info(f'local user: {local_user.nickname}\n')
-
-    if local_user.commu_id == None:
-        return redirect("/")
-
-    '''
-        def_context has parameters to show end form to change parameters
-    '''
-    def_context = {}
-    
-    if local_user.commu_id:
-        def_context.update({"local_user": local_user.nickname,
-                            "user_root": local_user.root_utem.get_title()
-                          })
-        # if local_user.pro_contract:
-        #     def_context.update({"user_contract": local_user.pro_contract})
-
-    
-    if args == None: ## create(add) event
-        logging.info(f'create event\n')
-
-        def_context.update({"user_skill": local_user.temp_utem.name})
-
-        now = datetime.now(tz=local_user.timezone)
-        
-        start_date_day = f"{now.day:02d}"
-        start_date_month = f"{now.month:02d}"
-        start_month_name = now.strftime("%B")
-        start_date_year = now.year
-        start_weekday = now.weekday()
-
-        end_date = f"{now.year}-{now.month:02d}-{now.day:02d}"
-        start_time = f"{now.hour:02d}:{now.minute:02d}"
-
-    else:  ## read & edit event
-        utem_type, utem_id = parse_link(args)
-        logging.info(f'get event {utem_type}, {utem_id}\n')
-        
-        ## !!! take from user
-        item = local_user.utems.read(utem_id)
-        if item:
-            logging.info(f'find event {item}\n')
-            
-            local_user.pro_event = item
-            def_context.update({"user_event": local_user.pro_event.name})
-
-            now = datetime(year=2025, month=1, day=1, hour=8, minute=0, tzinfo=local_user.timezone)
-
-        start_date_day = f"{now.day:02d}"
-        start_date_month = f"{now.month:02d}"
-        start_month_name = now.strftime("%B")
-        start_date_year = now.year
-        start_weekday = now.weekday()
-
-        end_date = f"{now.year}-{now.month:02d}-{now.day:02d}"
-        start_time = f"{now.hour:02d}:{now.minute:02d}"
-    # else:
-        # logging.info(f"wrong args to crud_event {args}\n")
 
 
     logging.info(f"request.method {request.method} \n")
@@ -498,39 +442,79 @@ def crud_event(request, args=None):
         if form.is_valid(): ## is_valid also makes cleaned_data
         
             if request.POST.get('add'):
-                local_user.temp_utem.set_event(local_user, form.cleaned_data)
+                local_user.temp_utem.set_event(form.cleaned_data)
+                local_user.temp_utem.set_executor(local_user)
                 local_user.add_utem(local_user.temp_utem)
                 
-                                
                 logging.info(f'exit by add\n')
                 
             elif request.POST.get('save'):
-                # local_user.temp_utem.set_event(local_user, form.cleaned_data)
-                # local_user.add_utem(local_user.temp_utem)
-                          
+                local_user.pro_event.set_event(form.cleaned_data)
+                
                 logging.info(f'exit by save\n')
-            elif request.POST.get('delete'):
-                ## delete skill from current project
-                ## !!! FIRST check parents (project, contract) state !!!
 
+            elif request.POST.get('delete'):
+                local_user.utems.delete(local_user.pro_event.get_token())
+                local_user.pro_event = None
+                
                 logging.info(f'exit by delete\n')
                 
             return redirect('/user/')    
     else:
        form = EventForm()
-        
 
-    def_context.update({"form": form})
-    def_context.update({"start_date_day": start_date_day,
-                        "start_date_month": start_date_month,
-                        "start_month_name": start_month_name,
-                        "start_date_year": start_date_year,
-                        "start_weekday": start_weekday,
-                        "end_date": end_date,
-                        "start_time": start_time,
-                        "end_time": start_time
+    '''
+        def_context has parameters to show end form to change parameters
+    '''
+    def_context = {"form": form,
+                   "local_user": local_user.nickname
+                  }
+    
+    ## create(add) event  
+    if args == None: 
+        logging.info(f'create event\n')
+        now = datetime.now(tz=local_user.timezone)
+          
+        def_context.update({"event_create": True,
+                            "event": {"start_date": now.date().isoformat(),
+                                      "start_time": now.strftime("%H:%M")
+                                    }
                         })
 
+    ## read & edit event
+    else:  
+        utem_type, utem_id = parse_link(args)
+        logging.info(f'get event {utem_type}, {utem_id}\n')
+        
+        ## Find event from user's utem Base
+        parent, local_user.pro_event = local_user.utems.read(utem_id)
+       
+        if local_user.pro_event and isinstance(local_user.pro_event, USkill):
+            logging.info(f'Has found event {local_user.pro_event} parent: {parent}\n')
+
+            ## Only contract or Project can be parent for event
+            if isinstance(parent, UContract) or isinstance(parent, UProject): 
+                local_user.root_utem = parent
+
+            ## restore event's datetime
+            now = datetime.strptime(f"{local_user.pro_event._event['start_date']} {local_user.pro_event._event['start_time']}", "%Y-%m-%d %H:%M")
+            now = now.replace(tzinfo=local_user.timezone)
+            logging.info(f"restore event's moment {now}")
+
+            def_context.update({"event_edit": True,
+                                "event": local_user.pro_event._event
+                            })
+        else:
+            ## no such event
+            logging.info(f"wrong args for crud_event {args}\n")
+            return redirect("/user/")
+    
+
+    ## parent context & event
+    def_context.update({"user_root": local_user.root_utem.get_title(),
+                        "user_event": local_user.temp_utem.name
+                    })    
+    
     logging.info(f"def_context {def_context} \n")
 
     return render(request, "event.html", context=def_context)

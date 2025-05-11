@@ -58,10 +58,10 @@ class UUser():
     def init_utem_base(self, base:UtemBase, root:UObject=None):
         ## base of user's utems
         self.utems = base
-        if isinstance(root, UObject):
+        if root:
             self.utems.add(copy.deepcopy(root))
             ## pointer to current skill from projects user work with
-            self.root_utem = self.utems.read(root.get_token())
+            temp, self.root_utem = self.utems.read(root.get_token())
         else:
             self.root_utem = None
     

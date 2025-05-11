@@ -40,7 +40,7 @@ class UProject(UObject):
         return f"{super().get_file_name(user)}.ptp"
         
     def get_title(self):
-        return f"pro {self.name}"
+        return f"project '{self.name}'"
 
     def add_event(self, skill: USkill):
         self.events.append({"name": skill.get_title(), "link": skill.make_link()})

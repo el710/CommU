@@ -80,6 +80,7 @@ class EventForm(forms.Form):
     rem_1h = forms.BooleanField(label="1 Hour", required=False)
     rem_1d = forms.BooleanField(label="1 Day", required=False)
 
+
 class ContractForm(forms.Form):
     '''
         Form of Utem-Contract's parameters

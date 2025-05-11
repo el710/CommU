@@ -37,11 +37,14 @@ class USkill(UObject):
         self.public = public
         self._create_datetime = datetime.now()
 
-    def set_event(self, user, event):
-        self._executor = user
+    def set_event(self, event):
         self._event = event
     
+    def set_executor(self, user):
+        self._executor = user
+        
+
     def get_title(self):
         time_moment = self._event['start_time'] if self._event else 'in plan'
-        return f"{time_moment} {self.name}"
+        return f"{time_moment} '{self.name}'"
 

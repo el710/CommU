@@ -73,6 +73,8 @@ def get_utem_info(utem):
 
 def get_project_tree(user: UUser):
 
+    logging.info(f"root {user.root_utem}")
+
     root_path = "recursive by tree"
 
     if isinstance(user.root_utem, UContract):

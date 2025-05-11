@@ -49,8 +49,16 @@ class UtemBase():
         for item in self._base:
             if item["id"] == id_hash:
                 # logging.info(f"found : {item}\n")
-                return item["utem"]
-        return None
+                parent = None
+                if item["parent"]:
+                    parent_id = item["parent"]
+                    for p_item in self._base:
+                        if p_item["id"] == parent_id:
+                            parent = p_item["utem"]
+                            break
+
+                return parent, item["utem"]
+        return None, None
 
     def edit(self, id_hash, new_utem:UObject, parent_id=None):
         for item in self._base:
@@ -59,12 +67,18 @@ class UtemBase():
                 item["utem"] = new_utem
                 if parent_id:  item["parent"] = parent_id
 
-    def delete(self, id_hash=None, parent_id=None): ## !!! recursive
+    def delete(self, id_hash=None, parent_id=None):
+        """
+            !!! Recursive
+            Delete id_hash item and children of pareint_id
+        """
         if id_hash or parent_id:
             for item in self._base:
                 if item["id"] == id_hash or item["parent"] == parent_id:
                     next = item["id"]
+                    ## find & delete children
                     self.delete(self, parent_id=next)
+                    
                     self._base.remove(item)
         return None
 

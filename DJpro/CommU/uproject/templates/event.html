@@ -67,9 +67,9 @@
     <div class="speed-bar">
         <a href="/user/" class="speed-bar-btn speed-bar-back">Back</a>
         <div>
-            {% if user_skill %}
+            {% if event_create %}
                 <button type="submit" class="speed-bar-btn" name="add" value="add">Add</button> <!-- {'name': value} will append to request.POST -->
-            {% elif user_event %}
+            {% elif event_edit %}
                 <button type="submit" class="speed-bar-btn" name="save" value="save">Save</button>
                 <button type="submit" class="speed-bar-btn" name="delete" value="delete"  onclick="return confirm('Are you sure?')">Delete</button>
             {% endif %}
@@ -91,9 +91,9 @@
 
             <div class="event-items">
                 {% if user_root %}
-                    Event: "{{user_skill}}": 
+                    Event: "{{user_event}}": 
                 {% endif %}
-                <label id="status">once {{start_date_day}} {{start_month_name}} {{start_date_year}} at {{start_time}}</label>
+                <label id="status">...</label>
             </div>
         </div>
 
@@ -101,21 +101,24 @@
             <div class="event-items">
                 <fieldset>
                     <legend>Date</legend>
-                    <input type="date" id="start_date" value="{{start_date_year}}-{{start_date_month}}-{{start_date_day}}" name="start_date" oninput="set_event_string()">
+                    <input type="date" id="start_date" value="{{event.start_date}}" name="start_date" oninput="set_event_string()">
                     <span class="validity"></span>
                 </fieldset>
-                <!--
-                <fieldset>
-                    <legend>Last date</legend>
-                    <input type="date" id="end_day" disabled value="{{start_date_year}}-{{start_date_month}}-{{start_date_day}}">
-                 </fieldset>
-                -->
             </div>
             <div class="event-items">
                 <fieldset>
                     <legend>Repeating</legend>
-                        <label><input type="checkbox" class="check" name="once"  onclick="onlyOne(this, 'once')" checked>Once</label>
-                        <label><input type="checkbox" class="check" name="daily" onclick="onlyOne(this, 'daily')">Daily</label>
+                        {% if event.once == False %}
+                            <label><input type="checkbox" class="check" name="once"  onclick="onlyOne(this, 'once')">Once</label>
+                        {% else %}
+                            <label><input type="checkbox" class="check" name="once"  onclick="onlyOne(this, 'once')" checked>Once</label>
+                        {% endif %}
+                        S: {{event.daily}}
+                        {% if event.daily == False %}
+                            <label><input type="checkbox" class="check" name="daily" onclick="onlyOne(this, 'daily')">Daily</label>
+                        {% elif event.daily == True %}
+                            <label><input type="checkbox" class="check" name="daily" onclick="onlyOne(this, 'daily')" checked>Daily</label>
+                        {% endif %}                            
                         <label><input type="checkbox" class="check" name="work"  onclick="onlyOne(this, 'work')">Work days</label>
                         <label><input type="checkbox" class="check" name="weekly"  onclick="onlyOne(this, 'weekly')">Weekly</label>
                         <label><input type="checkbox" class="check" name="atday"   onclick="onlyOne(this, 'atday')">Monthly on day</label>
@@ -143,11 +146,11 @@
             <div class="event-items">
                 <fieldset>
                     <legend>Start time</legend>
-                    <input type="time" id="start_time" name="start_time" value={{start_time}} oninput="set_event_string()">
+                    <input type="time" id="start_time" name="start_time" value={{event.start_time}} oninput="set_event_string()">
                 </fieldset>
                 <fieldset>
                     <legend>End time</legend>
-                    <input type="time" id="end_time" name="end_time" value={{end_time}} oninput="set_event_string()" disabled>
+                    <input type="time" id="end_time" name="end_time" value={{event.start_time}} oninput="set_event_string()" disabled>
                     <label><input type="checkbox" name="duration" onclick="addendtime(this)">Duration</label>
                  </fieldset>
             </div>            
@@ -176,6 +179,8 @@
     const weekdays = ["Sunday", "Monday", "Tuesday", "Wednsday", "Thirsday", "Friday", "Saturday"];
 
     var event_type = 'once'
+
+    set_event_string()
 
     //console.log({{start_weekday}})
 
@@ -228,6 +233,9 @@
         var start_hour = start_time.slice(0, 2);
         var start_minute = start_time.slice(3, 6);
 
+
+        Make event_type
+
         var event_string = document.getElementById("status")
         if (event_type == 'once') {
                 event_string.innerHTML = "once " + start_day +' '+ months[start_month-1] +' '+ start_year +" at "+ start_hour+":"+start_minute;
@@ -270,6 +278,7 @@
         }
 
     check_week_day()
+
 </script>
 
 {% endblock %}
