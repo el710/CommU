@@ -6,8 +6,6 @@ from django.contrib.staticfiles import finders
 
 # Create your views here.
 
-
-# from upack.uproject import *
 from uproject.models.user import *
 from uproject.models.bases import UtemBase
 from uproject.models.project import UProject
@@ -477,9 +475,10 @@ def crud_event(request, args=None):
           
         def_context.update({"event_create": True,
                             "event": {"start_date": now.date().isoformat(),
-                                      "start_time": now.strftime("%H:%M")
+                                      "start_time": now.strftime("%H:%M"),
+                                      "once": True
                                     }
-                        })
+                            })
 
     ## read & edit event
     else:  
