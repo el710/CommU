@@ -361,21 +361,8 @@ def crud_contract(request, args=None):
     '''
     global local_user
 
-    ## dictionary of args for HTML page
-    def_context = {}
-
     ## if no user
-    if not local_user.commu_id: return redirect("/")
-    else:
-        def_context.update({"local_user": local_user.nickname})
-
-    if args == None: ## create(add) 
-        logging.info(f'create contract\n')
-
-
-    else:  ## read & edit event
-        utem_type, utem_id = parse_link(args)
-        logging.info(f'get contract {utem_type}, {utem_id}\n')
+    if local_user.commu_id == None: return redirect("/")
   
     logging.info(f"request.method {request.method} \n")
 
@@ -386,19 +373,45 @@ def crud_contract(request, args=None):
         logging.info(f'data: {form.cleaned_data}\n')
 
         if form.is_valid(): ## is_valid also makes cleaned_data
-        
-            if request.POST.get('set'):
+                   
+            if request.POST.get('add'):
                
-                return redirect('/user/')
+               
+                logging.info(f'exit by add\n')
+            elif request.POST.get('save'):
+                               
+                logging.info(f'exit by save\n')
+            elif request.POST.get('sendto'):
+                               
+                logging.info(f'exit by sendto\n')                
+            elif request.POST.get('sendback'):
+                               
+                logging.info(f'exit by sendback\n')
+            elif request.POST.get('sign'):
+                               
+                logging.info(f'exit by sign\n')
             elif request.POST.get('delete'):
-                
-                return redirect('/user/')
-                
+             
+                logging.info(f'exit by delete\n')
+                                
+            return redirect('/user/')
     else:
        form = EventForm()
-        
-    def_context.update({"form": form})
-    
+
+    '''
+        def_context has parameters to show end form to change parameters
+    '''
+    def_context = {"form": form,
+                   "local_user": local_user.nickname
+                  }
+
+    if args == None: ## create(add) 
+        logging.info(f'create contract\n')
+
+
+    else:  ## read & edit event
+        utem_type, utem_id = parse_link(args)
+        logging.info(f'get contract {utem_type}, {utem_id}\n')
 
     
     return render(request, "contract.html", context=def_context)

@@ -193,9 +193,10 @@
     <div class="speed-bar">
         <a href="/user/" class="speed-bar-btn speed-bar-back">Back</a>
         <div>
+            <button type="submit" class="speed-bar-btn" name="add" value="add">Add</button>
             <button type="submit" class="speed-bar-btn" name="save" value="save">Save</button> <!-- {'name': value} will append to request.POST -->
-            <button type="submit" class="speed-bar-btn" name="send" value="send">Send to...</button>
-            <button type="submit" class="speed-bar-btn" name="send" value="send">Send back</button>
+            <button type="submit" class="speed-bar-btn" name="sendto" value="sendto">Send to dealer</button>
+            <button type="submit" class="speed-bar-btn" name="sendback" value="sendback">Send back</button>
             <button type="submit" class="speed-bar-btn" name="sign" value="sign">Sign</button>
 
             {% if name %}
@@ -207,6 +208,18 @@
 
 
     <div class="cont-container">
+        <div class="form-row">
+            <div class="form-col">
+                <div class="form-group">
+                    <label for="context-name">Context</label>
+                    <!-- <input type="text" id="context-name" name="context-name" placeholder="project" value="{{name}}"> -->
+                    <select id="context-name">
+                        <option value="Life">project "Life"</option>
+                        <option value="...">...</option>
+                    </select>
+                </div>
+            </div>
+        </div>
 
             <div class="form-row">
                 <div class="form-col">
@@ -236,6 +249,7 @@
             <div class="events-section">
                 <div class="events-header">
                     <label for="party1-name">Your Events:</label>
+                    <button type="button" class="btn btn-primary" id="change-role">Change role</button>
                     <button type="button" class="btn btn-primary" id="add-event">Add Event</button>
                 </div>
 
@@ -316,10 +330,7 @@
                     <span id="party1-debits">$0.00</span>
                 </div>
 
-                <div class="summary-item">
-                    <span>Net Balance (Party 1 - Party 2):</span>
-                    <span id="net-balance">$0.00</span>
-                </div>
+
             </div>
     </div>
 
