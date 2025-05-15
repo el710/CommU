@@ -113,62 +113,24 @@
             <div class="event-items">
                 <fieldset>
                     <legend>Repeating</legend>
-                   
-                        {% if event.once == False %}
-                            <label><input type="checkbox" class="check" name="once"  onclick="onlyOne(this)">Once</label>
-                        {% else %}
-                            <label><input type="checkbox" class="check" name="once"  onclick="onlyOne(this)" checked>Once</label>
-                        {% endif %}
-                        {% if event.daily == False or event.daily == None %}
-                            <label><input type="checkbox" class="check" name="daily" onclick="onlyOne(this)">Daily</label>
-                        {% else %}
-                            <label><input type="checkbox" class="check" name="daily" onclick="onlyOne(this)" checked>Daily</label>
-                        {% endif %}
-                        {% if event.work == False or event.work == None %}
-                            <label><input type="checkbox" class="check" name="work"  onclick="onlyOne(this)">Work days</label>
-                        {% else %}
-                            <label><input type="checkbox" class="check" name="work"  onclick="onlyOne(this)" checked>Work days</label>
-                        {% endif %}
-                        {% if event.weekly == False or event.weekly == None %}
-                            <label><input type="checkbox" class="check" name="weekly"  onclick="onlyOne(this)">Weekly</label>
-                        {% else %}
-                            <label><input type="checkbox" class="check" name="weekly"  onclick="onlyOne(this)" checked>Weekly</label>
-                        {% endif %}
-                        {% if event.atday == False or event.atday == None %}
-                            <label><input type="checkbox" class="check" name="atday"   onclick="onlyOne(this)">Monthly on day</label>    
-                        {% else %}
-                            <label><input type="checkbox" class="check" name="atday"   onclick="onlyOne(this)" checked>Monthly on day</label>
-                        {% endif %}
-                        {% if event.atweek == False or event.atweek == None %}
-                            <label><input type="checkbox" class="check" name="atweek" onclick="onlyOne(this)" >Monthly weekday</label>    
-                        {% else %}
-                            <label><input type="checkbox" class="check" name="atweek" onclick="onlyOne(this)" checked>Monthly weekday</label>
-                        {% endif %}
-                        {% if event.yearly == False or event.yearly == None %}
-                            <label><input type="checkbox" class="check" name="yearly" onclick="onlyOne(this)">Annually</label>
-                        {% else %}
-                            <label><input type="checkbox" class="check" name="yearly" onclick="onlyOne(this)" checked>Annually</label>
-                        {% endif %}
-                        
-                        
-                        
+                    <label><input type="checkbox" class="check" name="once"    onclick="onlyOne(this)" {% if event.once %} checked {%endif%}>Once</label>
+                    <label><input type="checkbox" class="check" name="daily"   onclick="onlyOne(this)" {% if event.daily %} checked {%endif%}>Daily</label>
+                    <label><input type="checkbox" class="check" name="work"    onclick="onlyOne(this)" {% if event.work %} checked {%endif%}>Work days</label>
+                    <label><input type="checkbox" class="check" name="weekly"  onclick="onlyOne(this)" {% if event.weekly %} checked {%endif%}>Weekly</label>
+                    <label><input type="checkbox" class="check" name="atday"   onclick="onlyOne(this)" {% if event.atday %} checked {%endif%}>Monthly on day</label>    
+                    <label><input type="checkbox" class="check" name="atweek"  onclick="onlyOne(this)" {% if event.atweek %} checked {%endif%}>Monthly weekday</label>
+                    <label><input type="checkbox" class="check" name="yearly"  onclick="onlyOne(this)" {% if event.yearly %} checked {%endif%}>Annually</label>  
                     <div>
                         <hr>
-                        {% if event.wdays == False or event.wdays == None %}
-                            <label><input type="checkbox" class="check" name="wdays"  onclick="onlyOne(this)">Week days</label>
-                        {% else %}
-                            <label><input type="checkbox" class="check" name="wdays"  onclick="onlyOne(this)" checked>Week days</label>
-                        {% endif %} 
-                        
+                        <label><input type="checkbox" class="check" name="wdays"  onclick="onlyOne(this)" {% if event.wdays %} checked {%endif%}>Week days</label>
                         <fieldset>
-                            
-                            <label><input type="checkbox" class="w_days" name="w_monday"   onclick="addwday()" disabled>Monday</label>
-                            <label><input type="checkbox" class="w_days" name="w_tuesday"  onclick="addwday()" disabled>Tuesday</label>
-                            <label><input type="checkbox" class="w_days" name="w_wednsday" onclick="addwday()" disabled>Wednsday</label>
-                            <label><input type="checkbox" class="w_days" name="w_thirsday" onclick="addwday()" disabled>Thirsday</label>
-                            <label><input type="checkbox" class="w_days" name="w_friday"   onclick="addwday()" disabled>Friday</label>
-                            <label><input type="checkbox" class="w_days" name="w_saturday" onclick="addwday()" disabled>Saturday</label>
-                            <label><input type="checkbox" class="w_days" name="w_sunday"   onclick="addwday()" disabled>Sunday</label>
+                            <label><input type="checkbox" class="w_days" name="w_monday"   onclick="addwday()" {% if event.w_monday %} checked {%endif%}>Monday</label>
+                            <label><input type="checkbox" class="w_days" name="w_tuesday"  onclick="addwday()" {% if event.w_tuesday %} checked {%endif%}>Tuesday</label>    
+                            <label><input type="checkbox" class="w_days" name="w_wednsday" onclick="addwday()" {% if event.w_wednsday %} checked {%endif%}>Wednsday</label>
+                            <label><input type="checkbox" class="w_days" name="w_thirsday" onclick="addwday()" {% if event.w_thirsday %} checked {%endif%}>Thirsday</label>
+                            <label><input type="checkbox" class="w_days" name="w_friday"   onclick="addwday()" {% if event.w_friday %} checked {%endif%}>Friday</label>
+                            <label><input type="checkbox" class="w_days" name="w_saturday" onclick="addwday()" {% if event.w_saturday %} checked {%endif%}>Saturday</label>
+                            <label><input type="checkbox" class="w_days" name="w_sunday"   onclick="addwday()" {% if event.w_sunday %} checked {%endif%}>Sunday</label>
                         </fieldset>
                     </div>
                </fieldset>
@@ -190,11 +152,11 @@
             <div class="event-items">
                <fieldset>
                     <legend>Remind</legend>
-                    <label><input type="checkbox" name="rem_5">5 Min</label>
-                    <label><input type="checkbox" name="rem_15">15 Min</label>
-                    <label><input type="checkbox" name="rem_30">30 Min</label>
-                    <label><input type="checkbox" name="rem_1h">1 Hour</label>
-                    <label><input type="checkbox" name="rem_1d">1 Day</label>
+                    <label><input type="checkbox" name="rem_5"  {% if event.rem_5 %} checked {%endif%}>5 Min</label>
+                    <label><input type="checkbox" name="rem_15" {% if event.rem_15 %} checked {%endif%}>15 Min</label>
+                    <label><input type="checkbox" name="rem_30" {% if event.rem_30 %} checked {%endif%}>30 Min</label>
+                    <label><input type="checkbox" name="rem_1h" {% if event.rem_1h %} checked {%endif%}>1 Hour</label>
+                    <label><input type="checkbox" name="rem_1d" {% if event.rem_1d %} checked {%endif%}>1 Day</label>
                 </fieldset>
             </div>
         </div>
@@ -210,8 +172,14 @@
 <script>
     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const weekdays = ["Sunday", "Monday", "Tuesday", "Wednsday", "Thirsday", "Friday", "Saturday"];
+    const weeknum = ["first", "second", "third", "fourth", "fifth"]
 
     //console.log({{start_weekday}})
+
+    function getWeekdayOccurrence(date) {
+        return  occurrence = Math.ceil(date.getDate() / 7);
+    }
+
 
     function addendtime(checkbox) {
         document.getElementById("end_time").disabled = !checkbox.checked;
@@ -246,7 +214,10 @@
 
     function closewday(){
         var checkboxes = document.getElementsByClassName("w_days");             
-        for (let i = 0; i < 7; i++) checkboxes[i].disabled = true;
+        for (let i = 0; i < 7; i++) {
+            checkboxes[i].disabled = true;
+            checkboxes[i].checked = false;
+        }
     }
 
     function set_event_string(event_type){
@@ -255,17 +226,26 @@
         var start_day = start_date.getDate();
         var start_month = start_date.getMonth() + 1;
         var start_weekday = start_date.getDay();
-        console.log('week day:', start_weekday)
+        var occure = getWeekdayOccurrence(start_date) - 1
+
+        console.log('week day:', start_weekday, occure )
 
         var start_time = document.getElementById("start_time").value;
         var start_hour = start_time.slice(0, 2);
         var start_minute = start_time.slice(3, 6);
 
+        if (event_type == undefined) {
+            event_type = get_checked()
+        }
+
         console.log('type:', event_type)
-        if (event_type == 'wdays') { addwday(); }
+        if (event_type == 'wdays') { 
+            addwday(); 
+            //check_week_day(start_weekday)
+        }
         else {
             closewday()
-            check_week_day(start_weekday)
+            
 
             var event_string = document.getElementById("status")
 
@@ -285,7 +265,7 @@
                 event_string.innerHTML = "every " + start_day+"'th" + " of month at "+ start_hour+":"+start_minute;
             }            
             else if (event_type == 'atweek') {
-                event_string.innerHTML = "every first " + weekdays[start_weekday] + " in month at "+ start_hour+":"+start_minute;
+                event_string.innerHTML = "every " + weeknum[occure] + " " + weekdays[start_weekday] + " in month at "+ start_hour+":"+start_minute;
             }                        
             else if (event_type == 'yearly') {
                 event_string.innerHTML = "every year " + start_day +' '+ months[start_month-1] + " at "+ start_hour+":"+start_minute;
