@@ -2,6 +2,7 @@
     Using Django input html-template forms 
 '''
 from django import forms
+from django.forms import formset_factory
 
 class SignUpForm(forms.Form):
     '''
@@ -81,9 +82,34 @@ class EventForm(forms.Form):
     rem_1d = forms.BooleanField(label="1 Day", required=False)
 
 
+class EventItem(forms.Form):
+    start_date = forms.CharField(max_length=100)
+    name = forms.CharField(max_length=100)
+    anount = forms.DecimalField(max_digits=10, decimal_places=2)
+    state = forms.CharField(max_length=100)
+
+personFormSet = formset_factory(EventItem, extra=3, can_delete=True)
+
 class ContractForm(forms.Form):
     '''
         Form of Utem-Contract's parameters
     '''
+    context_root = forms.ChoiceField(choices=[("Life","Life")])
     contract_name = forms.CharField(label="Name:", max_length=100,  required=True)
+    contract_dealer = forms.CharField(label="Dealer:", max_length=100,  required=False)
     contract_description = forms.CharField(label="Description:", max_length=300, widget=forms.Textarea, required=False)
+    public = forms.BooleanField(label="Public", required=False)
+
+
+EVENT_TYPE_CHOICES = [
+    ('debit', 'Дебет'),
+    ('credit', 'Кредит'),
+]
+
+class ContractEventForm(forms.Form):
+    date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    name = forms.CharField(max_length=100)
+    amount = forms.DecimalField(max_digits=10, decimal_places=2)
+    event_type = forms.ChoiceField(choices=EVENT_TYPE_CHOICES)
+
+ContractEventFormSet = formset_factory(ContractEventForm, extra=3, can_delete=True)

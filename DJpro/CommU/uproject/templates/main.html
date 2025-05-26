@@ -143,9 +143,9 @@
 
         <div class="user-left-sidebar">
             <div>
-                <a href="/skill/" class="linkbt">New skill</a>
-                <a href="/contract/" class="linkbt">New contract</a>
-                <a href="/project/" class="linkbt">New project</a>
+                <a href="/uskill/" class="linkbt">New skill</a>
+                <a href="/ucontract/" class="linkbt">New contract</a>
+                <a href="/uproject/" class="linkbt">New project</a>
                 <hr>
             </div> <!-- make_new -->
 
@@ -157,7 +157,7 @@
                         {% if find_projects != None %}
                             <li>there are project templates:</li>
                             <ul>
-                                <li>  <a href="projects/">{{find_projects}}</a>  </li>
+                                <li>  <a href="uprojects/">{{find_projects}}</a>  </li>
                             </ul>
                         {% endif %}
 
@@ -165,7 +165,7 @@
                             <li>there are skills:</li>
                             <ul>
                                 {% for item in find_skills %}
-                                    <li> <a href="skill={{item}}">{{item}}</a> </li>
+                                    <li> <a href="uskill={{item}}">{{item}}</a> </li>
                                 {% endfor %}
                             </ul>
                         {% endif %}
@@ -199,13 +199,27 @@
                         </ul>
                     </li>
                     <li><span class="caret">Projects</span>
+                        {% if template_projects %}
+                            <ul class="active">
+                                {% for item in template_projects %}
+                                    <li> <a href="{{item.link}}">{{item.name}}</a> </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}                        
                     </li>
                     <li><span class="caret">Contracts</span>
+                        {% if template_contracts %}
+                            <ul class="active">
+                                {% for item in template_contracts %}
+                                    <li> <a href="{{item.link}}">{{item.name}}</a> </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}                        
                     </li>
                     <li><span class="caret">Skills</span>
-                        {% if public_skills %}
+                        {% if template_skills %}
                             <ul class="active">
-                                {% for item in public_skills %}
+                                {% for item in template_skills %}
                                     <li> <a href="{{item.link}}">{{item.name}}</a> </li>
                                 {% endfor %}
                             </ul>
@@ -219,7 +233,7 @@
 
             <div class="user-center-top">
                 {% if about_type %}
-                    <fieldset> <legend>Template</legend>
+                    <fieldset> <legend> INFO </legend>
                         {{about_type}} '{{about_name}}': 
                         <ul>
                             {% for item in about_value %}

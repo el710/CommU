@@ -10,7 +10,7 @@ import copy
 # sys.path.append(str(Path(__file__).parent.parent /"." ))
 
 from .bases import UtemBase
-from .uobject import UObject
+from .tree import UtemTreeBase
 
 from uproject.constants.constants import *
 
@@ -39,8 +39,8 @@ class UUser():
         ## searching utem
         self.search = None
 
-        ## pointer on template utem - to make new, to load, to watch parameters, to add to project, work on index page
-        self.temp_utem = None
+        ## pointer on utem work with
+        self.work_utem = None
 
         ## pointer to work project or contract
         self.root_utem = None
@@ -55,20 +55,14 @@ class UUser():
     def init_storage(self, storage):
         self.storage = storage
 
-    def init_utem_base(self, base:UtemBase, root:UObject=None):
+    def init_utem_base(self, base:UtemBase):
         ## base of user's utems
-        self.utems = base
-        if root:
-            self.utems.add(copy.deepcopy(root))
-            ## pointer to current skill from projects user work with
-            temp, self.root_utem = self.utems.read(root.get_token())
-        else:
-            self.root_utem = None
-    
+        self.utem_base = base
 
-    def add_utem(self, utem):
-        if hasattr(self, "utems"):
-            self.utems.add(copy.deepcopy(utem), self.root_utem.get_token())
+    def init_utem_tree(self, tree:UtemTreeBase):
+        ## parents links
+        self.utem_tree = tree
+
 
 
         

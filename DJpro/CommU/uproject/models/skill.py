@@ -16,17 +16,16 @@ class USkill(UObject):
         A simple skill that depends only on one person.
         The person do it by itself
     """    
-    def __init__(self, name, description=None, resources=None, goal=None):
+    def __init__(self, name:str=None, description=None, resources=None, goal=None):
         super().__init__(name)
         self.description = description
         self.resources = resources
         self.goal = goal
         self._event = None
         self._duration = None
-        self._state = "template"
 
-    def get_file_name(self, user:str=None):
-        return f"{super().get_file_name(user)}.stp"
+    def get_file_name(self):
+        return f"{super().get_file_name()}.stp"
 
     def get_slug_name(self):
         return slugify(self.name)

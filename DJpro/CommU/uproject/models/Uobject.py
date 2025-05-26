@@ -23,12 +23,13 @@ class Persistable(ABC):
 
 
 class UObject(Persistable):
-    def __init__(self, name: str):
+    def __init__(self, name: str=None):
         self.name = name
         self.author = None
         self._create_datetime = None
         self.geosocium = None
         self.public = False
+        self._state = "template"
 
     def set_attributes(self, **kwargs):
         for key, value in kwargs.items():
@@ -38,14 +39,17 @@ class UObject(Persistable):
     def get_token(self):
         return str(hash(f"{self.name}:{self.author}:{self._create_datetime}:{self.geosocium}"))
 
-    def make_link(self):
-        return f"{self.__class__.__name__}={self.get_token()}".lower()
+    def get_state(self):
+        return self._state
     
-    def get_file_name(self, user:str=None):
-        if user:
-            return f"{user}-{slugify(self.name)}"
-        else:
-            return f"{slugify(self.name)}"
+    def get_classname(self):
+        return self.__class__.__name__
+
+    def make_link(self):
+        return f"/{self.__class__.__name__}/{self.get_token()}".lower()
+    
+    def get_file_name(self):
+        return f"{self.get_token()}".lower()
 
     def to_dict(self):
         data = self.__dict__.copy()

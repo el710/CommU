@@ -41,16 +41,16 @@ urlpatterns = [
     path('logout/',logout),
 
     ## CRUD template skills
-    path('skill/', crud_skill), # create
-    path('skill/<str:args>', crud_skill), 
+    path('uskill/', crud_skill), # create
+    path('uskill/<str:args>', crud_skill), 
 
     path('event/', crud_event),
     path('event/<str:args>', crud_event),
 
-    path('contract/', crud_contract),
-    path('contract/<str:args>', crud_contract),
+    path('ucontract/', crud_contract),
+    path('ucontract/<str:args>', crud_contract),
 
-    path('project/', crud_project),
-    path('project/<str:args>', crud_project),
+    path('uproject/', crud_project),
+    path('uproject/<str:args>', crud_project),
 ]
 

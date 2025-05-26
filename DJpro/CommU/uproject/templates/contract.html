@@ -190,11 +190,29 @@
 <form method="POST" id="dataid">
     {% csrf_token %}
 
+    {{form}}
+
+    {{ formset.management_form }}
+
+  <table id="event-table">
+    {% for form in formset %}
+      <tr class="form-row">
+        {% for field in form.visible_fields %}
+          <td>{{ field }}</td>
+        {% endfor %}
+        <td><button type="button" class="delete-row">Удалить</button></td>
+      </tr>
+    {% endfor %}
+  </table>
+
+  <button type="button" id="add-row">Добавить событие</button>
+  <button type="submit">Сохранить</button>
+
     <div class="speed-bar">
         <a href="/user/" class="speed-bar-btn speed-bar-back">Back</a>
         <div>
             <button type="submit" class="speed-bar-btn" name="add" value="add">Add</button>
-            <button type="submit" class="speed-bar-btn" name="save" value="save">Save</button> <!-- {'name': value} will append to request.POST -->
+            <button type="submit" class="speed-bar-btn" name="save" value="save">Save as template</button> <!-- {'name': value} will append to request.POST -->
             <button type="submit" class="speed-bar-btn" name="sendto" value="sendto">Send to dealer</button>
             <button type="submit" class="speed-bar-btn" name="sendback" value="sendback">Send back</button>
             <button type="submit" class="speed-bar-btn" name="sign" value="sign">Sign</button>
@@ -211,11 +229,12 @@
         <div class="form-row">
             <div class="form-col">
                 <div class="form-group">
-                    <label for="context-name">Context</label>
+                    <label for="context_name">Context</label>
                     <!-- <input type="text" id="context-name" name="context-name" placeholder="project" value="{{name}}"> -->
-                    <select id="context-name">
-                        <option value="Life">project "Life"</option>
-                        <option value="...">...</option>
+                    <select id="context-root" name="context_root">
+                        {% for item in context %}
+                            <option value="{{item.link}}">{{item.name}}</option>
+                        {% endfor %}
                     </select>
                 </div>
             </div>
@@ -225,20 +244,27 @@
                 <div class="form-col">
                     <div class="form-group">
                         <label for="contract-name">Contract Name</label>
-                        <input type="text" id="contract-name" name="contract_name" placeholder="e.g. Loan Agreement, Service Contract" value="{{name}}">
+                        <input type="text" id="contract-name" name="contract_name" placeholder="e.g. Loan Agreement, Service Contract" value="{{name}}" required>
                     </div>
                 </div>
                 <div class="form-col">
                     <div class="form-group">
-                        <label for="contract-name">Dealer:</label>
-                        <input type="text" id="contract-name" name="contract_name" placeholder="Name" value="">
+                        <label for="contract-dealer">Dealer:</label>
+                        <input type="text" id="contract-dealer" name="contract_dealer" placeholder="Dealer" value="">
                     </div>
                 </div>
             </div>
-
-            <div class="form-group">
-                <label for="contract-name">Status: Template (offer / agreement / deal / closed)</label>
-            </div>
+            <div class="form-row">
+                <div class="form-col">
+                    <div class="form-group">
+                        <label>Status: Template (offer / agreement / deal / closed)</label>
+                    </div>
+                </div>
+                <div class="form-col">
+                    <input type="checkbox" class="check" id="public" name="public" checked>    
+                    <label>Public</label>
+                </div>          
+            </div>            
             
             <div class="form-group">
                 <label for="contract-description">Description</label>
@@ -336,3 +362,38 @@
 
 </form>
 {% endblock %}
+
+{% block JavaScript %}
+    {{ block.super }}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const addRowButton = document.getElementById('add-row');
+    const table = document.getElementById('event-table');
+    const totalForms = document.getElementById('id_form-TOTAL_FORMS');
+
+    addRowButton.addEventListener('click', function () {
+        const currentFormCount = parseInt(totalForms.value);
+        const newRow = table.querySelector('.form-row').cloneNode(true);
+
+        newRow.querySelectorAll('input, select').forEach(function (input) {
+            const name = input.name.replace(/form-\d+-/, `form-${currentFormCount}-`);
+            const id = `id_${name}`;
+            input.name = name;
+            input.id = id;
+            if (input.type !== 'hidden') input.value = '';
+        });
+
+        table.appendChild(newRow);
+        totalForms.value = currentFormCount + 1;
+    });
+
+    table.addEventListener('click', function (e) {
+        if (e.target.classList.contains('delete-row')) {
+            const row = e.target.closest('tr');
+            row.remove();
+            // Пример упрощённый, TOTAL_FORMS нужно переустановить при удалении
+        }
+    });
+});
+</script>
+{% endblock %} <!-- JavaScript -->

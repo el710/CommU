@@ -4,13 +4,63 @@
 import os
 import logging
 
+from ..models.uobject import UObject
 from ..models.skill import USkill
 from ..models.contract import UContract
 from ..models.project import UProject
 from ..models.user import UUser
 from ..storage.filestorage import FileStorage
+from ..models.bases import UtemBase
+
+def upload_utembase(storage, base: UtemBase, file_list): 
+    '''
+        Fill UtemBase with file list
+        Args:
+            storage - file storage | DB
+            base: UtemBase
+            file_list - ['*.stp', ]
+    '''
+    utem = None
+
+    for item in file_list:
+        id = os.path.splitext(item)[0]
+        ## check for uniq
+        if base.read(id) == None:
+            if '.stp' in os.path.splitext(item):
+                utem = USkill()
+            elif '.ctp' in os.path.splitext(item):
+                utem = UContract()
+            elif '.ptp' in os.path.splitext(item):
+                utem = UProject()
+            else:
+                continue
+
+            ## Load data of <utem> from file <item>
+            if storage.load(utem, item):
+                base.add(utem)
 
 
+def make_template_context(base: UtemBase):
+    skill_list = []
+    contract_list = []
+    project_list = []
+
+    for item in base:
+        utem = item['utem']
+        if utem.get_state() == "template":
+            if utem.get_classname() == USkill:
+                skill_list.append({"name":utem.name, "link":f"{utem.make_link()}"})
+            elif utem.get_classname() == UContract:
+                contract_list.append({"name":utem.name, "link":f"{utem.make_link()}"})
+            elif utem.get_classname() == UProject:
+                project_list.append({"name":utem.name, "link":f"{utem.make_link()}"})                
+
+    return {'template_skills': skill_list,
+            'template_contracts': contract_list,
+            'template_project': project_list
+        }
+            
+    
 def parse_link(arg: str):
     try:
         type_str, name = arg.split("=")
@@ -19,27 +69,16 @@ def parse_link(arg: str):
         logging.info(f" wrong args: {arg}\n")
         return None, None
 
-def find_public_skills(subdir=None):
-    os.chdir(subdir)
-    # match type:
-    #     case 'skill': ext = '.stp'
-    #     case 'contract': ext = '.ctp'
-    #     case 'project': ext = '.ptp'
-    #     __: ext = ''
 
-    files = [f for f in os.listdir() if os.path.isfile(f) and '.stp' in os.path.splitext(f)]
-    os.chdir('..')
-    return [os.path.splitext(f)[0] for f in files]
-
-def make_skill_context(skills: list, path="."):
-    context = []
-    storage = FileStorage(path)
-    for name in skills:
-        utem = USkill(name)
-        storage.load(utem)
-        context.append({"name": utem.name, "link": (f"{utem.__class__.__name__}={utem.get_slug_name()}").lower()})
+# def make_skill_context(skills: list, path="."):
+#     context = []
+#     storage = FileStorage(path)
+#     for name in skills:
+#         utem = USkill(name)
+#         storage.load(utem)
+#         context.append({"name": utem.name, "link": (f"{utem.__class__.__name__}={utem.get_slug_name()}").lower()})
     
-    return context
+#     return context
     
 
 def find_utems(key_name, path="."):
@@ -75,39 +114,56 @@ def get_project_tree(user: UUser):
 
     logging.info(f"root {user.root_utem}")
 
+    root = {"name": user.root_utem.get_title(), "link": user.root_utem.make_link()}
     root_path = "recursive by tree"
 
-    if isinstance(user.root_utem, UContract):
-        link = f"/contract/{user.root_utem.make_link()}"
-    elif isinstance(user.root_utem, UProject):
-        link = f"/project/{user.root_utem.make_link()}"
-    else:
-        link = "/"
+    context = {"root": root, ## current user's project
+               "root_path": root_path
+              }
 
-    root = {"name": user.root_utem.get_title(), "link": link}
+    context.update(walk_by_tree(user.utem_base, user.root_utem))
 
-    event_list = [{"name": event['utem'].get_title(), "link": f"/event/{event['utem'].make_link()}"} for event in user.utems 
-                  if isinstance(event['utem'], USkill) and event['parent'] == user.root_utem.get_token()]
+    return context
 
 
-    context = { "root_path": root_path,
-                "root": root, ## current user's project
-               
-               ## elements type annotation: {"name": , "link": }
-               ## list of projects with "parent" = "Life"
-               "projects": [{"name": "pro_1", "link": "/project/pro_1"},
-                                 {"name": "pro_2", "link": "/project/pro_2"},
-                                ],  
-                
-                ## list of contracts with "parent" = "Life" 
-               "contracts": [{"name": "deal_1", "link": "/contract/deal_1"},
-                                  {"name": "deal_2", "link": "/contract/deal_2"},
-                                 ],
-                
-                ## list of events with "parent" = "Life"                                 
-               "events": event_list                      
-               }
+def walk_by_tree(base, utem: UObject):
 
-            
+    if isinstance(utem, UProject):
+        if len(utem.projects) > 0:
+            sub_pro = []
+            for item in utem.projects:
+                sub_pro.append(walk_by_tree(base, base.read(item)))
+        else:
+            sub_pro = None
+        
+        if len(utem.contracts) > 0:
+            sub_con = []
+            for item in utem.contracts:
+                sub_con.append(walk_by_tree(base, base.read(item)))
+        else:
+            sub_con = None
 
+        if len(utem.events) > 0:
+            sub_ev = []
+            for item in utem.events:
+                sub_ev.append(walk_by_tree(base, base.read(item)))
+        else:
+            sub_ev = None
+
+    elif isinstance(utem, UContract):
+        sub_pro = None
+        sub_con = None
+
+    elif isinstance(utem, USkill):
+        sub_pro = None
+        sub_con = None
+        sub_ev = None
+    
+
+    context = { "name": utem.name, "link": utem.make_link(),
+                "projects": sub_pro, ## [context, context, ...]
+                "contracts": sub_con, ## [context, context, ...]
+                "events": sub_ev  ## [context, context, ...]
+            }
+    
     return context

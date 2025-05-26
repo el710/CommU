@@ -30,14 +30,14 @@ class UProject(UObject):
         self.project_laws = {"base": "CommU laws", }
         self.partners = [starter_user]
 
-        self.projects = []
+        self.projects = [] ## list of ids
         self.contracts = []
 
         ## list of links to events(skill + time)
         self.events = []
 
-    def get_file_name(self, user:str=None):
-        return f"{super().get_file_name(user)}.ptp"
+    def get_file_name(self):
+        return f"{super().get_file_name()}.ptp"
         
     def get_title(self):
         return f"project '{self.name}'"
