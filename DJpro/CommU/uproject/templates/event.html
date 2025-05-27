@@ -6,7 +6,13 @@
 {% endblock %}
 
 {% block application %}
-    Event
+    Event for
+    {% if user_root %}
+        {{user_root}} - 
+    {% endif %}
+    {% if user_root %}
+        skill "{{event.name}}"
+    {% endif %}  
 {% endblock %}
 
 {% block style %}
@@ -42,9 +48,7 @@
             border-radius: 8px;
         }
 
-        input[type='text'] {
-            width: 50px;
-        }
+
         input[type='submit'] {
             width: 150px;
             font-size: large;
@@ -57,6 +61,15 @@
         input:valid + span::after {
             content: " ✓";
         }
+
+        .event-string {
+            font-size: medium;
+            font-weight: bold;
+
+            background-color: #ccc;
+            border: #ccc;
+            width: 500px;
+        }
     </style>
 {% endblock %}
 
@@ -65,12 +78,10 @@
     {% csrf_token %}
 
     <div class="speed-bar">
-        <a href="/user/" class="speed-bar-btn speed-bar-back">Back</a>
+        <a href="{{back_link}}" class="speed-bar-btn speed-bar-back">Back</a>
         <div>
-            {% if event_create %}
-                <button type="submit" class="speed-bar-btn" name="add" value="add">Add</button> <!-- {'name': value} will append to request.POST -->
-            {% elif event_edit %}
-                <button type="submit" class="speed-bar-btn" name="save" value="save">Save</button>
+            <button type="submit" class="speed-bar-btn" name="save" value="save">Save</button> <!-- {'name': value} will append to request.POST -->
+            {% if event_edit %}
                 <button type="submit" class="speed-bar-btn" name="delete" value="delete"  onclick="return confirm('Are you sure?')">Delete</button>
             {% endif %}
         </div> 
@@ -79,26 +90,15 @@
 
     <div class="event-work-field">
 
-
         <div class="event-center">
             <div class="event-items">
                 <fieldset>
-                    <legend>Context</legend>
-                        {% if user_root %}
-                            {{user_root}}
-                        {% endif %}
-                </fieldset>
-            </div>
-            
-
-            <div class="event-items">
-                <fieldset>
                     <legend>Event</legend>
-                        {% if user_root %}
-                            "{{user_event}}": 
-                        {% endif %}
-                        <label id="status">...</label>
+
+                        <!--<label id="status">...</label>-->
+                        <input type="text" id="status" class="event-string" name="event_string">
                 </fieldset>
+                
             </div>
         </div>
 
@@ -209,7 +209,7 @@
         var start_hour = start_time.slice(0, 2);
         var start_minute = start_time.slice(3, 6);
                 
-        document.getElementById("status").innerHTML = day_list +" at "+ start_hour+":"+start_minute;
+        document.getElementById("status").value = day_list +" at "+ start_hour+":"+start_minute;
     }
 
     function closewday(){
@@ -250,25 +250,25 @@
             var event_string = document.getElementById("status")
 
             if (event_type == 'once') {
-                event_string.innerHTML = "once " + start_day +' '+ months[start_month-1] +' '+ start_year +" at "+ start_hour+":"+start_minute;
+                event_string.value = "once " + start_day +' '+ months[start_month-1] +' '+ start_year +" at "+ start_hour+":"+start_minute;
             }
             else if (event_type == 'daily') {
-                event_string.innerHTML = "everyday at "+ start_hour+":"+start_minute;
+                event_string.value = "everyday at "+ start_hour+":"+start_minute;
             }            
             else if (event_type == 'work') {
-                event_string.innerHTML = "from Monday to Friday at "+ start_hour+":"+start_minute;
+                event_string.value = "from Monday to Friday at "+ start_hour+":"+start_minute;
             }
             else if (event_type == 'weekly') {
-                event_string.innerHTML = "every " + weekdays[start_weekday] +" at "+ start_hour+":"+start_minute;
+                event_string.value = "every " + weekdays[start_weekday] +" at "+ start_hour+":"+start_minute;
             }            
             else if (event_type == 'atday') {
-                event_string.innerHTML = "every " + start_day+"'th" + " of month at "+ start_hour+":"+start_minute;
+                event_string.value = "every " + start_day+"'th" + " of month at "+ start_hour+":"+start_minute;
             }            
             else if (event_type == 'atweek') {
-                event_string.innerHTML = "every " + weeknum[occure] + " " + weekdays[start_weekday] + " in month at "+ start_hour+":"+start_minute;
+                event_string.value = "every " + weeknum[occure] + " " + weekdays[start_weekday] + " in month at "+ start_hour+":"+start_minute;
             }                        
             else if (event_type == 'yearly') {
-                event_string.innerHTML = "every year " + start_day +' '+ months[start_month-1] + " at "+ start_hour+":"+start_minute;
+                event_string.value = "every year " + start_day +' '+ months[start_month-1] + " at "+ start_hour+":"+start_minute;
             }
         }
     }

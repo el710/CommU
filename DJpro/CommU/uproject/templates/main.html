@@ -258,10 +258,9 @@
                     / <a href="{{item.link}}">{{item.name}}</a>
                 {%endfor%}
                 
-   
-                
+
                 <ul id="menu-tree">
-                    <li><span><a href="{{user_staff.root.link}}">{{user_staff.root.name}}</a></span>
+                    <li><span><a href="{{user_staff.link}}">{{user_staff.name}}</a></span>
                         <ul>
                             {% if user_staff.projects %}
                                 <li><span class="caret">Projects</span>
@@ -286,9 +285,8 @@
                             {% if user_staff.events %}
                                 {% for item in user_staff.events %}
                                     <li><a href="{{item.link}}">{{item.name}}</a></li>
-
                                 {% endfor %}
-                            {% endif %}
+                            {% endif %}                                                     
                         </ul>
                     </li><!-- Life -->
                 </ul> <!-- menu-tree -->

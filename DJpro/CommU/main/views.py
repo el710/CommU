@@ -88,9 +88,11 @@ def signup(request):
             # local_user.init_utem_tree(UtemTreeBase())
 
             ## basic project Life for User
-            root=UProject(local_user, "Life")
+            root=UProject(local_user, "Life", "usermain")
+            ## root of user tree
             local_user.root_utem = root
-            local_user.work_utem = root
+
+            # local_user.work_utem = root
             logging.info(f'new user: root - {local_user.root_utem} work - {local_user.work_utem}')
             local_user.utem_base.add(root)
             #local_user.utem_tree.add(root.get_token(), root.get_classname)
@@ -282,21 +284,22 @@ def crud_skill(request, args=None):
 
     def_context = {}
 
-    if args == 'temp': 
-        if local_user.temp_utem:
-            def_context.update(local_user.temp_utem.to_dict())
-        logging.info(f"load template {def_context}\n")
-    # elif args == "event":
-    #     if hasattr(local_user, 'pro_event') and local_user.pro_event:
-    #         def_context.update(local_user.pro_event.to_dict())
+    # if args == 'temp': 
+    #     if local_user.temp_utem:
+    #         def_context.update(local_user.temp_utem.to_dict())
+    #     logging.info(f"load template {def_context}\n")
+    # # elif args == "event":
+    # #     if hasattr(local_user, 'pro_event') and local_user.pro_event:
+    # #         def_context.update(local_user.pro_event.to_dict())
         
     
     logging.info(f" method: {request.method} cont: {request.POST}\n")
     if request.method == "POST":
         if request.POST.get('delete'):
             if hasattr(local_user, 'storage'):
-                local_user.storage.delete(local_user.temp_utem)
-            local_user.temp_utem = None
+                local_user.storage.delete(local_user.work_utem)
+
+            local_user.work_utem = None
             return redirect("/user/")
 
         elif request.POST.get('save'):
@@ -306,25 +309,21 @@ def crud_skill(request, args=None):
             logging.info(f'data: {form.cleaned_data}\n')
             
             if form.is_valid(): ## is_valid also makes cleaned_data
-                skill_name = form.cleaned_data['skill_name']
-                skill_desc = form.cleaned_data['skill_desc']
-                skill_resources = form.cleaned_data['skill_resources']
-                skill_goal = form.cleaned_data['skill_goal']
-                skill_public = form.cleaned_data['skill_public']
-
-                local_user.temp_utem = USkill(name=skill_name,
-                                              resources=skill_resources,
-                                              description=skill_desc,
-                                              goal=skill_goal)
+                if local_user.work_utem == None: ## New skill
+                    local_user.work_utem = USkill()
                 
-                local_user.temp_utem.sign(author=local_user.nickname,
-                                          geosocium=local_user.geosocium,
-                                          public=skill_public
-                                         )
-                logging.info(f"new skill {local_user.temp_utem}")
+                local_user.work_utem.from_dict(form.cleaned_data)
+
+                if local_user.work_utem.get_sign() == None:
+                    local_user.work_utem.sign(author=local_user.nickname,
+                                              geosocium=local_user.geosocium
+                                             )
+                    
+                logging.info(f"new skill {local_user.work_utem}")
                 
                 if hasattr(local_user, 'storage'):
-                    local_user.storage.save(local_user.temp_utem)
+                    local_user.storage.save(local_user.work_utem)
+                local_user.work_utem = None    
                 return redirect("/user/")
         else:
             form = SkillForm(request.POST)
@@ -332,12 +331,95 @@ def crud_skill(request, args=None):
         
     else:
         form = SkillForm(request)
+
+    if args:
+        local_user.work_utem = local_user.utem_base.read(args)
+    else:
+       local_user.work_utem = None 
     
-    def_context.update({"form": form})
-    def_context.update({"local_user": local_user.nickname})
+    if local_user.work_utem:
+        def_context.update(local_user.work_utem.to_dict())
+    
+    def_context.update({"form": form,
+                        "local_user": local_user.nickname,
+                        "root": local_user.root_utem.get_title()
+                    })
  
-    
+    logging.info(f"Skill CRUD context {def_context} \n")
+
     return render(request, "skill.html", context=def_context)
+
+
+def crud_event(request, args=None):
+    global local_user
+
+    if local_user.commu_id == None:
+        return redirect("/")
+
+    logging.info(f'local user: {local_user.nickname}\n')
+
+    logging.info(f"request.method {request.method} \n")
+    if request.method == "POST":
+        form = EventForm(request.POST)
+
+        logging.info(f"valid POST {form.is_valid()} \n")
+        logging.info(f'data: {form.cleaned_data}\n')
+
+        if form.is_valid(): ## is_valid also makes cleaned_data
+            if request.POST.get('save'):
+                if local_user.work_utem == None:
+                    local_user.work_utem = USkill()
+
+                local_user.work_utem.set_executor(local_user)
+                local_user.work_utem.set_event(form.cleaned_data)
+                
+                logging.info(f'exit by save\n')
+
+            elif request.POST.get('delete'):
+                if local_user.work_utem:
+                    local_user.work_utem.set_event(None)
+                                
+                logging.info(f'exit by delete\n')
+                
+            return redirect(local_user.work_utem.make_link())    
+    else:
+       form = EventForm()
+
+    '''
+        def_context has parameters to show end form to change parameters
+    '''
+    def_context = {"form": form,
+                   "local_user": local_user.nickname
+                  }
+    
+    if local_user.work_utem:
+        def_context.update({"back_link": local_user.work_utem.make_link()})
+    else:
+        def_context.update({"back_link": "/uskill/"})
+        
+    ## create(add) event
+    if local_user.work_utem == None or local_user.work_utem.get_event() == None:
+        logging.info(f'create event\n')
+        now = datetime.now(tz=local_user.timezone)
+
+        def_context.update({"event": {"start_date": now.date().isoformat(),
+                                      "start_time": now.strftime("%H:%M"),
+                                      "once": True
+                                     },
+                            "event_create": True
+                        })
+    ## read & edit event
+    else:
+        def_context.update({"event": local_user.work_utem.get_event(),
+                            "event_edit": True
+                        })
+
+        
+    def_context.update({"user_root": local_user.root_utem.get_title() })    
+        
+    logging.info(f"Event CRUD context {def_context} \n")
+
+    return render(request, "event.html", context=def_context)
 
 
 def crud_contract(request, args=None):
@@ -434,98 +516,3 @@ def crud_project(request, args=None):
     return render(request, "index_temp.html", context=def_context)
 
 
-def crud_event(request, args=None):
-    global local_user
-
-    if local_user.commu_id == None: return redirect("/")
-
-    logging.info(f'local user: {local_user.nickname}\n')
-
-
-    logging.info(f"request.method {request.method} \n")
-    if request.method == "POST":
-        form = EventForm(request.POST)
-
-        logging.info(f"valid POST {form.is_valid()} \n")
-        logging.info(f'data: {form.cleaned_data}\n')
-
-        if form.is_valid(): ## is_valid also makes cleaned_data
-        
-            if request.POST.get('add'):
-                local_user.temp_utem.set_event(form.cleaned_data)
-                local_user.temp_utem.set_executor(local_user)
-                local_user.add_utem(local_user.temp_utem)
-                
-                logging.info(f'exit by add\n')
-                
-            elif request.POST.get('save'):
-                local_user.pro_event.set_event(form.cleaned_data)
-                
-                logging.info(f'exit by save\n')
-
-            elif request.POST.get('delete'):
-                local_user.utems.delete(local_user.pro_event.get_token())
-                local_user.pro_event = None
-                
-                logging.info(f'exit by delete\n')
-                
-            return redirect('/user/')    
-    else:
-       form = EventForm()
-
-    '''
-        def_context has parameters to show end form to change parameters
-    '''
-    def_context = {"form": form,
-                   "local_user": local_user.nickname
-                  }
-    
-    ## create(add) event  
-    if args == None: 
-        logging.info(f'create event\n')
-        now = datetime.now(tz=local_user.timezone)
-          
-        def_context.update({"event_create": True,
-                            "event": {"start_date": now.date().isoformat(),
-                                      "start_time": now.strftime("%H:%M"),
-                                      "once": True
-                                    }
-                            })
-
-    ## read & edit event
-    else:  
-        utem_type, utem_id = parse_link(args)
-        logging.info(f'get event {utem_type}, {utem_id}\n')
-        
-        ## Find event from user's utem Base
-        parent, local_user.pro_event = local_user.utems.read(utem_id)
-       
-        if local_user.pro_event and isinstance(local_user.pro_event, USkill):
-            logging.info(f'Has found event {local_user.pro_event} parent: {parent}\n')
-
-            ## Only contract or Project can be parent for event
-            if isinstance(parent, UContract) or isinstance(parent, UProject): 
-                local_user.root_utem = parent
-
-            ## restore event's datetime
-            now = datetime.strptime(f"{local_user.pro_event._event['start_date']} {local_user.pro_event._event['start_time']}", "%Y-%m-%d %H:%M")
-            now = now.replace(tzinfo=local_user.timezone)
-            logging.info(f"restore event's moment {now}")
-
-            def_context.update({"event_edit": True,
-                                "event": local_user.pro_event._event
-                            })
-        else:
-            ## no such event
-            logging.info(f"wrong args for crud_event {args}\n")
-            return redirect("/user/")
-    
-
-    ## parent context & event
-    def_context.update({"user_root": local_user.root_utem.get_title(),
-                        "user_event": local_user.temp_utem.name
-                    })    
-    
-    logging.info(f"def_context {def_context} \n")
-
-    return render(request, "event.html", context=def_context)

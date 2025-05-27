@@ -47,12 +47,13 @@ def make_template_context(base: UtemBase):
 
     for item in base:
         utem = item['utem']
+        print(f"template: {utem} {utem.get_state()} {utem.get_classname()}")
         if utem.get_state() == "template":
-            if utem.get_classname() == USkill:
+            if utem.get_classname() =="USkill":
                 skill_list.append({"name":utem.name, "link":f"{utem.make_link()}"})
-            elif utem.get_classname() == UContract:
+            elif utem.get_classname() == "UContract":
                 contract_list.append({"name":utem.name, "link":f"{utem.make_link()}"})
-            elif utem.get_classname() == UProject:
+            elif utem.get_classname() == "UProject":
                 project_list.append({"name":utem.name, "link":f"{utem.make_link()}"})                
 
     return {'template_skills': skill_list,
@@ -104,9 +105,9 @@ def get_utem_info(utem):
     context = {}
     info = [f"{k}: {v}" for k, v in utem.to_dict().items() if k != 'name' and not k.startswith('_') and v]
     
-    context.update({"about_type": utem.__class__.__name__.lower(), 
-                   "about_name": utem.name, 
-                   "about_value": info})
+    context.update({"about_type": utem.__class__.__name__.lower(),
+                    "about_name": utem.name,
+                    "about_value": info})
     return context
 
 

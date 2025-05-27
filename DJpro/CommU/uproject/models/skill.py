@@ -21,7 +21,7 @@ class USkill(UObject):
         self.description = description
         self.resources = resources
         self.goal = goal
-        self._event = None
+        self.event = None
         self._duration = None
 
     def get_file_name(self):
@@ -30,20 +30,27 @@ class USkill(UObject):
     def get_slug_name(self):
         return slugify(self.name)
 
-    def sign(self, author, geosocium=None, public=False):
+    def get_sign(self):
+        if hasattr(self, "author"):
+            return self.author
+        return None
+    
+    def sign(self, author, geosocium=None):
         self.author = author
         self.geosocium = geosocium
-        self.public = public
         self._create_datetime = datetime.now()
 
+    def get_event(self):
+        return self.event
+    
     def set_event(self, event):
-        self._event = event
+        self.event = event   
     
     def set_executor(self, user):
         self._executor = user
         
 
     def get_title(self):
-        time_moment = self._event['start_time'] if self._event else 'in plan'
+        time_moment = self.get_event()['start_time'] if self.get_event() else 'in plan'
         return f"{time_moment} '{self.name}'"
 

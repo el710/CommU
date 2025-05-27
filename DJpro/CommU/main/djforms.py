@@ -40,18 +40,19 @@ class SkillForm(forms.Form):
     '''
         Form of Utem-skill's parameters
     '''
-    skill_name = forms.CharField(label="Name:", max_length=100,  required=True)
-    skill_resources = forms.CharField(label="Resources:", max_length=300, widget=forms.Textarea, required=False)
-    skill_desc = forms.CharField(label="Description:", max_length=300,widget=forms.Textarea, required=False)
-    skill_goal = forms.CharField(label="Goal:", max_length=300, widget=forms.Textarea, required=False)
-    skill_public = forms.BooleanField(label="Public", required=False)
-    ##skill_author = forms.CharField(label="Author:", max_length=100,  required=False)
+    name = forms.CharField(label="Name:", max_length=100,  required=True)
+    description = forms.CharField(label="Description:", max_length=300,widget=forms.Textarea, required=False)
+    public = forms.BooleanField(label="Public", required=False)
 
+    resources = forms.CharField(label="Resources:", max_length=300, widget=forms.Textarea, required=False)
+    goal = forms.CharField(label="Goal:", max_length=300, widget=forms.Textarea, required=False)
 
 class EventForm(forms.Form):
     '''
         Form of Event's parameters
     '''
+    event_string = forms.CharField(max_length=500)
+
     start_date = forms.CharField(max_length=100)
     
     once = forms.BooleanField(label="Once", required=False)

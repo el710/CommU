@@ -6,7 +6,11 @@
 {% endblock %}
 
 {% block application %}
-    Skill
+    {% if name %}
+        Skill "{{name}}"
+    {% else %}
+        New skill
+    {%endif%}
 {% endblock %}
 
 
@@ -78,12 +82,14 @@
 <div class="speed-bar">
    <a href="/user/" class="speed-bar-btn speed-bar-back">Back</a>
     <div>
-        {% if local_user %}
-            <button type="submit" class="speed-bar-btn" name="save" value="save">Save</button> <!-- {'name': value} will append to request.POST -->
-            {% if name %}
-                <button type="submit" class="speed-bar-btn" name="delete" value="delete"  onclick="return confirm('Are you sure?')">Delete</button>
-            {% endif %}
-        {% endif %}          
+        {% if root %}
+            <button type="submit" class="speed-bar-btn" name="add" value="add">Add to {{root}} </button>
+        {%endif%}
+        <button type="submit" class="speed-bar-btn" name="save" value="save">Save as template</button> <!-- {'name': value} will append to request.POST -->
+        {% if name %}
+            <button type="submit" class="speed-bar-btn" name="delete" value="delete"  onclick="return confirm('Are you sure?')">Delete</button>
+        {% endif %}
+                  
     </div> 
 </div>
 
@@ -93,17 +99,27 @@
 
                 <fieldset>
                     <legend> <h4>Parameters</h4> </legend>
-                    <label>Name: <input type="text" name="skill_name"  maxlength="100" value="{{name}}" ></label>
-                    <label>Description: <textarea name="skill_desc" maxlength="300" >{{description}}</textarea></label>
-                    <label>Resources: <textarea name="skill_resources" maxlength="300" >{{resources}}</textarea></label>
-                    <label>Goal: <textarea name="skill_goal" maxlength="100">{{goal}}</textarea></label>
-                    {% if public == True %}
-                        <label><input type="checkbox" name="skill_public" checked>Public</label>
-                    {% else %}
-                        <label><input type="checkbox" name="skill_public" >Public</label>
-                    {% endif %}
+                    <label>Name: <input type="text" name="name"  maxlength="100" value="{{name}}" required></label>
+                    <label>Description: <textarea name="description" maxlength="300" >{{description}}</textarea></label>
+                    <label>Resources: <textarea name="resources" maxlength="300" >{{resources}}</textarea></label>
+                    <label>Goal: <textarea name="goal" maxlength="100">{{goal}}</textarea></label>
+                    <label><input type="checkbox" name="public" {% if public == True %} checked {%endif%} >Public</label>
+                    
                     <button type="submit" class="speed-bar-btn" onclick="clearform()" value="Restore">Restore</button>
                 </fieldset>
+                <fieldset>
+                    <legend> <h4>Event</h4> </legend>
+                    <a href="/event/" class="speed-bar-btn">
+                    {% if event %}
+                       {{event.event_string}}
+                    {% else %}
+                        Add Event
+                    {%endif%}
+                    </a>                
+                </fieldset>
+
+
+
 <!--
                 <div class="skill-bottom-field">
                     {% if local_user %}

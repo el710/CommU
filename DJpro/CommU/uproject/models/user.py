@@ -59,9 +59,6 @@ class UUser():
         ## base of user's utems
         self.utem_base = base
 
-    # def init_utem_tree(self, tree:UtemTreeBase):
-    #     ## parents links
-    #     self.utem_tree = tree
 
 
 

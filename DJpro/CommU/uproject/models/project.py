@@ -23,8 +23,10 @@ class UProject(UObject):
         User can have many Projects, 
         but there are always default project - "Life" project
     """    
-    def __init__(self, starter_user, project_name=None):
+    def __init__(self, starter_user, project_name=None, state:str="template"):
         super().__init__(project_name or f"{starter_user}'s project")
+
+        self._state = state
         self.target = "Project's point"
         ## 'Do not" laws
         self.project_laws = {"base": "CommU laws", }
