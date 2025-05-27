@@ -13,9 +13,9 @@ class UContract(UObject):
         self.dealer_id = dealer_id
         ##self.status = "template" ## "offer", "deal", "closed"
         
-        ## networkx - graph for dependence ???
-        self.holder_credit_events = [] ## :  {event, dependence}
-        self.holder_debet_events = [] ## :  {event, dependence}
+        ## for holder:
+        self.credit_events = [] ## :  {event, dependence}
+        self.debet_events = [] ## :  {event, dependence}
 
         self.history = []
     

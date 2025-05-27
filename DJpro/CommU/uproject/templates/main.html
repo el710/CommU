@@ -253,7 +253,12 @@
             </div> <!-- center-top-->
 
             <div class="user-center-bottom">
-                Path: {{user_staff.root_path}}
+                Path: 
+                {% for item in user_staff.root_path %}
+                    / <a href="{{item.link}}">{{item.name}}</a>
+                {%endfor%}
+                
+   
                 
                 <ul id="menu-tree">
                     <li><span><a href="{{user_staff.root.link}}">{{user_staff.root.name}}</a></span>

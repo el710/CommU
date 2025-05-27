@@ -114,53 +114,85 @@ def get_project_tree(user: UUser):
 
     logging.info(f"root {user.root_utem}")
 
-    root = {"name": user.root_utem.get_title(), "link": user.root_utem.make_link()}
-    root_path = "recursive by tree"
+    root_path = [{"name": user.root_utem.name, "link": user.root_utem.make_link()}, ]
 
-    context = {"root": root, ## current user's project
-               "root_path": root_path
-              }
+    context = {"root_path": root_path }
 
-    context.update(walk_by_tree(user.utem_base, user.root_utem))
+    context.update(walk_by_tree(user))
 
     return context
 
 
-def walk_by_tree(base, utem: UObject):
+def walk_by_tree(user):
 
-    if isinstance(utem, UProject):
-        if len(utem.projects) > 0:
+    base = user.utem_base
+    root = user.root_utem
+
+    if isinstance(root, UProject):
+        if len(root.projects) > 0:
             sub_pro = []
-            for item in utem.projects:
-                sub_pro.append(walk_by_tree(base, base.read(item)))
+            for item in root.projects:
+                ##sub_pro.append(walk_by_tree(base, base.read(item)))
+                obj = base.read(item)
+                sub_pro.append({"name": obj.name, "link": obj.make_link})
         else:
             sub_pro = None
         
-        if len(utem.contracts) > 0:
+        if len(root.contracts) > 0:
             sub_con = []
-            for item in utem.contracts:
-                sub_con.append(walk_by_tree(base, base.read(item)))
+            for item in root.contracts:
+                #sub_con.append(walk_by_tree(base, base.read(item)))
+                obj = base.read(item)
+                sub_pro.append({"name": obj.name, "link": obj.make_link})
         else:
             sub_con = None
 
-        if len(utem.events) > 0:
+        if len(root.events) > 0:
             sub_ev = []
-            for item in utem.events:
-                sub_ev.append(walk_by_tree(base, base.read(item)))
+            for item in root.events:
+                ##sub_ev.append(walk_by_tree(base, base.read(item)))
+                obj = base.read(item)
+                sub_pro.append({"name": obj.name, "link": obj.make_link})
         else:
             sub_ev = None
 
-    elif isinstance(utem, UContract):
+    elif isinstance(root, UContract):
+        
+        if user.commu_id == root.holder_id:
+            credit_worker = None
+            debet_worker = root.dealer_id
+        else: 
+            credit_worker = user.nickname
+            debet_worker = None
+
+        if len(root.credit_events) > 0:
+            sub_credit_ev = []
+            for item in root.credit_events:
+                ##sub_ev.append(walk_by_tree(base, base.read(item)))
+                obj = base.read(item)
+                sub_pro.append({"name": obj.name, "worker": credit_worker, "link": obj.make_link})
+        else:
+            sub_credit_ev = None
+
+        if len(root.debet_events) > 0:
+            sub_debet_ev = []
+            for item in root.debet_events:
+                obj = base.read(item)
+                sub_pro.append({"name": obj.name, "worker": debet_worker, "link": obj.make_link})
+        else:
+            sub_debet_ev = None
+
+        sub_ev = sub_credit_ev + sub_debet_ev
         sub_pro = None
         sub_con = None
 
-    elif isinstance(utem, USkill):
+    elif isinstance(root, USkill):
         sub_pro = None
         sub_con = None
         sub_ev = None
     
 
-    context = { "name": utem.name, "link": utem.make_link(),
+    context = { "name": root.get_title(), "link": root.make_link(),
                 "projects": sub_pro, ## [context, context, ...]
                 "contracts": sub_con, ## [context, context, ...]
                 "events": sub_ev  ## [context, context, ...]

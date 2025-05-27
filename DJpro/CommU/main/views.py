@@ -84,8 +84,8 @@ def signup(request):
             ## RAM storage for all utems
             local_user.init_utem_base(UtemBase())
 
-            ## tree of user's utems in work
-            local_user.init_utem_tree(UtemTreeBase())
+            # ## tree of user's utems in work
+            # local_user.init_utem_tree(UtemTreeBase())
 
             ## basic project Life for User
             root=UProject(local_user, "Life")
@@ -93,7 +93,7 @@ def signup(request):
             local_user.work_utem = root
             logging.info(f'new user: root - {local_user.root_utem} work - {local_user.work_utem}')
             local_user.utem_base.add(root)
-            local_user.utem_tree.add(root.get_token(), root.get_classname)
+            #local_user.utem_tree.add(root.get_token(), root.get_classname)
             
             return redirect('/user/') 
             # else:
@@ -207,8 +207,6 @@ def show_info(request, args=None):
         page = 'about.html'
 
     return render(request, page, context=def_context)
-
-
 
 
 
