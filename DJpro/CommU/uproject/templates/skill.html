@@ -86,7 +86,7 @@
             <button type="submit" class="speed-bar-btn" name="add" value="add">Add to {{root}} </button>
         {%endif%}
         <button type="submit" class="speed-bar-btn" name="save" value="save">Save as template</button> <!-- {'name': value} will append to request.POST -->
-        {% if name %}
+        {% if saved %}
             <button type="submit" class="speed-bar-btn" name="delete" value="delete"  onclick="return confirm('Are you sure?')">Delete</button>
         {% endif %}
                   
@@ -101,21 +101,22 @@
                     <legend> <h4>Parameters</h4> </legend>
                     <label>Name: <input type="text" name="name"  maxlength="100" value="{{name}}" required></label>
                     <label>Description: <textarea name="description" maxlength="300" >{{description}}</textarea></label>
+<!--
                     <label>Resources: <textarea name="resources" maxlength="300" >{{resources}}</textarea></label>
                     <label>Goal: <textarea name="goal" maxlength="100">{{goal}}</textarea></label>
+-->
                     <label><input type="checkbox" name="public" {% if public == True %} checked {%endif%} >Public</label>
                     
                     <button type="submit" class="speed-bar-btn" onclick="clearform()" value="Restore">Restore</button>
                 </fieldset>
                 <fieldset>
-                    <legend> <h4>Event</h4> </legend>
-                    <a href="/event/" class="speed-bar-btn">
-                    {% if event %}
-                       {{event.event_string}}
-                    {% else %}
-                        Add Event
-                    {%endif%}
-                    </a>                
+                    <button type="submit" class="speed-bar-btn" name="event" value="event">
+                        {% if event %}
+                            {{event.event_string}}
+                        {% else %}
+                            Add Event
+                        {%endif%}
+                    </button>
                 </fieldset>
 
 

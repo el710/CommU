@@ -8,10 +8,10 @@
 {% block application %}
     Event for
     {% if user_root %}
-        {{user_root}} - 
+        {{user_root}}
     {% endif %}
-    {% if user_root %}
-        skill "{{event.name}}"
+    {% if event.name %}
+         - skill "{{event.name}}"
     {% endif %}  
 {% endblock %}
 

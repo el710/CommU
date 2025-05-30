@@ -36,7 +36,9 @@ def upload_utembase(storage, base: UtemBase, file_list):
                 continue
 
             ## Load data of <utem> from file <item>
+            # logging.info(f" Load utem from file: {item}\n")
             if storage.load(utem, item):
+                # logging.info(f"utem id: {utem.get_token()}\n")
                 base.add(utem)
 
 
@@ -47,7 +49,7 @@ def make_template_context(base: UtemBase):
 
     for item in base:
         utem = item['utem']
-        print(f"template: {utem} {utem.get_state()} {utem.get_classname()}")
+        # print(f"template: {utem} {utem.get_state()} {utem.get_classname()}")
         if utem.get_state() == "template":
             if utem.get_classname() =="USkill":
                 skill_list.append({"name":utem.name, "link":f"{utem.make_link()}"})

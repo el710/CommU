@@ -36,6 +36,9 @@ class UObject(Persistable):
             if hasattr(self, key):
                 setattr(self, key, datetime.fromisoformat(value) if key == "_create_datetime" else value)
 
+    def get_name(self):
+        return self.name
+    
     def get_token(self):
         return str(hash(f"{self.name}:{self.author}:{self._create_datetime}:{self.geosocium}"))
 

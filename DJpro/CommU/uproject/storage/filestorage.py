@@ -42,7 +42,10 @@ class FileStorage:
         return list_files
 
     def save(self, obj, overwrite: bool = False) -> bool:
+        logging.info(f"save obj: {obj.get_token()}")
         filename = obj.get_file_name()
+        logging.info(f"save file: {filename}\n")
+
         path = os.path.join(self.base_path, filename)
 
         if not overwrite and os.path.isfile(path):
@@ -60,7 +63,9 @@ class FileStorage:
         try:
             with open(path, "r", encoding="utf-8") as f:
                 data = json.load(f)
+                # logging.info(f"load data: {data}")
                 obj.from_dict(data)
+                # logging.info(f"obj data: {obj.to_dict()}\n")
             return True
         except Exception as exc:
             logging.info(f"Failed to load file {path}: {exc}")

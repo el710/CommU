@@ -44,8 +44,8 @@ class SkillForm(forms.Form):
     description = forms.CharField(label="Description:", max_length=300,widget=forms.Textarea, required=False)
     public = forms.BooleanField(label="Public", required=False)
 
-    resources = forms.CharField(label="Resources:", max_length=300, widget=forms.Textarea, required=False)
-    goal = forms.CharField(label="Goal:", max_length=300, widget=forms.Textarea, required=False)
+    # resources = forms.CharField(label="Resources:", max_length=300, widget=forms.Textarea, required=False)
+    # goal = forms.CharField(label="Goal:", max_length=300, widget=forms.Textarea, required=False)
 
 class EventForm(forms.Form):
     '''

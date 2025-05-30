@@ -47,7 +47,7 @@ class USkill(UObject):
         self.event = event   
     
     def set_executor(self, user):
-        self._executor = user
+        self._executor = user.commu_id
         
 
     def get_title(self):
