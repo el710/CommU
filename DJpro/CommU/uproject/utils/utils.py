@@ -10,9 +10,9 @@ from ..models.contract import UContract
 from ..models.project import UProject
 from ..models.user import UUser
 from ..storage.filestorage import FileStorage
-from ..models.bases import UtemBase
 
-def upload_utembase(storage, base: UtemBase, file_list): 
+
+def upload_utembase(storage, base, file_list): 
     '''
         Fill UtemBase with file list
         Args:
@@ -42,7 +42,12 @@ def upload_utembase(storage, base: UtemBase, file_list):
                 base.add(utem)
 
 
-def make_template_context(base: UtemBase):
+def make_template_context(base):
+    '''
+        Make context about template utems for user page
+        Args:
+            base: UtemBase
+    '''
     skill_list = []
     contract_list = []
     project_list = []
@@ -64,13 +69,13 @@ def make_template_context(base: UtemBase):
         }
             
     
-def parse_link(arg: str):
-    try:
-        type_str, name = arg.split("=")
-        return type_str.lower(), name
-    except ValueError:
-        logging.info(f" wrong args: {arg}\n")
-        return None, None
+# def parse_link(arg: str):
+#     try:
+#         type_str, name = arg.split("=")
+#         return type_str.lower(), name
+#     except ValueError:
+#         logging.info(f" wrong args: {arg}\n")
+#         return None, None
 
 
 # def make_skill_context(skills: list, path="."):

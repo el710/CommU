@@ -6,6 +6,11 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from slugify import slugify
 
+import hashlib
+
+
+def get_hash(data: str):
+    return hashlib.shake_128(data.encode()).hexdigest(13)
 
 class Persistable(ABC):
     @abstractmethod
@@ -40,7 +45,8 @@ class UObject(Persistable):
         return self.name
     
     def get_token(self):
-        return str(hash(f"{self.name}:{self.author}:{self._create_datetime}:{self.geosocium}"))
+        str = f"{self.name}:{self.author}:{self._create_datetime}:{self.geosocium}"
+        return get_hash(str)
 
     def get_state(self):
         return self._state

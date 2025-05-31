@@ -5,17 +5,18 @@ from django.contrib.staticfiles import finders
 
 
 # Create your views here.
-
-from uproject.models.user import *
-from uproject.models.bases import UtemBase
 from uproject.models.project import UProject
 from uproject.models.contract import UContract
 from uproject.models.skill import USkill
 
-from uproject.utils.utils import *
+from uproject.models.user import *
 
 from uproject.storage.filestorage import FileStorage
+from uproject.storage.bases import UtemBase
 
+from uproject.storage.keepmanager import KeepManager
+
+from uproject.utils.utils import *
 
 import logging
 import os
@@ -25,16 +26,11 @@ from datetime import datetime, timedelta
 """ Operating Data"""
 ## There is always a user - by define 'Guest'
 
-
-public_skills = None
-public_contracts = None
-public_projects = None
-
-
 WORK_PATH = os.path.join(os.getcwd(), "file_store")
 
 local_user = UUser(GUEST_USER)
 local_user.init_storage(FileStorage(WORK_PATH))
+
 
 def show_index(request):
     global local_user
@@ -84,8 +80,8 @@ def signup(request):
             ## RAM storage for all utems
             local_user.init_utem_base(UtemBase())
 
-            # ## tree of user's utems in work
-            # local_user.init_utem_tree(UtemTreeBase())
+            ## base manager
+            local_user.init_keep_manager( KeepManager( FileStorage(WORK_PATH, f"{local_user.nickname}") ) )
 
             ## basic project Life for User
             root=UProject(local_user, "Life", "usermain")
@@ -117,12 +113,9 @@ def show_user(request, args=None):
     ## if no user
     if not local_user.commu_id: return redirect("/")
 
-    logging.info(f'get args: {args}\n')
-    ## Close utem's info
-    if args == "close":
-        local_user.work_utem = None
-        return redirect("/user/")
-    
+    ## utem - we gonna work with in other pages
+    local_user.work_utem = None
+        
     ## dictionary of args for HTML page
     def_context = {}
 
@@ -151,7 +144,11 @@ def show_user(request, args=None):
     project_list = local_user.storage.find_all("*.ptp")
     logging.info(f'local user projects: {project_list}\n')
 
-    upload_utembase(local_user.storage, local_user.utem_base, skill_list + contract_list + project_list)
+    upload_utembase(local_user.storage, local_user.utem_base,
+                    local_user.storage.find_all("*.stp") + 
+                    local_user.storage.find_all("*.ctp") +
+                    local_user.storage.find_all("*.ptp")
+                )
       
     ## Load search result
     # logging.info(f"search {local_user.search} ")
@@ -357,6 +354,13 @@ def crud_skill(request, args=None):
     else:
         form = SkillForm(request)
 
+    '''
+        - open other skill
+            work_utem == None 
+
+        - return from event.html
+            utem_token == args
+    '''
     if args:
         if local_user.work_utem == None:
             local_user.work_utem = local_user.utem_base.read(args)

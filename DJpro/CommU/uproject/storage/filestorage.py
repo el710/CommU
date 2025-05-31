@@ -42,9 +42,9 @@ class FileStorage:
         return list_files
 
     def save(self, obj, overwrite: bool = False) -> bool:
-        logging.info(f"save obj: {obj.get_token()}")
+        # logging.info(f"save obj: {obj.get_token()}")
         filename = obj.get_file_name()
-        logging.info(f"save file: {filename}\n")
+        # logging.info(f"save file: {filename}\n")
 
         path = os.path.join(self.base_path, filename)
 
@@ -55,7 +55,7 @@ class FileStorage:
             json.dump(obj.to_dict(), f)
         return True
 
-    def load(self, obj, filename=None) -> bool:
+    def load(self, obj, filename:str=None) -> bool:
         # logging.info(f"load {obj}")
         if filename == None: filename = obj.get_file_name()
         path = os.path.join(self.base_path, filename)
@@ -91,6 +91,6 @@ if __name__ == "__main__":
     for item in list:
         print(os.path.splitext(item)[0])
 
-    print(st.find_all(pattern="*.stp"))
+
     print(st.find_all(pattern="*.ctp"))
     print(st.find_all(pattern="*.ptp"))

@@ -6,3 +6,5 @@
 """
 
 GUEST_USER = 'Guest'
+
+DEFAULT_GEOSOCIUM = "Earth"

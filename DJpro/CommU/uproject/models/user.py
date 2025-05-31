@@ -9,8 +9,8 @@ import copy
 # from pathlib import Path
 # sys.path.append(str(Path(__file__).parent.parent /"." ))
 
-from .bases import UtemBase
-from .tree import UtemTreeBase
+
+from .uobject import get_hash
 
 from uproject.constants.constants import *
 
@@ -18,8 +18,8 @@ class UUser():
     '''
         User's data
     '''
-    def __init__(self, nickname):
-        self.commu_id = hash(nickname) if nickname != GUEST_USER else None
+    def __init__(self, nickname:str):
+        self.commu_id = get_hash(nickname) if nickname != GUEST_USER else None
 
         self.nickname = nickname
         self.password = None
@@ -29,7 +29,7 @@ class UUser():
         self.lastname = None
         self.language = 'en'
 
-        self.geosocium = 'Earth'
+        self.geosocium = DEFAULT_GEOSOCIUM
         self.timezone = None
      
 
@@ -53,11 +53,15 @@ class UUser():
 
 
     def init_storage(self, storage):
+        ## Hard storage: files / DB
         self.storage = storage
 
-    def init_utem_base(self, base:UtemBase):
-        ## base of user's utems
+    def init_utem_base(self, base):
+        ## RAM base of user's utems
         self.utem_base = base
+    
+    def init_keep_manager(self, manager):
+        self.keep_manager = manager
 
 
 
