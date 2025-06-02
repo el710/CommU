@@ -12,61 +12,61 @@ from ..models.user import UUser
 from ..storage.filestorage import FileStorage
 
 
-def upload_utembase(storage, base, file_list): 
-    '''
-        Fill UtemBase with file list
-        Args:
-            storage - file storage | DB
-            base: UtemBase
-            file_list - ['*.stp', ]
-    '''
-    utem = None
+# def upload_utembase(storage, base, file_list): 
+#     '''
+#         Fill UtemBase with file list
+#         Args:
+#             storage - file storage | DB
+#             base: UtemBase
+#             file_list - ['*.stp', ]
+#     '''
+#     utem = None
 
-    for item in file_list:
-        id = os.path.splitext(item)[0]
-        ## check for uniq
-        if base.read(id) == None:
-            if '.stp' in os.path.splitext(item):
-                utem = USkill()
-            elif '.ctp' in os.path.splitext(item):
-                utem = UContract()
-            elif '.ptp' in os.path.splitext(item):
-                utem = UProject()
-            else:
-                continue
+#     for item in file_list:
+#         id = os.path.splitext(item)[0]
+#         ## check for uniq
+#         if base.read(id) == None:
+#             if '.stp' in os.path.splitext(item):
+#                 utem = USkill()
+#             elif '.ctp' in os.path.splitext(item):
+#                 utem = UContract()
+#             elif '.ptp' in os.path.splitext(item):
+#                 utem = UProject()
+#             else:
+#                 continue
 
-            ## Load data of <utem> from file <item>
-            # logging.info(f" Load utem from file: {item}\n")
-            if storage.load(utem, item):
-                # logging.info(f"utem id: {utem.get_token()}\n")
-                base.add(utem)
+#             ## Load data of <utem> from file <item>
+#             # logging.info(f" Load utem from file: {item}\n")
+#             if storage.load(utem, item):
+#                 # logging.info(f"utem id: {utem.get_token()}\n")
+#                 base.add(utem)
 
 
-def make_template_context(base):
-    '''
-        Make context about template utems for user page
-        Args:
-            base: UtemBase
-    '''
-    skill_list = []
-    contract_list = []
-    project_list = []
+# def make_template_context(base):
+#     '''
+#         Make context about template utems for user page
+#         Args:
+#             base: UtemBase
+#     '''
+#     skill_list = []
+#     contract_list = []
+#     project_list = []
 
-    for item in base:
-        utem = item['utem']
-        # print(f"template: {utem} {utem.get_state()} {utem.get_classname()}")
-        if utem.get_state() == "template":
-            if utem.get_classname() =="USkill":
-                skill_list.append({"name":utem.name, "link":f"{utem.make_link()}"})
-            elif utem.get_classname() == "UContract":
-                contract_list.append({"name":utem.name, "link":f"{utem.make_link()}"})
-            elif utem.get_classname() == "UProject":
-                project_list.append({"name":utem.name, "link":f"{utem.make_link()}"})                
+#     for item in base:
+#         utem = item['utem']
+#         # print(f"template: {utem} {utem.get_state()} {utem.get_classname()}")
+#         if utem.get_state() == "template":
+#             if utem.get_classname() =="USkill":
+#                 skill_list.append({"name":utem.name, "link":f"{utem.make_link()}"})
+#             elif utem.get_classname() == "UContract":
+#                 contract_list.append({"name":utem.name, "link":f"{utem.make_link()}"})
+#             elif utem.get_classname() == "UProject":
+#                 project_list.append({"name":utem.name, "link":f"{utem.make_link()}"})                
 
-    return {'template_skills': skill_list,
-            'template_contracts': contract_list,
-            'template_project': project_list
-        }
+#     return {'template_skills': skill_list,
+#             'template_contracts': contract_list,
+#             'template_project': project_list
+#         }
             
     
 # def parse_link(arg: str):
@@ -89,20 +89,20 @@ def make_template_context(base):
 #     return context
     
 
-def find_utems(key_name, path="."):
-    storage = FileStorage(path)
-    context = {}
+# def find_utems(key_name, path="."):
+#     storage = FileStorage(path)
+#     context = {}
 
-    for cls, label in [(USkill, "find_skills"), (UContract, "find_contracts"), (UProject, "find_projects")]:
-        utem = cls(key_name)
-        # logging.info(f"find {utem} {key_name}")
-        found = storage.load(utem)
+#     for cls, label in [(USkill, "find_skills"), (UContract, "find_contracts"), (UProject, "find_projects")]:
+#         utem = cls(key_name)
+#         # logging.info(f"find {utem} {key_name}")
+#         found = storage.load(utem)
         
-        context[label] = [utem.name] if found else None
+#         context[label] = [utem.name] if found else None
 
-    # context["find_dealers"] = [user.partners] if user else public_dealers
-    logging.info(f" return context {context}")
-    return context
+#     # context["find_dealers"] = [user.partners] if user else public_dealers
+#     logging.info(f" return context {context}")
+#     return context
 
 
 def get_utem_info(utem):
@@ -133,7 +133,7 @@ def get_project_tree(user: UUser):
 
 def walk_by_tree(user):
 
-    base = user.utem_base
+    base = user.keep_manager.base
     root = user.root_utem
 
     if isinstance(root, UProject):
@@ -207,3 +207,5 @@ def walk_by_tree(user):
             }
     
     return context
+
+

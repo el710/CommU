@@ -8,3 +8,8 @@
 GUEST_USER = 'Guest'
 
 DEFAULT_GEOSOCIUM = "Earth"
+
+'''
+    States of Utems
+'''
+TEMPLATE_UTEM = "template"

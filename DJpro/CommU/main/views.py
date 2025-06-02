@@ -74,23 +74,23 @@ def signup(request):
             '''            
             logging.info(f'new user: {local_user.nickname}')
 
-            ## hard storage (file | DB)
-            local_user.init_storage(FileStorage(WORK_PATH, f"{local_user.nickname}"))
+            # ## hard storage (file | DB)
+            # local_user.init_storage(FileStorage(WORK_PATH, f"{local_user.nickname}"))
 
-            ## RAM storage for all utems
-            local_user.init_utem_base(UtemBase())
+            # ## RAM storage for all utems
+            # local_user.init_utem_base(UtemBase())
 
             ## base manager
             local_user.init_keep_manager( KeepManager( FileStorage(WORK_PATH, f"{local_user.nickname}") ) )
 
             ## basic project Life for User
-            root=UProject(local_user, "Life", "usermain")
+            root=UProject(local_user.commu_id, "Life", "usermain")
             ## root of user tree
             local_user.root_utem = root
 
             # local_user.work_utem = root
             logging.info(f'new user: root - {local_user.root_utem} work - {local_user.work_utem}')
-            local_user.utem_base.add(root)
+            local_user.keep_manager.save_utem(root)
             #local_user.utem_tree.add(root.get_token(), root.get_classname)
             
             return redirect('/user/') 
@@ -113,7 +113,7 @@ def show_user(request, args=None):
     ## if no user
     if not local_user.commu_id: return redirect("/")
 
-    ## utem - we gonna work with in other pages
+    ## utem we gonna work with on other pages
     local_user.work_utem = None
         
     ## dictionary of args for HTML page
@@ -137,44 +137,27 @@ def show_user(request, args=None):
         Load utems list
     '''
     ##find all user's utems in user's storage
-    skill_list = local_user.storage.find_all("*.stp")
-    logging.info(f'\nlocal user skills: {skill_list}')
-    contract_list = local_user.storage.find_all("*.ctp")
-    logging.info(f'local user contracts: {contract_list}')
-    project_list = local_user.storage.find_all("*.ptp")
-    logging.info(f'local user projects: {project_list}\n')
+    # upload_utembase(local_user.storage, local_user.utem_base,
+    #                 local_user.storage.find_all("*.stp") + 
+    #                 local_user.storage.find_all("*.ctp") +
+    #                 local_user.storage.find_all("*.ptp")
+    #             )
+    
+    
+    local_user.keep_manager.upload_base(['UProject', 'UContract', 'USkill'])
+    # logging.info(f"Base {[utem for utem in local_user.keep_manager.base]} ")
 
-    upload_utembase(local_user.storage, local_user.utem_base,
-                    local_user.storage.find_all("*.stp") + 
-                    local_user.storage.find_all("*.ctp") +
-                    local_user.storage.find_all("*.ptp")
-                )
-      
     ## Load search result
     # logging.info(f"search {local_user.search} ")
     def_context.update({"index_search": local_user.search})
     ## show new or last searching results
     if local_user.search:
-        def_context.update(find_utems(key_name=local_user.search, path=WORK_PATH))
+        def_context.update(local_user.keep_manager.find_by_name(local_user.search))
 
 
     ## Template utems
-    def_context.update(make_template_context(local_user.utem_base))
-
-    # ## add data of choosen utem
-    # if local_user.work_utem:
-    #     def_context.update(get_utem_info(local_user.work_utem))
-    #     logging.info(f"Context: {def_context} ")
-
-    #     if isinstance(local_user.work_utem, USkill):
-    #         def_context.update({"edit_link": "/skill/temp"})
-    #         def_context.update({"add_link": "/event/"})
-
-    #     if isinstance(local_user.work_utem, UContract):
-    #         pass
-    #     if isinstance(local_user.work_utem, UProject):
-    #         pass
-    
+    # logging.info(f"templates {local_user.keep_manager.find_by_state(TEMPLATE_UTEM)} ")
+    def_context.update(local_user.keep_manager.find_by_state(TEMPLATE_UTEM))
 
     ## Fill user's Life
     def_context.update({"user_staff": get_project_tree(local_user)})

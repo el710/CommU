@@ -8,17 +8,12 @@ from slugify import slugify
 
 import hashlib
 
+from ..constants.constants import *
 
 def get_hash(data: str):
     return hashlib.shake_128(data.encode()).hexdigest(13)
 
 class Persistable(ABC):
-    @abstractmethod
-    def to_dict(self): pass
-
-    @abstractmethod
-    def from_dict(self, data: dict): pass
-
     @abstractmethod
     def get_file_name(self, user:str=None) -> str: pass
 
@@ -34,7 +29,7 @@ class UObject(Persistable):
         self._create_datetime = None
         self.geosocium = None
         self.public = False
-        self._state = "template"
+        self._state = TEMPLATE_UTEM
 
     def set_attributes(self, **kwargs):
         for key, value in kwargs.items():
@@ -52,7 +47,7 @@ class UObject(Persistable):
         return self._state
     
     def get_classname(self):
-        return self.__class__.__name__
+        return f"{self.__class__.__name__}"
 
     def make_link(self):
         return f"/{self.__class__.__name__}/{self.get_token()}".lower()
