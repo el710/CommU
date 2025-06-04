@@ -55,8 +55,7 @@ Human! Protect the Flame of Prometheus from the darkness of ignorance.
 
 ## How it works
 
-  The "Guest" user can simply view public skills, contracts & projects.
-  To become a real user, you need to be a Human and register.
+To use utems you need to be a Human and register.
 
 Here are some utems:
 
