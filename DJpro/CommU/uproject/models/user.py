@@ -41,6 +41,8 @@ class UUser():
 
         ## pointer on utem work with
         self.work_utem = None
+        self.origin_utem_id = None
+
 
         ## pointer to work project or contract
         self.root_utem = None

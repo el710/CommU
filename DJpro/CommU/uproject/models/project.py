@@ -6,6 +6,7 @@ from slugify import slugify
 from .uobject import UObject
 from .skill import USkill
 from .contract import UContract
+from ..constants.constants import *
 
 class UProject(UObject):
     """
@@ -23,10 +24,13 @@ class UProject(UObject):
         User can have many Projects, 
         but there is always main default project - "Life" project
     """    
-    def __init__(self, starter_user_id, project_name=None, state:str="template"):
-        super().__init__(project_name or f"{starter_user}'s project")
+    def __init__(self, name=None, starter_user_id=None, state:str=TEMPLATE_UTEM, my_token:str=None):
+        super().__init__(name)
 
         self._state = state
+        ## constant token = user_id
+        self.hard_token = my_token
+
         self.target = "Project's point"
         ## 'Do not" laws
         self.project_laws = {"base": "CommU laws"}
@@ -38,9 +42,11 @@ class UProject(UObject):
         ## list of links to events(skill + time)
         self.events = []
 
-    def get_file_name(self):
-        return f"{super().get_file_name()}.ptp"
-        
+    def get_token(self):
+        if self.hard_token: return self.hard_token
+        else:
+            return super().get_token()
+           
     def get_title(self):
         return f"project '{self.name}'"
 

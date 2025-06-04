@@ -1,7 +1,7 @@
 """
     Copyright (c) 2025 Kim Oleg <theel710@gmail.com>
 """
-
+import logging
 class UtemBase():
     '''
         Operative base of utems for user
@@ -33,7 +33,7 @@ class UtemBase():
         '''
         if self.read(utem.get_token()) == None:
             item = {"id": utem.get_token(),
-                    "type": utem.__class__.__name__,
+                    "type": utem.get_classname(),
                     "utem": utem,
                     }
             self._base.append(item)
@@ -56,6 +56,7 @@ class UtemBase():
         for item in self._base:
             if item["id"] == id_hash:
                 item["id"] = new_utem.get_token()
+                item["type"] = new_utem.get_classname()
                 item["utem"] = new_utem
                 
 

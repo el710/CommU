@@ -84,7 +84,8 @@ def signup(request):
             local_user.init_keep_manager( KeepManager( FileStorage(WORK_PATH, f"{local_user.nickname}") ) )
 
             ## basic project Life for User
-            root=UProject(local_user.commu_id, "Life", "usermain")
+            root=UProject(name="Life", starter_user_id=local_user.commu_id, state=ROOT_PROJECT, my_token=local_user.commu_id)
+            root.sign(local_user)
             ## root of user tree
             local_user.root_utem = root
 
@@ -113,8 +114,13 @@ def show_user(request, args=None):
     ## if no user
     if not local_user.commu_id: return redirect("/")
 
-    ## utem we gonna work with on other pages
+    if args == 'close': 
+        local_user.search = None
+        return redirect("/user/")
+
+    ## utem we has worked with on other pages
     local_user.work_utem = None
+    local_user.origin_utem_id = None
         
     ## dictionary of args for HTML page
     def_context = {}
@@ -135,15 +141,7 @@ def show_user(request, args=None):
 
     '''
         Load utems list
-    '''
-    ##find all user's utems in user's storage
-    # upload_utembase(local_user.storage, local_user.utem_base,
-    #                 local_user.storage.find_all("*.stp") + 
-    #                 local_user.storage.find_all("*.ctp") +
-    #                 local_user.storage.find_all("*.ptp")
-    #             )
-    
-    
+    '''   
     local_user.keep_manager.upload_base(['UProject', 'UContract', 'USkill'])
     # logging.info(f"Base {[utem for utem in local_user.keep_manager.base]} ")
 
@@ -160,7 +158,7 @@ def show_user(request, args=None):
     def_context.update(local_user.keep_manager.find_by_state(TEMPLATE_UTEM))
 
     ## Fill user's Life
-    def_context.update({"user_staff": get_project_tree(local_user)})
+    def_context.update({"user_staff": local_user.keep_manager.get_tree(local_user)})
     
     logging.info(f"Context: {def_context} ")
     return render(request, 'main.html', context=def_context)
@@ -256,111 +254,105 @@ def crud_skill(request, args=None):
     '''
     global local_user
 
+    logging.info(f'local user: {local_user}')
     logging.info(f'open skill: {args}\n')
-    logging.info(f'local user: {local_user}\n')
-
+    
     if local_user.commu_id == None: return redirect("/")
 
-    def_context = {}
-
-    # if args == 'temp': 
-    #     if local_user.temp_utem:
-    #         def_context.update(local_user.temp_utem.to_dict())
-    #     logging.info(f"load template {def_context}\n")
-    # # elif args == "event":
-    # #     if hasattr(local_user, 'pro_event') and local_user.pro_event:
-    # #         def_context.update(local_user.pro_event.to_dict())
-        
+    def_context = {}      
     
     logging.info(f" method: {request.method} cont: {request.POST}\n")
     if request.method == "POST":
 
-        ## add to root
-        if request.POST.get('add'):  
-
-            local_user.work_utem.set_executor(local_user)
-            
-
-            local_user.work_utem = None
+        ## delete skill no matter changed
+        if request.POST.get('delete'):
+            local_user.keep_manager.delete_utem(local_user.work_utem)
             return redirect("/user/")
-        
-        ## add event       
-        elif request.POST.get('event'):
-            
-            if local_user.work_utem == None: ## New skill
-                local_user.work_utem = USkill()
-            
-            form = SkillForm(request.POST)
-            if form.is_valid(): 
-                local_user.work_utem.from_dict(form.cleaned_data)
-            
-            return redirect("/event/")
-        
-        ## save as template
-        elif request.POST.get('save'):
-            form = SkillForm(request.POST)
-            
-            logging.info(f"valid POST {form.is_valid()} \n")
-            logging.info(f'data: {form.cleaned_data}\n')
-            
-            if form.is_valid(): ## is_valid also makes cleaned_data
-                if local_user.work_utem == None: ## New skill
+
+        form = SkillForm(request.POST)
+        logging.info(f"valid POST {form.is_valid()} \n")
+        logging.info(f'data: {form.cleaned_data}\n')
+
+        if form.is_valid():
+            ## add or change event
+            if request.POST.get('event'):
+                if not local_user.work_utem:
                     local_user.work_utem = USkill()
-                
+
+                ## for enable to make back link token
                 local_user.work_utem.from_dict(form.cleaned_data)
+                return redirect("/event/")
 
-                if local_user.work_utem.get_sign() == None:
-                    local_user.work_utem.sign(author=local_user.nickname,
-                                              geosocium=local_user.geosocium
-                                             )
-                    
-                logging.info(f"new skill {local_user.work_utem}")
-                
-                if hasattr(local_user, 'storage'):
-                    local_user.storage.save(local_user.work_utem)
-                local_user.work_utem = None    
-                return redirect("/user/")
+            ## set last data
+            local_user.work_utem.from_dict(form.cleaned_data)
             
-        ## delete skill
-        elif request.POST.get('delete'):
-            if hasattr(local_user, 'storage'):
-                local_user.storage.delete(local_user.work_utem)
 
-            local_user.work_utem = None
+            if request.POST.get('save'):
+                ## if sign data hasn't change
+                if local_user.work_utem.get_token() == local_user.origin_utem_id:
+                    local_user.keep_manager.edit_utem(local_user.origin_utem_id, local_user.work_utem)
+                else:
+                    ## it's a new utem or old utem became new
+                    local_user.work_utem.sign(local_user)
+                    local_user.keep_manager.save_utem(local_user.work_utem)
+            
+            ## add to root
+            if request.POST.get('add'):
+        
+                ## it's always new utem - not template
+                local_user.work_utem.set_executor(local_user)
+                local_user.work_utem.set_state(WORKING_UTEM)
+                local_user.work_utem.sign(local_user)
+                local_user.work_utem.set_parent(local_user.root_utem.get_token())
+                local_user.keep_manager.save_utem(local_user.work_utem)
+
+                logging.info(f"add to root {local_user.root_utem.get_classname()}")
+                ## Add id to root list
+                if local_user.root_utem.get_classname() == 'UProject':
+                    local_user.root_utem.add_event(local_user.work_utem.get_token())
+                elif local_user.root_utem.get_classname() == 'UContract':
+                    pass
+
+            logging.info(f"save skill {local_user.work_utem.to_dict()}")
+
             return redirect("/user/")
 
         ## error POST   
         else:
             form = SkillForm(request.POST)
             logging.info(f"POST failed\n")
-        
+
+    ## POST    
     else:
         form = SkillForm(request)
 
-    '''
-        - open other skill
-            work_utem == None 
-
-        - return from event.html
-            utem_token == args
-    '''
     if args:
-        if local_user.work_utem == None:
-            local_user.work_utem = local_user.utem_base.read(args)
-            def_context.update({"saved": True})
+        ## in case when we came from user page !!! not from event page
+        if not local_user.work_utem:
+            ## work_utem must be copy - not the object in Base
+            local_user.work_utem = copy.deepcopy(local_user.keep_manager.read_utem(args))
+            if local_user.work_utem:
+                local_user.origin_utem_id = local_user.work_utem.get_token()
 
-    else:
-       local_user.work_utem = None
-       def_context.update({"saved": False})
+    # else:
+    #    local_user.work_utem = USkill()
     
     if local_user.work_utem:
-        logging.info(f"Fill the form: {local_user.work_utem.to_dict()}\n")
         def_context.update(local_user.work_utem.to_dict())
+        def_context.update({"saved": local_user.work_utem.is_signed()})
     
     def_context.update({"form": form,
-                        "local_user": local_user.nickname,
-                        "root": local_user.root_utem.get_title()
-                    })
+                        "local_user": local_user.nickname
+                        })
+    
+    if local_user.work_utem.get_state() == TEMPLATE_UTEM:
+        def_context.update({"root": local_user.root_utem.get_title()})
+    else:
+        '''
+            !!! TODO: FIND PARENT OBJ NAME
+        '''
+        def_context.update({"context": local_user.work_utem._parent})
+
  
     logging.info(f"Skill CRUD context {def_context} \n")
 

@@ -76,7 +76,7 @@
 
 
 {% block workplace %}
-<form method="POST" id="dataid">
+<form method="POST" >
 {% csrf_token %}
 
 <div class="speed-bar">
@@ -85,7 +85,7 @@
         {% if root %}
             <button type="submit" class="speed-bar-btn" name="add" value="add">Add to {{root}} </button>
         {%endif%}
-        <button type="submit" class="speed-bar-btn" name="save" value="save">Save as template</button> <!-- {'name': value} will append to request.POST -->
+        <button type="submit" class="speed-bar-btn" name="save" value="save">Save</button> <!-- {'name': value} will append to request.POST -->
         {% if saved %}
             <button type="submit" class="speed-bar-btn" name="delete" value="delete"  onclick="return confirm('Are you sure?')">Delete</button>
         {% endif %}
@@ -96,18 +96,16 @@
     <div class="skill-container">
         <div class="skill-column">
             
+            {% if context %}
+                <label>Context: {{context}}  </label>
+            {% endif %}
 
                 <fieldset>
                     <legend> <h4>Parameters</h4> </legend>
                     <label>Name: <input type="text" name="name"  maxlength="100" value="{{name}}" required></label>
                     <label>Description: <textarea name="description" maxlength="300" >{{description}}</textarea></label>
-<!--
-                    <label>Resources: <textarea name="resources" maxlength="300" >{{resources}}</textarea></label>
-                    <label>Goal: <textarea name="goal" maxlength="100">{{goal}}</textarea></label>
--->
                     <label><input type="checkbox" name="public" {% if public == True %} checked {%endif%} >Public</label>
-                    
-                    <button type="submit" class="speed-bar-btn" onclick="clearform()" value="Restore">Restore</button>
+                                                           
                 </fieldset>
                 <fieldset>
                     <button type="submit" class="speed-bar-btn" name="event" value="event">
@@ -121,20 +119,7 @@
 
 
 
-<!--
-                <div class="skill-bottom-field">
-                    {% if local_user %}
-                        <div class="skill-button">
-                            <input type="submit" class="form-btn" value="Save" name="save">
-                        </div>
-                        <div class="skill-button">
-                            {% if name %}
-                                <input type="submit" class="form-btn" value="Delete" name="delete" onclick="return confirm('Are you sure?')">
-                            {% endif %}       
-                        </div>
-                    {% endif %}                 
-                </div>
--->     
+  
 
         </div> <!-- column -->        
     </div> <!-- container -->
@@ -146,11 +131,4 @@
 
 {% block JavaScript %}
     {{ block.super }}
-    <script>
-
-        function clearform() {
-            document.getElementById("dataid").reset()
-        }
-
-    </script>
 {% endblock %}

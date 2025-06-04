@@ -150,23 +150,27 @@
             </div> <!-- make_new -->
 
             <div>
-                {% if find_projects != None or find_skills != None or find_dealers != None %}
-                {% if index_search != None %}
-                    <p>Founded: <b>'{{index_search}}'</b>...</p>
+                {% if find_UProject or find_UContract or find_USkill or find_dealers %}
+                {% if index_search %}
+                    <br>
+                    <p>Searching for: <b>'{{index_search}}'</b>...</p>
                     <ul> <!-- list of templates-->
-                        {% if find_projects != None %}
-                            <li>there are project templates:</li>
+                        {% if find_UProject %}
+                            <li>there is a project template:</li>
                             <ul>
-                                <li>  <a href="uprojects/">{{find_projects}}</a>  </li>
+                                <li>  <a href="{{find_UProject.link}}">{{find_UProject.name}}</a>  </li>
                             </ul>
                         {% endif %}
-
-                        {% if find_skills != None %}
-                            <li>there are skills:</li>
+                        {% if find_UContract %}
+                            <li>there is a contract template:</li>
                             <ul>
-                                {% for item in find_skills %}
-                                    <li> <a href="uskill={{item}}">{{item}}</a> </li>
-                                {% endfor %}
+                                <li>  <a href="{{find_UContract.link}}">{{find_UContract.name}}</a>  </li>
+                            </ul>
+                        {% endif %}
+                        {% if find_USkill %}
+                            <li>there is a skill template:</li>
+                            <ul>
+                                <li>  <a href="{{find_USkill.link}}">{{find_USkill.name}}</a>  </li>
                             </ul>
                         {% endif %}
                 
@@ -179,13 +183,15 @@
                             </ul>
                         {% endif %}
                     </ul>  <!-- list of templates-->
-                    
+                    <center><a href="close" class="index-btn index-btn-login" >Close</a></center>
+                    <br>
                 {% endif %} <!-- task -->
                 <hr>
                 {% endif %}
             </div> <!-- search-result-->
             
             <div>
+                <br>
                 <p>Most used:</p>
                 <hr>
             </div> <!-- most-used -->
@@ -232,24 +238,7 @@
         <div class="user-center">
 
             <div class="user-center-top">
-                {% if about_type %}
-                    <fieldset> <legend> INFO </legend>
-                        {{about_type}} '{{about_name}}': 
-                        <ul>
-                            {% for item in about_value %}
-                                <li>{{item}}</li> 
-                            {% endfor %}
-                        </ul>
-                        <br>
-                        {% if local_user %}
-                            <a href="{{add_link}}">Add to plan</a>
-                            <a href="{{edit_link}}">Edit</a>
-                        {% else %}
-                            <a href="{{edit_link}}">Parameters</a>
-                        {% endif%}
-                        <a href="close">Close</a>
-                    </fieldset>
-                {% endif %}
+<!-- block no use anymore-->
             </div> <!-- center-top-->
 
             <div class="user-center-bottom">

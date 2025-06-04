@@ -19,26 +19,14 @@ class USkill(UObject):
     def __init__(self, name:str=None, description=None, resources=None, goal=None):
         super().__init__(name)
         self.description = description
-        self.resources = resources
-        self.goal = goal
         self.event = None
-        self._duration = None
 
+      
     def get_file_name(self):
         return f"{super().get_file_name()}.stp"
 
     def get_slug_name(self):
         return slugify(self.name)
-
-    def get_sign(self):
-        if hasattr(self, "author"):
-            return self.author
-        return None
-    
-    def sign(self, author, geosocium=None):
-        self.author = author
-        self.geosocium = geosocium
-        self._create_datetime = datetime.now()
 
     def get_event(self):
         return self.event

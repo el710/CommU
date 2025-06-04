@@ -13,3 +13,5 @@ DEFAULT_GEOSOCIUM = "Earth"
     States of Utems
 '''
 TEMPLATE_UTEM = "template"
+WORKING_UTEM = "working"
+ROOT_PROJECT = "usermain"
