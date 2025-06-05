@@ -135,7 +135,7 @@ class KeepManager(UtemBase, FileStorage):
         context.update(self.walk_by_tree(user))
 
         return context
-
+ 
 
     def walk_by_tree(self, user):
         base = self.base

@@ -16,8 +16,6 @@ from uproject.storage.bases import UtemBase
 
 from uproject.storage.keepmanager import KeepManager
 
-from uproject.utils.utils import *
-
 import logging
 import os
 from datetime import datetime, timedelta
@@ -348,10 +346,11 @@ def crud_skill(request, args=None):
     if local_user.work_utem.get_state() == TEMPLATE_UTEM:
         def_context.update({"root": local_user.root_utem.get_title()})
     else:
-        '''
-            !!! TODO: FIND PARENT OBJ NAME
-        '''
-        def_context.update({"context": local_user.work_utem._parent})
+        parent = local_user.keep_manager.read_utem(local_user.work_utem.get_parent())
+        if not parent:
+            def_context.update({"root": local_user.root_utem.get_title()})
+        else:
+            def_context.update({"context": parent.get_title()})
 
  
     logging.info(f"Skill CRUD context {def_context} \n")

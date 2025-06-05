@@ -48,7 +48,7 @@ class UtemBase():
                     return item["utem"]
         else:
             if self.len() > 0:
-                return self._base[0]
+                return self._base[0]["utem"]
             
         return None
 

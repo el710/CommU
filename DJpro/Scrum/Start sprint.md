@@ -1,5 +1,5 @@
 ### sprint backlog
-1 refactoring: make parent tree and UtemBase
+point 1: refactoring: make parent tree and UtemBase
 + new user get utembase & storage
 + show user: refresh all utems in user's storage
 + load all founded utems to UtemBase
@@ -18,8 +18,7 @@
 + sinchronize storage & UtemBase: class KeepManager()
 + refactored skill-event CRUD
 + add context to utem as parent
-
-send parent Title to skill CRUD
++ send parent Title to skill CRUD
 
 
 Next sprint
@@ -28,3 +27,5 @@ Next sprint
 - find user_id.ptp after log in
 - contruct CRUD
   - switch credit/debit in contract
+
+- different between template and work utems

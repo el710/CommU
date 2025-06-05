@@ -96,3 +96,5 @@ class UObject(Persistable):
         if self.author and self.geosocium and self._create_datetime: return True
         return False
     
+    def get_parent(self):
+        return self._parent
