@@ -18,16 +18,14 @@
     {{ block.super }}
     <style>
         .skill-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-
-            font-family: Arial, sans-serif;
-            gap: 20px;
-            margin: 0;
-            border: 1px solid #ccc;
+            max-width: 1000px;
+            margin: 0 auto;
+            /*padding: 0;*/
+            background-color: white;
+            padding: 20px;
             border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
         }
 
         .skill-column {
@@ -60,11 +58,11 @@
             margin-top: 15px;
         }
 
-        .form-btn{
+        /* .form-btn{
             display: block;
             width: 100%;
             margin-top: 10px;         
-        }
+        } */
 
         input[type="checkbox"] {
             width: auto;
@@ -76,29 +74,34 @@
 
 
 {% block workplace %}
-<form method="POST" >
-{% csrf_token %}
+    <form method="POST" >
+    {% csrf_token %}
 
-<div class="speed-bar">
-   <a href="/user/" class="speed-bar-btn speed-bar-back">Back</a>
-    <div>
-        {% if root %}
-            <button type="submit" class="speed-bar-btn" name="add" value="add">Add to {{root}} </button>
-        {%endif%}
-        <button type="submit" class="speed-bar-btn" name="save" value="save">Save</button> <!-- {'name': value} will append to request.POST -->
-        {% if saved %}
-            <button type="submit" class="speed-bar-btn" name="delete" value="delete"  onclick="return confirm('Are you sure?')">Delete</button>
-        {% endif %}
-                  
-    </div> 
-</div>
+        <div class="speed-bar">
+            <a href="/user/" class="speed-bar-btn speed-bar-link">Back</a>
+            <div>
+                {% if root %}
+                    <button type="submit" class="speed-bar-btn" name="add" value="add">Add to {{root}} </button>
+                {%endif%}
+                <button type="submit" class="speed-bar-btn" name="save" value="save">Save</button> <!-- {'name': value} will append to request.POST -->
+                {% if saved %}
+                    <button type="submit" class="speed-bar-btn" name="delete" value="delete"  onclick="return confirm('Are you sure?')">Delete</button>
+                {% endif %}
+            </div> 
+        </div>
 
-    <div class="skill-container">
-        <div class="skill-column">
+        <div class="skill-container">
+            <div class="skill-column">
             
-            {% if context %}
-                <label>Context: {{context}}  </label>
-            {% endif %}
+                {% if context %}
+                    {%if context_link %}
+                        <a href="{{context_link}}" class="speed-bar-btn speed-bar-link">
+                    {% else %}
+                        <a href="/user/" class="speed-bar-btn speed-bar-link">
+                    {% endif %}    
+                        Context: {{context}}
+                    </a>
+                {% endif %}
 
                 <fieldset>
                     <legend> <h4>Parameters</h4> </legend>

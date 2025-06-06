@@ -247,22 +247,22 @@ def crud_skill(request, args=None):
     '''
         make Skill's page for C.R.U.D. in skill.html 
         args: None - create new skill
-              'temp' - work with local_user.temp_  skill
-              'event' - open event(skill+schedule) from user's project
+              'token' - open event with id == token
     '''
     global local_user
 
     logging.info(f'local user: {local_user}')
     logging.info(f'open skill: {args}\n')
     
-    if local_user.commu_id == None: return redirect("/")
+    if not local_user.commu_id: return redirect("/")
 
     def_context = {}      
     
     logging.info(f" method: {request.method} cont: {request.POST}\n")
+    
     if request.method == "POST":
 
-        ## delete skill no matter changed
+        ## delete skill no matter changes
         if request.POST.get('delete'):
             local_user.keep_manager.delete_utem(local_user.work_utem)
             return redirect("/user/")
@@ -332,8 +332,8 @@ def crud_skill(request, args=None):
             if local_user.work_utem:
                 local_user.origin_utem_id = local_user.work_utem.get_token()
 
-    # else:
-    #    local_user.work_utem = USkill()
+    else:
+       local_user.work_utem = USkill()
     
     if local_user.work_utem:
         def_context.update(local_user.work_utem.to_dict())
@@ -350,7 +350,7 @@ def crud_skill(request, args=None):
         if not parent:
             def_context.update({"root": local_user.root_utem.get_title()})
         else:
-            def_context.update({"context": parent.get_title()})
+            def_context.update({"context": parent.get_title(), "context_link": parent.make_link()})
 
  
     logging.info(f"Skill CRUD context {def_context} \n")
@@ -426,75 +426,100 @@ def crud_event(request, args=None):
 def crud_contract(request, args=None):
     '''
         Make contract.html
-        args: none - create, UContract
+        args: None - create new UContract
+              'token' - open UContract by id
+
     '''
     global local_user
+    
+    logging.info(f'local user: {local_user}')
+    logging.info(f'open contract: {args}\n')
 
-    ## if no user
-    if local_user.commu_id == None: return redirect("/")
+    if not local_user.commu_id: return redirect("/")
   
+    def_context = {}
+
     logging.info(f"request.method {request.method} \n")
 
     if request.method == "POST":
+
+        ## delete no matter changes
+        if request.POST.get('delete'):
+            local_user.keep_manager.delete_utem(local_user.work_utem)
+            return redirect("/user/")
+
         form = ContractForm(request.POST)
+        logging.info(f"valid form {form.is_valid()}")
+        logging.info(f'data: {form.cleaned_data}\n')
 
         formset = ContractEventFormSet(request.POST)
-        if formset.is_valid():
+        logging.info(f"valid form {formset.is_valid()}")
+
+        if form.is_valid() and formset.is_valid() : ## is_valid also makes cleaned_data
+            
             for form in formset:
                 if form.cleaned_data and not form.cleaned_data.get('DELETE', False):
                     print(form.cleaned_data)
 
-
-
-        logging.info(f"valid POST {form.is_valid()} \n")
-        logging.info(f'data: {form.cleaned_data}\n')
-
-        if form.is_valid(): ## is_valid also makes cleaned_data
-                   
-            if request.POST.get('add'):
-               
-               
-                logging.info(f'exit by add\n')
-            elif request.POST.get('save'):
-                               
+            if request.POST.get('save'):
                 logging.info(f'exit by save\n')
-            elif request.POST.get('sendto'):
-                               
+
+            if request.POST.get('add'):
+                logging.info(f'exit by add\n')
+      
+            if request.POST.get('sendto'):
                 logging.info(f'exit by sendto\n')                
-            elif request.POST.get('sendback'):
-                               
+            
+            if request.POST.get('sendback'):
                 logging.info(f'exit by sendback\n')
-            elif request.POST.get('sign'):
-                               
+
+            if request.POST.get('sign'):
                 logging.info(f'exit by sign\n')
-            elif request.POST.get('delete'):
-             
-                logging.info(f'exit by delete\n')
-                                
+
+            logging.info(f"save contract {local_user.work_utem.to_dict()}")                   
             return redirect('/user/')
+        
+        ## error POST   
+        else:
+            form = ContractForm(request.POST)
+            formset = ContractEventFormSet(request.POST)
+            logging.info(f"POST failed\n")
+
+    ## POST
     else:
        form = ContractForm()
        formset = ContractEventFormSet()
 
-    '''
-        def_context has parameters to show end form to change parameters
-    '''
-    def_context = {"form": form,
-                   "local_user": local_user.nickname,
-                   "formset": formset
-                  }
+    if args:
+        ## in case when we came from user page !!! not from event page
+        if not local_user.work_utem:
+            ## work_utem must be copy - not the object in Base
+            local_user.work_utem = copy.deepcopy(local_user.keep_manager.read_utem(args))
+            if local_user.work_utem:
+                local_user.origin_utem_id = local_user.work_utem.get_token()
+    else:
+       local_user.work_utem = UContract()
 
-    if args == None: ## create(add) 
-        logging.info(f'create contract\n')
+    if local_user.work_utem:
+        def_context.update(local_user.work_utem.to_dict())
+        def_context.update({"saved": local_user.work_utem.is_signed()})
 
-        def_context.update({"context": [{"name": local_user.root_utem.get_title(), 'link': local_user.root_utem.get_token()}]
-                            })
+    def_context.update({"form": form,
+                        "formset": formset,
+                        "local_user": local_user.nickname
+                        })
 
+    if local_user.work_utem.get_state() == TEMPLATE_UTEM:
+        def_context.update({"root": local_user.root_utem.get_title()})
+    else:
+        parent = local_user.keep_manager.read_utem(local_user.work_utem.get_parent())
+        if not parent:
+            def_context.update({"root": local_user.root_utem.get_title()})
+        else:
+            def_context.update({"context": parent.get_title(), "context_link": parent.make_link()})
 
-    else:  ## read & edit event
-        utem_type, utem_id = parse_link(args)
-        logging.info(f'get contract {utem_type}, {utem_id}\n')
-
+ 
+    logging.info(f"Contract CRUD context {def_context} \n")
     
     return render(request, "contract.html", context=def_context)
 

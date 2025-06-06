@@ -180,53 +180,34 @@
             font-weight: 600;
             font-size: 1.1rem;
         }
-        
-
 
     </style>
 {% endblock %}
 
 {% block workplace %}
-<form method="POST" id="dataid">
+    <form method="POST" id="dataid">
     {% csrf_token %}
+              
+        <div class="speed-bar">
+            <a href="/user/" class="speed-bar-btn speed-bar-link">Back</a>
+            <div>
 
-    {{form}}
+                <button type="submit" class="speed-bar-btn" name="sendto" value="sendto">Send to dealer</button>
+                <button type="submit" class="speed-bar-btn" name="sendback" value="sendback">Send back</button>
+                <button type="submit" class="speed-bar-btn" name="sign" value="sign">Sign</button>
 
-    {{ formset.management_form }}
+                {% if root %}
+                    <button type="submit" class="speed-bar-btn" name="add" value="add">Add to {{root}} </button>
+                {%endif%}
+                <button type="submit" class="speed-bar-btn" name="save" value="save">Save</button>
+                {% if saved %}
+                    <button type="submit" class="speed-bar-btn" name="delete" value="delete"  onclick="return confirm('Are you sure?')">Delete</button>
+                {% endif %}
+            </div> 
+        </div>
 
-  <table id="event-table">
-    {% for form in formset %}
-      <tr class="form-row">
-        {% for field in form.visible_fields %}
-          <td>{{ field }}</td>
-        {% endfor %}
-        <td><button type="button" class="delete-row">Удалить</button></td>
-      </tr>
-    {% endfor %}
-  </table>
-
-  <button type="button" id="add-row">Добавить событие</button>
-  <button type="submit">Сохранить</button>
-
-    <div class="speed-bar">
-        <a href="/user/" class="speed-bar-btn speed-bar-back">Back</a>
-        <div>
-            <button type="submit" class="speed-bar-btn" name="add" value="add">Add</button>
-            <button type="submit" class="speed-bar-btn" name="save" value="save">Save as template</button> <!-- {'name': value} will append to request.POST -->
-            <button type="submit" class="speed-bar-btn" name="sendto" value="sendto">Send to dealer</button>
-            <button type="submit" class="speed-bar-btn" name="sendback" value="sendback">Send back</button>
-            <button type="submit" class="speed-bar-btn" name="sign" value="sign">Sign</button>
-
-            {% if name %}
-                <button type="submit" class="speed-bar-btn" name="delete" value="delete"  onclick="return confirm('Are you sure?')">Delete</button>
-            {% endif %}
-
-        </div> 
-    </div>
-
-
-    <div class="cont-container">
-        <div class="form-row">
+        <div class="cont-container">
+            <div class="form-row">
             <div class="form-col">
                 <div class="form-group">
                     <label for="context_name">Context</label>
@@ -360,28 +341,48 @@
             </div>
     </div>
 
+
+    {{form}}
+
+    {{ formset.management_form }}
+
+    <table id="event-table">
+        {% for form in formset %}
+            <tr class="form-row">
+                {% for field in form.visible_fields %}
+                     <td>{{ field }}</td>
+                {% endfor %}
+                
+                <td><button type="button" class="delete-row">Удалить</button></td>
+            </tr>
+        {% endfor %}
+    </table>
+
+  <button type="button" id="add-row">Добавить событие</button>
+  <button type="submit">Сохранить</button>
+
 </form>
 {% endblock %}
 
 {% block JavaScript %}
     {{ block.super }}
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const addRowButton = document.getElementById('add-row');
-    const table = document.getElementById('event-table');
-    const totalForms = document.getElementById('id_form-TOTAL_FORMS');
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const addRowButton = document.getElementById('add-row');
+            const table = document.getElementById('event-table');
+            const totalForms = document.getElementById('id_form-TOTAL_FORMS');
 
-    addRowButton.addEventListener('click', function () {
-        const currentFormCount = parseInt(totalForms.value);
-        const newRow = table.querySelector('.form-row').cloneNode(true);
+            addRowButton.addEventListener('click', function () {
+                const currentFormCount = parseInt(totalForms.value);
+                const newRow = table.querySelector('.form-row').cloneNode(true);
 
-        newRow.querySelectorAll('input, select').forEach(function (input) {
-            const name = input.name.replace(/form-\d+-/, `form-${currentFormCount}-`);
-            const id = `id_${name}`;
-            input.name = name;
-            input.id = id;
-            if (input.type !== 'hidden') input.value = '';
-        });
+                newRow.querySelectorAll('input, select').forEach(function (input) {
+                    const name = input.name.replace(/form-\d+-/, `form-${currentFormCount}-`);
+                    const id = `id_${name}`;
+                    input.name = name;
+                    input.id = id;
+                    if (input.type !== 'hidden') input.value = '';
+                });
 
         table.appendChild(newRow);
         totalForms.value = currentFormCount + 1;

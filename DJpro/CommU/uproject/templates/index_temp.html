@@ -8,57 +8,12 @@
 
 {% block style %}
   {{block.super}}
-
-  /*
-    <style>
-      .speed-bar{
-          display: flex;
-          flex-direction: row;
-          margin: 0;
-          padding: 0;
-          justify-content: space-between;
-          background-color: white;
-          border-radius: 5px;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      }
-
-      .speed-bar-btn {
-          padding: 10px 20px;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-          font-size: 16px;
-          font-weight: 600;
-          background-color:  #3498db;
-          transition: background-color 0.3s;
-          color: white;
-      }
-
-      .speed-bar-btn:hover {
-        opacity: 0.9;
-      }      
-
-      .speed-bar-back {
-        position: sticky;
-        left: 0;
-      }
-
-      .speed-bar-back a{
-            text-decoration: none;
-            color: white;
-      }
-
-    </style>
-*/
-
-
-
 {% endblock %}
 
 {% block workplace %}
 
     <div class="speed-bar">
-        <a href="/user/" class="speed-bar-btn speed-bar-back">Back</a>
+        <a href="/user/" class="speed-bar-btn speed-bar-link">Back</a>
         <div>
             <button type="submit" class="speed-bar-btn">Save</button>
             <button type="submit" class="speed-bar-btn">Delete</button>

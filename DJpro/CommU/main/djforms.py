@@ -105,9 +105,12 @@ EVENT_TYPE_CHOICES = [
 ]
 
 class ContractEventForm(forms.Form):
+    '''
+        Table row
+    '''
     date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     name = forms.CharField(max_length=100)
     amount = forms.DecimalField(max_digits=10, decimal_places=2)
     event_type = forms.ChoiceField(choices=EVENT_TYPE_CHOICES)
 
-ContractEventFormSet = formset_factory(ContractEventForm, extra=3, can_delete=True)
+ContractEventFormSet = formset_factory(ContractEventForm, extra=2, can_delete=True)
