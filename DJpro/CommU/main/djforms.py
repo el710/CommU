@@ -42,6 +42,7 @@ class SkillForm(forms.Form):
     '''
     name = forms.CharField(label="Name:", max_length=100,  required=True)
     description = forms.CharField(label="Description:", max_length=300,widget=forms.Textarea, required=False)
+    amount = forms.DecimalField(max_digits=100, decimal_places=2)
     public = forms.BooleanField(label="Public", required=False)
 
 class EventForm(forms.Form):
@@ -92,11 +93,11 @@ class ContractForm(forms.Form):
     '''
         Form of Utem-Contract's parameters
     '''
-    context_root = forms.ChoiceField(choices=[("Life","Life")])
+
     contract_name = forms.CharField(label="Name:", max_length=100,  required=True)
-    contract_dealer = forms.CharField(label="Dealer:", max_length=100,  required=False)
-    contract_description = forms.CharField(label="Description:", max_length=300, widget=forms.Textarea, required=False)
-    public = forms.BooleanField(label="Public", required=False)
+    contract_dealer = forms.CharField(label="Dealer:", max_length=100)
+    contract_description = forms.CharField(label="Description:", max_length=300, widget=forms.Textarea)
+    public = forms.BooleanField(label="Public")
 
 
 EVENT_TYPE_CHOICES = [

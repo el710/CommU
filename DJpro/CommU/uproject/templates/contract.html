@@ -22,16 +22,6 @@
             --success-color: #2ecc71;
         }
    
-        /* .cont-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            /*padding: 0;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-        } */
         
 
         .form-group {
@@ -48,26 +38,7 @@
             flex: 1;
         }
         
-        /* label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--dark-color);
-        } */
-        
-        input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-            transition: border 0.3s;
-        }
-        
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--primary-color);
-            outline: none;
-        }
+
         
         .events-section {
             margin-top: 30px;
@@ -181,6 +152,12 @@
             font-size: 1.1rem;
         }
 
+        input[type="checkbox"] {
+            width: auto;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
     </style>
 {% endblock %}
 
@@ -192,7 +169,7 @@
             <a href="/user/" class="speed-bar-btn speed-bar-link">Back</a>
             <div>
 
-                <button type="submit" class="speed-bar-btn" name="sendto" value="sendto">Send to dealer</button>
+
                 <button type="submit" class="speed-bar-btn" name="sendback" value="sendback">Send back</button>
                 <button type="submit" class="speed-bar-btn" name="sign" value="sign">Sign</button>
 
@@ -232,38 +209,37 @@
                 </div>
             </div>
 
-            <div class="form-row">
-                <div class="form-col">
-
-                </div>
-                <div class="form-col">
-                    <div class="form-group">
-                        <label for="contract-dealer">Dealer:</label>
-                        <input type="text" id="contract-dealer" name="contract_dealer" placeholder="Dealer" value="">
-                    </div>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-col">
-                    <div class="form-group">
-                        <label>Status: Template (offer / agreement / deal / closed)</label>
-                    </div>
-                </div>
-                <div class="form-col">
-                    <input type="checkbox" class="check" id="public" name="public" checked>    
-                    <label>Public</label>
-                </div>          
-            </div>            
-            
             <div class="form-group">
                 <label for="contract-description">Description</label>
                 <textarea id="contract-description" name="contract_description" rows="3" placeholder="Brief description of the contract terms"></textarea>
             </div>
 
+            <div class="form-row">
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="contract-dealer">Dealer</label>
+                        <input type="text" id="contract-dealer" name="contract_dealer" placeholder="Dealer" value="">
+                    </div>
+                </div>
+                <div class="form-col">
+                    <div class="form-group">
+                        <label for="sendto">Exchange</label>
+                      
+                            <button type="submit" class="speed-bar-btn" name="sendto" value="sendto">Send to dealer</button>
+                      
+                    </div>    
+                </div>
+            </div>
+           
+            
+            <label>Status: Template (offer / agreement / deal / closed)</label>
+                     
+            <label><input type="checkbox" name="public" {% if public == True %} checked {%endif%} >Public skill</label>
+
             
             <div class="events-section">
                 <div class="events-header">
-                    <label for="party1-name">Your Events:</label>
+                    <label for="party1-name">Events</label>
                     <button type="button" class="btn btn-primary" id="change-role">Change role</button>
                     <button type="button" class="btn btn-primary" id="add-event">Add Event</button>
                 </div>

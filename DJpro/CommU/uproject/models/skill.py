@@ -19,6 +19,7 @@ class USkill(UObject):
     def __init__(self, name:str=None, description=None, resources=None, goal=None):
         super().__init__(name)
         self.description = description
+        self.amount = 0
         self.event = None
 
       

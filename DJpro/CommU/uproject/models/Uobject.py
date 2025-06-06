@@ -41,6 +41,11 @@ class UObject(Persistable):
         for key, value in kwargs.items():
             if hasattr(self, key):
                 setattr(self, key, datetime.fromisoformat(value) if key == "_create_datetime" else value)
+                try:
+                    setattr(self, key, int(value) if key == "amount" else value)
+                except:
+                    setattr(self, key, 0)
+
 
     def sign(self, user):
         self.author = user.commu_id
@@ -77,6 +82,9 @@ class UObject(Persistable):
         data = self.__dict__.copy()
         if isinstance(data.get("_create_datetime"), datetime):
             data["_create_datetime"] = data["_create_datetime"].isoformat()
+        if hasattr(self, "amount"):
+            if not isinstance(data.get("amount"), str):
+                data["amount"] = str(data["amount"])
         return data
 
     def from_dict(self, data: dict):

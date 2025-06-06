@@ -211,8 +211,8 @@
       }      
 
       .speed-bar-link {
-            position: sticky;
-            left: 0;
+             /* position: sticky; */
+            /* left: 0; */
             text-decoration: none;
             color: white;
       }
@@ -248,7 +248,21 @@
         font-weight: 600;
         color: var(--dark-color);
     }
-    
+
+    input, select, textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+        transition: border 0.3s;
+    }
+        
+    input:focus, select:focus, textarea:focus {
+        border-color: var(--primary-color);
+        outline: none;
+    }
+
 </style>
 {% endblock %}
 

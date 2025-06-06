@@ -511,7 +511,7 @@ def crud_contract(request, args=None):
                 def_context.update({"context": parent.get_title(), "context_link": parent.make_link()})
     else:
         def_context.update({"root": local_user.root_utem.get_title()})
-        
+
     def_context.update({"form": form,
                         "formset": formset,
                         "local_user": local_user.nickname
