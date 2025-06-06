@@ -22,16 +22,16 @@
             --success-color: #2ecc71;
         }
    
-        .cont-container {
+        /* .cont-container {
             max-width: 1000px;
             margin: 0 auto;
-            /*padding: 0;*/
+            /*padding: 0;
             background-color: white;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 30px;
-        }
+        } */
         
 
         .form-group {
@@ -48,12 +48,12 @@
             flex: 1;
         }
         
-        label {
+        /* label {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
             color: var(--dark-color);
-        }
+        } */
         
         input, select, textarea {
             width: 100%;
@@ -196,9 +196,6 @@
                 <button type="submit" class="speed-bar-btn" name="sendback" value="sendback">Send back</button>
                 <button type="submit" class="speed-bar-btn" name="sign" value="sign">Sign</button>
 
-                {% if root %}
-                    <button type="submit" class="speed-bar-btn" name="add" value="add">Add to {{root}} </button>
-                {%endif%}
                 <button type="submit" class="speed-bar-btn" name="save" value="save">Save</button>
                 {% if saved %}
                     <button type="submit" class="speed-bar-btn" name="delete" value="delete"  onclick="return confirm('Are you sure?')">Delete</button>
@@ -206,27 +203,38 @@
             </div> 
         </div>
 
-        <div class="cont-container">
-            <div class="form-row">
-            <div class="form-col">
-                <div class="form-group">
-                    <label for="context_name">Context</label>
-                    <!-- <input type="text" id="context-name" name="context-name" placeholder="project" value="{{name}}"> -->
-                    <select id="context-root" name="context_root">
-                        {% for item in context %}
-                            <option value="{{item.link}}">{{item.name}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-        </div>
-
+        <div class="page-container">
             <div class="form-row">
                 <div class="form-col">
                     <div class="form-group">
                         <label for="contract-name">Contract Name</label>
                         <input type="text" id="contract-name" name="contract_name" placeholder="e.g. Loan Agreement, Service Contract" value="{{name}}" required>
                     </div>
+                </div>                
+
+                <div class="page-form-col">
+                    <div class="page-form-group">
+                        <label for="root-context">Context</label>
+                        {% if context %}
+                            {%if context_link %}
+                                <a href="{{context_link}}" class="speed-bar-btn speed-bar-link" name="root-context">
+                            {% else %}
+                                <a href="/" class="speed-bar-btn speed-bar-link" name="root-context">
+                            {% endif %}
+                            {{context}} </a>
+                        {% else %}
+                            {% if root %}
+                                <button type="submit" class="speed-bar-btn" name="add" value="add">Add to {{root}} </button>
+                            {% endif %}
+                        {% endif %}
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-col">
+
                 </div>
                 <div class="form-col">
                     <div class="form-group">

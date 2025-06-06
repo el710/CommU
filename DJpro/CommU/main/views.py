@@ -332,26 +332,24 @@ def crud_skill(request, args=None):
             if local_user.work_utem:
                 local_user.origin_utem_id = local_user.work_utem.get_token()
 
-    else:
-       local_user.work_utem = USkill()
-    
     if local_user.work_utem:
         def_context.update(local_user.work_utem.to_dict())
         def_context.update({"saved": local_user.work_utem.is_signed()})
-    
+
+        if local_user.work_utem.get_state() == TEMPLATE_UTEM:
+            def_context.update({"root": local_user.root_utem.get_title()})
+        else:
+            parent = local_user.keep_manager.read_utem(local_user.work_utem.get_parent())
+            if not parent:
+                def_context.update({"root": local_user.root_utem.get_title()})
+            else:
+                def_context.update({"context": parent.get_title(), "context_link": parent.make_link()})
+    else:
+        def_context.update({"root": local_user.root_utem.get_title()})
+
     def_context.update({"form": form,
                         "local_user": local_user.nickname
                         })
-    
-    if local_user.work_utem.get_state() == TEMPLATE_UTEM:
-        def_context.update({"root": local_user.root_utem.get_title()})
-    else:
-        parent = local_user.keep_manager.read_utem(local_user.work_utem.get_parent())
-        if not parent:
-            def_context.update({"root": local_user.root_utem.get_title()})
-        else:
-            def_context.update({"context": parent.get_title(), "context_link": parent.make_link()})
-
  
     logging.info(f"Skill CRUD context {def_context} \n")
 
@@ -490,6 +488,7 @@ def crud_contract(request, args=None):
        form = ContractForm()
        formset = ContractEventFormSet()
 
+
     if args:
         ## in case when we came from user page !!! not from event page
         if not local_user.work_utem:
@@ -497,27 +496,26 @@ def crud_contract(request, args=None):
             local_user.work_utem = copy.deepcopy(local_user.keep_manager.read_utem(args))
             if local_user.work_utem:
                 local_user.origin_utem_id = local_user.work_utem.get_token()
-    else:
-       local_user.work_utem = UContract()
 
     if local_user.work_utem:
         def_context.update(local_user.work_utem.to_dict())
         def_context.update({"saved": local_user.work_utem.is_signed()})
 
+        if local_user.work_utem.get_state() == TEMPLATE_UTEM:
+            def_context.update({"root": local_user.root_utem.get_title()})
+        else:
+            parent = local_user.keep_manager.read_utem(local_user.work_utem.get_parent())
+            if not parent:
+                def_context.update({"root": local_user.root_utem.get_title()})
+            else:
+                def_context.update({"context": parent.get_title(), "context_link": parent.make_link()})
+    else:
+        def_context.update({"root": local_user.root_utem.get_title()})
+        
     def_context.update({"form": form,
                         "formset": formset,
                         "local_user": local_user.nickname
                         })
-
-    if local_user.work_utem.get_state() == TEMPLATE_UTEM:
-        def_context.update({"root": local_user.root_utem.get_title()})
-    else:
-        parent = local_user.keep_manager.read_utem(local_user.work_utem.get_parent())
-        if not parent:
-            def_context.update({"root": local_user.root_utem.get_title()})
-        else:
-            def_context.update({"context": parent.get_title(), "context_link": parent.make_link()})
-
  
     logging.info(f"Contract CRUD context {def_context} \n")
     
