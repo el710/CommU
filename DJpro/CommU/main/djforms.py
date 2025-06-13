@@ -101,17 +101,17 @@ class ContractForm(forms.Form):
 
 
 EVENT_TYPE_CHOICES = [
-    ('debit', 'Дебет'),
-    ('credit', 'Кредит'),
+    ('debit', 'Debit'),
+    ('credit', 'Credit'),
 ]
 
 class ContractEventForm(forms.Form):
     '''
         Table row
     '''
-    date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
-    name = forms.CharField(max_length=100)
-    amount = forms.DecimalField(max_digits=10, decimal_places=2)
+    event_date = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    event_name = forms.CharField(max_length=100)
+    event_amount = forms.DecimalField(max_digits=10, decimal_places=2)
     event_type = forms.ChoiceField(choices=EVENT_TYPE_CHOICES)
 
-ContractEventFormSet = formset_factory(ContractEventForm, extra=2, can_delete=True)
+ContractEventFormSet = formset_factory(ContractEventForm, extra=0, can_delete=True)

@@ -6,6 +6,10 @@
 {% endblock %}
 
 {% block application %}
+    {% if not context %}
+        Template
+    {%endif%}
+
     {% if name %}
         Skill "{{name}}"
     {% else %}
@@ -60,21 +64,15 @@
 
                 <div class="page-form-col">
                     <div class="page-form-group">
-                        <label for="root-context">Context</label>
-                        {% if context %}
-                            <div class="link-row">
-                                {%if context_link %}
-                                    <a href="{{context_link}}" class="speed-bar-btn speed-bar-link" name="root-context">
-                                {% else %}
-                                    <a href="/" class="speed-bar-btn speed-bar-link" name="root-context">
-                                {% endif %}
-                                {{context}} </a>
-                            </div>
-                        {% else %}
-                            {% if root %}
-                                <button type="submit" class="speed-bar-btn" name="add" value="add">Add to {{root}} </button>
-                            {% endif %}
-                        {% endif %}
+
+                        <label for="event">Event</label>
+                        <button type="submit" class="speed-bar-btn" name="event" value="event">
+                            {% if event %}
+                                {{event.event_string}}
+                            {% else %}
+                                Add Event
+                            {%endif%}
+                        </button>
                         
                     </div>
                 </div>
@@ -94,19 +92,27 @@
                 </div>
                 <div class="page-form-col">
                     <div class="page-form-group">
-                        <label for="event">Event</label>
-                        <button type="submit" class="speed-bar-btn" name="event" value="event">
-                            {% if event %}
-                                {{event.event_string}}
-                            {% else %}
-                                Add Event
-                            {%endif%}
-                        </button>
+                        <label for="root-context">Context</label>
+                        {% if context %}
+                            <div>
+                                {%if context_link %}
+                                    <a href="{{context_link}}" class="speed-bar-btn speed-bar-link" name="root-context">
+                                {% else %}
+                                    <a href="/" class="speed-bar-btn speed-bar-link" name="root-context">
+                                {% endif %}
+                                {{context}} </a>
+                                <button type="submit" class="speed-bar-btn" name="savetemp" value="savetemp">Save as template</button>
+                            </div>
+                        {% else %}
+                            {% if root %}
+                                <button type="submit" class="speed-bar-btn" name="add" value="add">Add to {{root}} </button>
+                            {% endif %}
+                        {% endif %}
                     </div>
                 </div>
             </div>
 
-            <label><input type="checkbox" name="public" {% if public == True %} checked {%endif%} >Public skill</label>
+            <label><input type="checkbox" name="public" {% if public == True %} checked {%endif%} >Public - share i twith humans</label>
 
         </div> <!-- page-container -->        
     </form> <!-- post -->

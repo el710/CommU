@@ -6,7 +6,16 @@
 {% endblock %}
 
 {% block application %}
-    Setup an agreement between two people with credit & debit events
+    {% if name %}
+        {% if not context %}
+            Template
+        {%endif%}    
+        Contract {{name}}
+    {% else %}
+        Setup an agreement between two people with credit & debit events    
+    {%endif%}
+
+    
 {% endblock %}
 
 {% block style %}
@@ -27,6 +36,7 @@
         .form-group {
             margin-bottom: 20px;
         }
+        
         
         .form-row {
             display: flex;
@@ -169,7 +179,7 @@
             <a href="/user/" class="speed-bar-btn speed-bar-link">Back</a>
             <div>
 
-
+                <button type="submit" class="speed-bar-btn" name="sendto" value="sendto">Send to dealer</button>
                 <button type="submit" class="speed-bar-btn" name="sendback" value="sendback">Send back</button>
                 <button type="submit" class="speed-bar-btn" name="sign" value="sign">Sign</button>
 
@@ -181,14 +191,29 @@
         </div>
 
         <div class="page-container">
-            <div class="form-row">
-                <div class="form-col">
-                    <div class="form-group">
+            <div class="page-form-row">
+                <div class="page-form-col">
+                    <div class="page-form-group">
                         <label for="contract-name">Contract Name</label>
                         <input type="text" id="contract-name" name="contract_name" placeholder="e.g. Loan Agreement, Service Contract" value="{{name}}" required>
                     </div>
                 </div>                
 
+                <div class="page-form-col">
+                    <div class="page-form-group">
+                        <label for="contract-dealer">Dealer</label>
+                        <input type="text" id="contract-dealer" name="contract_dealer" placeholder="Dealer" value="">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="page-form-group">
+                <label for="contract-description">Description</label>
+                <textarea id="contract-description" name="contract_description" rows="3" placeholder="Brief description of the contract terms"></textarea>
+            </div>
+
+            <div class="page-form-row">
                 <div class="page-form-col">
                     <div class="page-form-group">
                         <label for="root-context">Context</label>
@@ -204,146 +229,72 @@
                                 <button type="submit" class="speed-bar-btn" name="add" value="add">Add to {{root}} </button>
                             {% endif %}
                         {% endif %}
-                        
+                    </div> 
+                </div>
+                <div class="page-form-col">
+                    <div>
+                        <label>Status: {% if status %} {{status}} {% else %} New {% endif %}
+
+                        </label>
+                        <label><input type="checkbox" name="public" {% if public == True %} checked {%endif%} >Public - share it with humans</label>
                     </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label for="contract-description">Description</label>
-                <textarea id="contract-description" name="contract_description" rows="3" placeholder="Brief description of the contract terms"></textarea>
-            </div>
-
-            <div class="form-row">
-                <div class="form-col">
-                    <div class="form-group">
-                        <label for="contract-dealer">Dealer</label>
-                        <input type="text" id="contract-dealer" name="contract_dealer" placeholder="Dealer" value="">
-                    </div>
-                </div>
-                <div class="form-col">
-                    <div class="form-group">
-                        <label for="sendto">Exchange</label>
-                      
-                            <button type="submit" class="speed-bar-btn" name="sendto" value="sendto">Send to dealer</button>
-                      
-                    </div>    
-                </div>
             </div>
            
             
-            <label>Status: Template (offer / agreement / deal / closed)</label>
-                     
-            <label><input type="checkbox" name="public" {% if public == True %} checked {%endif%} >Public skill</label>
+
 
             
             <div class="events-section">
                 <div class="events-header">
-                    <label for="party1-name">Events</label>
+                    <label>Events</label>
+                    
                     <button type="button" class="btn btn-primary" id="change-role">Change role</button>
-                    <button type="button" class="btn btn-primary" id="add-event">Add Event</button>
+                    <button type="button" class="btn btn-primary" id="add-row">Add Event</button>
                 </div>
 
-                <table>
+                <table id="event-table" border="1">
                     <thead>
-                        <tr>
-                            <th>Credit (give):</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                            <th>Debet (get):</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                        <tr>
-                            <th>Date</th>
-                            <th>Action</th>
-                            <th>Amount</th>
-                            <th>State</th>
-                            <th></th>
-                            <th>Date</th>
-                            <th>Action</th>
-                            <th>Amount</th>
-                            <th>State</th>
-                        </tr>
+                        <th>Date</th>
+                        <th>Action</th>
+                        <th>Amount</th>
+                        <th>Type</th>
+                        <th></th>
                     </thead>
                     <tbody id="events-table">
                         <!-- Events will be added here dynamically -->
+
+                    <tr class="table-row">
+                        <td><input type="date" name="event_date" value="2000-01-01" name="date" hidden></td>
+                        <td><input type="text" name="event_name" value="templ" placeholder="Payment, Fee, etc." hidden></td>
+                        <td><input type="number" name="event_amount" value="0.0" placeholder="0.00" step="0.01" hidden></td>  
+                        <td>
+                            <select id="event-type" name="event_type" hidden>
+                              <option value="credit">Credit</option>
+                              <option value="debit">Debit</option>
+                            </select>
+                        </td>
+                        <td><button type="button" class="delete-row" hidden>Delete</button></td>
+                    </tr>
+                    <!-- {% for form in formset %}
+                        <tr class="table-row">
+                            {% for field in form.visible_fields %}
+                                <td>{{ field }}</td>
+                            {% endfor %}
+                            <td><button type="button" class="delete-row">Delete</button></td>
+                        </tr>
+                    {% endfor %}                     -->
                     </tbody>
                 </table>
                 
-                <div id="event-form" >
-                    <div class="event-row">
-                        <div class="form-group">
-                            <label for="event-date">Date</label>
-                            <input type="date" id="event-date">
-                        </div>
-                        <div class="form-group">
-                            <label for="event-desc">Action</label>
-                            <input type="text" id="event-desc" placeholder="Payment, Fee, etc.">
-                        </div>
-                        <div class="form-group">
-                            <label for="event-amount">Amount</label>
-                            <input type="number" id="event-amount" placeholder="0.00" step="0.01">
-                        </div>
-                        <div class="form-group">
-                            <label for="event-type">Type</label>
-                            <select id="event-type">
-                                <option value="credit">Credit</option>
-                                <option value="debit">Debit</option>
-                            </select>
-                        </div>
-                        <!--
-                        <div class="form-group">
-                            <label for="event-party">Party</label>
-                            <select id="event-party">
-                                <option value="party1">Party 1</option>
-                                <option value="party2">Party 2</option>
-                                <option value="both">Both</option>
-                            </select>
-                        </div>
-                        -->
-                        <button type="button" class="btn btn-success" id="save-event">Save</button>
-                    </div>
-                </div>
             </div>
 
-            <div class="summary-section">
-                <h3>Contract Summary</h3>
-                <div class="summary-item">
-                    <span>Total Credits:</span>
-                    <span id="party1-credits">$0.00</span>
-                </div>
-                <div class="summary-item">
-                    <span>Total Debits:</span>
-                    <span id="party1-debits">$0.00</span>
-                </div>
-
-
-            </div>
     </div>
 
 
-    {{form}}
-
-    {{ formset.management_form }}
-
-    <table id="event-table">
-        {% for form in formset %}
-            <tr class="form-row">
-                {% for field in form.visible_fields %}
-                     <td>{{ field }}</td>
-                {% endfor %}
-                
-                <td><button type="button" class="delete-row">Удалить</button></td>
-            </tr>
-        {% endfor %}
-    </table>
-
-  <button type="button" id="add-row">Добавить событие</button>
-  <button type="submit">Сохранить</button>
+    <!-- {{form}} -->
+    {{formset.management_form}}
 
 </form>
 {% endblock %}
@@ -351,34 +302,41 @@
 {% block JavaScript %}
     {{ block.super }}
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const addRowButton = document.getElementById('add-row');
-            const table = document.getElementById('event-table');
-            const totalForms = document.getElementById('id_form-TOTAL_FORMS');
+        document.addEventListener('DOMContentLoaded', 
+                                  function () {
+                                        const addRowButton = document.getElementById('add-row');
+                                        const table = document.getElementById('event-table');
+                                        const totalForms = document.getElementById('id_form-TOTAL_FORMS');
 
-            addRowButton.addEventListener('click', function () {
-                const currentFormCount = parseInt(totalForms.value);
-                const newRow = table.querySelector('.form-row').cloneNode(true);
+                                        addRowButton.addEventListener('click', 
+                                                                      function () {
+                                                                            const currentFormCount = parseInt(totalForms.value);
+                                                                            const newRow = table.querySelector('.table-row').cloneNode(true);
 
-                newRow.querySelectorAll('input, select').forEach(function (input) {
-                    const name = input.name.replace(/form-\d+-/, `form-${currentFormCount}-`);
-                    const id = `id_${name}`;
-                    input.name = name;
-                    input.id = id;
-                    if (input.type !== 'hidden') input.value = '';
-                });
+                                                                            newRow.querySelectorAll('input, select, button').forEach(function (input) {
+                                                                            //         const name = input.name.replace(/form-\d+-/, `form-${currentFormCount}-`);
+                                                                            //         const id = `id_${name}`;
+                                                                                    
+                                                                                    // input.value = "";
+                                                                            //         input.id = id;
+                                                                                    //  if (input.type !== 'hidden') input.value = '';
+                                                                                   
+                                                                                    input.hidden=false
 
-        table.appendChild(newRow);
-        totalForms.value = currentFormCount + 1;
-    });
+                                                                                    });
+                                                                            
+                                                                            table.appendChild(newRow);
+                                                                            totalForms.value = currentFormCount + 1;
+                                                                        }
+                                                                    );
+                                        table.addEventListener('click', 
+                                                                function (e) {
+                                                                    if (e.target.classList.contains('delete-row')) {
+                                                                        const row = e.target.closest('tr');
+                                                                        row.remove();
+                                                                    }
+                                                                });
+                                    });
 
-    table.addEventListener('click', function (e) {
-        if (e.target.classList.contains('delete-row')) {
-            const row = e.target.closest('tr');
-            row.remove();
-            // Пример упрощённый, TOTAL_FORMS нужно переустановить при удалении
-        }
-    });
-});
-</script>
+    </script>
 {% endblock %} <!-- JavaScript -->

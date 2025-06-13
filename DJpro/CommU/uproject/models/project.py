@@ -49,6 +49,9 @@ class UProject(UObject):
            
     def get_title(self):
         return f"project '{self.name}'"
+    
+    def get_file_name(self):
+        return f"{super().get_file_name()}.ptp"
 
     def add_event(self, skill_id:str):
         self.events.append(skill_id)

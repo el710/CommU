@@ -437,7 +437,7 @@ def crud_contract(request, args=None):
   
     def_context = {}
 
-    logging.info(f"request.method {request.method} \n")
+    logging.info(f"request.method {request.method} cont: {request.POST} \n")
 
     if request.method == "POST":
 
@@ -451,10 +451,13 @@ def crud_contract(request, args=None):
         logging.info(f'data: {form.cleaned_data}\n')
 
         formset = ContractEventFormSet(request.POST)
-        logging.info(f"valid form {formset.is_valid()}")
+        logging.info(f"valid formset {formset.is_valid()}\n")
+        
 
         if form.is_valid() and formset.is_valid() : ## is_valid also makes cleaned_data
-            
+
+            logging.info(f'data: {formset.cleaned_data}')
+             
             for form in formset:
                 if form.cleaned_data and not form.cleaned_data.get('DELETE', False):
                     print(form.cleaned_data)
@@ -474,7 +477,7 @@ def crud_contract(request, args=None):
             if request.POST.get('sign'):
                 logging.info(f'exit by sign\n')
 
-            logging.info(f"save contract {local_user.work_utem.to_dict()}")                   
+            # logging.info(f"save contract {local_user.work_utem.to_dict()}")                   
             return redirect('/user/')
         
         ## error POST   
@@ -500,6 +503,7 @@ def crud_contract(request, args=None):
     if local_user.work_utem:
         def_context.update(local_user.work_utem.to_dict())
         def_context.update({"saved": local_user.work_utem.is_signed()})
+        def_context.update({"status": local_user.work_utem.get_state()})
 
         if local_user.work_utem.get_state() == TEMPLATE_UTEM:
             def_context.update({"root": local_user.root_utem.get_title()})

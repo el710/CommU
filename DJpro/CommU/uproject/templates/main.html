@@ -15,7 +15,7 @@
         display: flex;
         justify-content: center;
         margin: 5px;
-        padding: auto;
+        padding-bottom: 10px;
         text-align: center;
         /*border: 2px solid #ccc;  */
     }
@@ -134,8 +134,7 @@
     <div class="user-input-container">
         <form method="post" >
             {% csrf_token %}
-            <label class="user-search-label" for="new_idea">Query: </label>
-            <input type="text" name="new_task" placeholder="Type name of skill, project or dealer..." id="new_idea">
+            <input type="text" name="new_task" placeholder="Type name for search skill, project or dealer..." id="new_idea">
         </form>
     </div>
 

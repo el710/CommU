@@ -15,7 +15,7 @@ def get_hash(data: str):
 
 class Persistable(ABC):
     @abstractmethod
-    def get_file_name(self, user:str=None) -> str: pass
+    def get_file_name(self) -> str: pass
 
     @abstractmethod
     def get_title(self) -> str: pass

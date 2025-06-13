@@ -14,7 +14,7 @@
 - multyuser
 - hosting
 
-## 2. Link menegment
+## 2. Link managment
 
 - Base of contacts (User class)
 - business communities: <partner> - <hired worker> - <customer> deals (no any cheif)
@@ -31,16 +31,18 @@ answers should correspond to laws.
 Confirm by func memebers
 Question & answers - is a passport of member
 
-## 3. Dial menegment
+- chat by telegram
+
+## 3. Dial managment
 
 - Base of skills/projects templates
 - control time, credit/debet of dial with Bases
 - base of process makets (reglaments, typical solves, technologies)
 
-## 4. Time menegment
+## 4. Time managment
 
 4.1 Planing ( S.M.A.R.T.)
-    - calendar of events (event - part of deal with someone else)
+    - calendar of events (event - part of deal with someone else) collaborate with google
     - daily event list
     - dials events
     - bases for week days
@@ -50,10 +52,11 @@ Question & answers - is a passport of member
     - alarms
     - combination plans between people
 
-## 5. Source menegment
-- money menegment
+## 5. Source managment
+- money managment
   - simple accounting with contacts
   - monetary system (e-bank)
-- staff menegment
+- staff manaagment
   - stock in/out
   - synchronize buys/exchange/throw out
+  - market OZON
