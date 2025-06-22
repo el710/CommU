@@ -56,7 +56,7 @@ def run_thread_agent(target_function, *args, add_link=False):
         thread.start()
     except Exception as exc:
         logging.info(f"exception at start - {exc}")
-        raise Exception
+        raise 
     
     if add_link:
         return in_queue, out_queue
@@ -78,7 +78,7 @@ if __name__ == '__main__':
     # telegram_link = run_thread_agent(telebot_start, add_link=True)
     # logging.info(f"got telegram bot link {telegram_link}")
 
-
+    
     # run_thread_agent(start_base_dispatcher, *telegram_link)
 
     args = ['manage.py', 'runserver']

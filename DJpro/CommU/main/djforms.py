@@ -18,12 +18,12 @@ class SignUpForm(forms.Form):
         NAME = forms.CharField(...)
     '''
 
-    username = forms.CharField(label="Name:", max_length=100)
-    # user_password = forms.CharField(label="Password:", widget=forms.PasswordInput)
-    # user_repassword = forms.CharField(label="Repeat password:", widget=forms.PasswordInput)
+    username = forms.CharField(label="Name:", max_length=100,  required=True)
+    user_password = forms.CharField(label="Password:", widget=forms.PasswordInput)
+    user_repassword = forms.CharField(label="Repeat password:", widget=forms.PasswordInput)
     # email = forms.EmailField(label="E-mail:")
     # message = forms.CharField(label="Message:", widget=forms.Textarea)
-    # box = forms.BooleanField(label="Premium", required=False)
+    box = forms.BooleanField(label="Agree", required=False)
 
     '''
         this template Django will try to find in ***.html

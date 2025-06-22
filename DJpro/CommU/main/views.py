@@ -42,10 +42,14 @@ def show_index(request):
     return render(request, 'index.html', context = def_context)
 
 def signup(request):
-    global local_user
     """
         This function shows signup Web page
     """
+    global local_user
+
+    name = None
+    def_context = {} 
+
     logging.info(f"\nsignup(): method {request.method} ")
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -55,51 +59,58 @@ def signup(request):
 
         if form.is_valid(): ## is_valid also makes cleaned_data
             name = form.cleaned_data['username']
-            # password = request.POST.get("user_password")
-            # repassword = request.POST.get("user_repassword")
-            # email = form.cleaned_data['email']
+            password = request.POST.get("user_password")
+            repassword = request.POST.get("user_repassword")
+            law_box = request.POST.get("box")
 
             '''
-                In base we looking for user by hash - no passwords
-
+                search for such user by hash - no string passwords
             '''
-            # if password == repassword:
-            ## if no such user
-            local_user = UUser(name)
-
-            '''
-                Save In base user by hash - no passwords
-            '''            
-            logging.info(f'new user: {local_user.nickname}')
-
-            # ## hard storage (file | DB)
-            # local_user.init_storage(FileStorage(WORK_PATH, f"{local_user.nickname}"))
-
-            # ## RAM storage for all utems
-            # local_user.init_utem_base(UtemBase())
-
-            ## base manager
-            local_user.init_keep_manager( KeepManager( FileStorage(WORK_PATH, f"{local_user.nickname}") ) )
-
-            ## basic project Life for User
-            root=UProject(name="Life", starter_user_id=local_user.commu_id, state=ROOT_PROJECT, my_token=local_user.commu_id)
-            root.sign(local_user)
-            ## root of user tree
-            local_user.root_utem = root
-
-            # local_user.work_utem = root
-            logging.info(f'new user: root - {local_user.root_utem} work - {local_user.work_utem}')
-            local_user.keep_manager.save_utem(root)
-            #local_user.utem_tree.add(root.get_token(), root.get_classname)
+            # user_exists = local_user.keep_manager.find_by_name(name)
+            # logging.info(f"signup(): user exists {user_exists} ")
+            user_exists = None
             
-            return redirect('/user/') 
-            # else:
-            #     def_context.update({'passstate': "... passwords is not equal. Try again."})
+            if not user_exists:
+                if password == repassword and law_box:
+                    local_user = UUser(name)
+                    logging.info(f'new user: {local_user.nickname}')
+
+                    # ## hard storage (file | DB)
+                    # local_user.init_storage(FileStorage(WORK_PATH, f"{local_user.nickname}"))
+
+                    # ## RAM storage for all utems
+                    # local_user.init_utem_base(UtemBase())
+
+                    ## base manager
+                    local_user.init_keep_manager( KeepManager( FileStorage(WORK_PATH, f"{local_user.nickname}") ) )
+
+                    ## basic project Life for User
+                    root=UProject(name="Life", starter_user_id=local_user.commu_id, state=ROOT_PROJECT, my_token=local_user.commu_id)
+                    root.sign(local_user)
+                    ## root of user tree
+                    local_user.root_utem = root
+
+                    # local_user.work_utem = root
+                    logging.info(f'new user: root - {local_user.root_utem} work - {local_user.work_utem}')
+                    local_user.keep_manager.save_utem(root)
+                    
+                    return redirect('/user/') 
+                else:
+                    if not law_box:
+                        def_context.update({'laws_state': "Be sure, you have read terms & laws!!!"})
+                    if password != repassword:
+                        def_context.update({'pass_state': "Be careful! Passwords is not equal. Try again."})
+            else:
+                def_context.update({'user_state': f'Sorry, user with ID: "{name}" already exists. Choose other ID.'})
+            
+        if name: def_context.update({'username': name})
+        form = SignUpForm(request)
 
     else:
         form = SignUpForm()  ## form is a html-template that django try to find in html page by name
         
-    def_context = {'form': form}
+    def_context.update({'form': form})
+
     return render(request, 'signup.html', context=def_context )
 
 def show_user(request, args=None):

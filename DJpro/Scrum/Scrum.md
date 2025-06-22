@@ -37,9 +37,12 @@ Question & answers - is a passport of member
 
 - Base of skills/projects templates
 - control time, credit/debet of dial with Bases
+- schedule of credit/debet
 - base of process makets (reglaments, typical solves, technologies)
 
 ## 4. Time managment
+
+- local timers threads on devices (PC, mobile, clock)
 
 4.1 Planing ( S.M.A.R.T.)
     - calendar of events (event - part of deal with someone else) collaborate with google
