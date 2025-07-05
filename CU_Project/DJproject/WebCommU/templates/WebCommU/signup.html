@@ -1,0 +1,98 @@
+{% extends "index.html" %}
+{% load static %}
+
+{% block style %}
+    {{ block.super}}
+
+    <style>
+      
+        .signup-warning {
+            color: red;
+            font-style: italic;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .result-button {
+            width: 60%;
+        }
+
+        input[type="checkbox"] {
+            width: auto;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+
+
+    </style>
+{% endblock %}
+
+{% block application %}
+    Sign up Friend and come in...
+{% endblock %}
+
+{% block authorization %}
+    <div class="auth-buttons">
+        <a href="/login/" class="index-btn index-btn-login">Sign In</a>
+    </div>
+{% endblock %} <!-- authorization -->
+
+{% block workplace %}
+    <div class="speed-bar">
+        <a href="/" class="speed-bar-btn speed-bar-link">Back</a>
+    </div>
+
+<form method="post" >
+   {% csrf_token %}
+       
+    <div class="page-container">
+        <div class="page-form-row">
+            <div class="page-form-col">
+                <div class="signup-warning"> {{ user_state }}  </div>
+                <div class="page-form-group">
+                    <label for="name">Your ID</label>
+                    <input type="text" name="username" maxlength="100" id="id_name" {% if username %} value="{{username}}" {%endif%} placeholder="use only letters, numbers, and @/./+/-/_ characters" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-form-row">
+            <div class="page-form-col">
+                <div class="page-form-group">
+                    <label for="id_pass">Password</label>
+                    <input type="password" name="password1" minlength="8" id="id_pass" placeholder="type your password at least in 8 characters" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-form-row">
+            <div class="page-form-col">
+                <div class="signup-warning"> {{ pass_state }}  </div>
+                <div class="page-form-group">
+                    <label for="id_repass">Repeat password</label>
+                    <input type="password" name="password2" minlength="8" id="id_repass" placeholder="type the same password" required>
+                </div>
+            </div>
+        </div>
+                
+        <div class="page-form-row">
+            <div class="page-form-col">
+                <div class="signup-warning"><br> {{ laws_state }}</div>
+                <label><input type="checkbox" name="box" required>I agree with <a href="/info/terms">terms</a> and I do accept the <a href="/info/laws">laws</a></label>
+            </div>
+        </div>
+
+        <div class="signup-warning"> {{ form_errors }}  </div>
+
+        <center>
+            <button type="submit" class="speed-bar-btn result-button">Sign up</button>
+        </center>
+        
+
+    </div> <!-- page-container -->
+
+</form>
+
+
+{% endblock %} <!-- workplace -->
