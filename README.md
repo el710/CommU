@@ -35,21 +35,15 @@ Human! Protect the Flame of Prometheus from the darkness of ignorance.
   git pull --set-upstream origin main
    ```
 
-   1.7 Setup Telegram token in 'id_bot.py'
+   1.5 Open directory 'CU_Project' in VSCode.
 
-   ```text
-      tel_token = "xxxxxxxxxxx:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-   ```
-
-   1.5 Open directory 'DJPRO' in VSCode.
-
-   1.6 Choose python interpreter: 'p-CommU\DJpro\.venv\Scripts\python.exe'
+   1.6 Choose python interpreter: 'p-CommU\CU_Project\.venv\Scripts\python.exe'
 
    ```text
     - ctrl + shift + p - python select interpreter
    ```
   
-   1.7 Start Commu.py
+   1.7 Start main.py
   
  ---
 
