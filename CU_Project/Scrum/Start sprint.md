@@ -1,5 +1,6 @@
 ### sprint 06/06 backlog
 
++ refactoring project structure
 
 - finish user authorization
   + UI signup
