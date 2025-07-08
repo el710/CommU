@@ -1,7 +1,9 @@
 ### sprint 06/06 backlog
 
 + refactoring project structure
-- delete 06_06_sprint branch
++ rename 06_06_sprint branch to main
++ delete 06_06_sprint branch
++ delete in .git/config double records about main
 
 - finish user authorization
   + UI signup
