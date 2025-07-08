@@ -1,6 +1,7 @@
 ### sprint 06/06 backlog
 
 + refactoring project structure
+- delete 06_06_sprint branch
 
 - finish user authorization
   + UI signup
