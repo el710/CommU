@@ -4,6 +4,7 @@
 + rename 06_06_sprint branch to main
 + delete 06_06_sprint branch
 + delete in .git/config double records about main
+  checkout git
 
 - finish user authorization
   + UI signup
