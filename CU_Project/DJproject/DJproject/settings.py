@@ -132,6 +132,12 @@ STATICFILES_DIRS = [ BASE_DIR/'WebCommU'/'static'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ## URL redirect
-LOGIN_REDIRECT_URL = '/' # Redirect to homepage after successful login
+LOGIN_URL = '/accounts/login/' # Where to redirect users if they try to access a login-required page
+
+# Django does not need special case of views for login
+LOGIN_REDIRECT_URL = '/user/' # Redirect to homepage after successful login
+
+## we don't need use logged_out.html redirect
 LOGOUT_REDIRECT_URL = '/' # Redirect to homepage after successful logout
-LOGIN_URL = '/login/' # Where to redirect users if they try to access a login-required page
+
+

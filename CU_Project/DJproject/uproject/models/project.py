@@ -25,7 +25,12 @@ class UProject(UObject):
         but there is always main default project - "Life" project
     """    
     def __init__(self, name=None, starter_user_id=None, state:str=TEMPLATE_UTEM, my_token:str=None):
+        
+        if not name:
+            name = "New Project"
         super().__init__(name)
+
+        self.partners = [starter_user_id]
 
         self._state = state
         ## constant token = user_id
@@ -34,24 +39,26 @@ class UProject(UObject):
         self.target = "Project's point"
         ## 'Do not" laws
         self.project_laws = {"base": "CommU laws"}
-        self.partners = [starter_user_id]
-
+        
         self.projects = [] ## list of ids
         self.contracts = []
 
         ## list of links to events(skill + time)
         self.events = []
 
-    def get_token(self):
+    @property
+    def token(self):
         if self.hard_token: return self.hard_token
         else:
-            return super().get_token()
-           
-    def get_title(self):
+            return super().token
+
+    @property     
+    def title(self):
         return f"project '{self.name}'"
     
-    def get_file_name(self):
-        return f"{super().get_file_name()}.ptp"
+    @property
+    def file_name(self):
+        return f"{super().file_name}.ptp"
 
     def add_event(self, skill_id:str):
         self.events.append(skill_id)

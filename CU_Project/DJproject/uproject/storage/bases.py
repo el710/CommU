@@ -31,9 +31,9 @@ class UtemBase():
         '''
             Create & save 
         '''
-        if self.read(utem.get_token()) == None:
-            item = {"id": utem.get_token(),
-                    "type": utem.get_classname(),
+        if self.read(utem.token) == None:
+            item = {"id": utem.token,
+                    "type": utem.classname,
                     "utem": utem,
                     }
             self._base.append(item)
@@ -55,8 +55,8 @@ class UtemBase():
     def edit(self, id_hash, new_utem):
         for item in self._base:
             if item["id"] == id_hash:
-                item["id"] = new_utem.get_token()
-                item["type"] = new_utem.get_classname()
+                item["id"] = new_utem.token
+                item["type"] = new_utem.classname
                 item["utem"] = new_utem
                 
 

@@ -11,20 +11,20 @@
 
 {% block workplace %}
     <div class="speed-bar">
-        <a href="/" class="speed-bar-btn speed-bar-link">Back</a>
-        <div>
-        <!--
-         <button type="submit" class="speed-bar-btn">Save</button>
-         <button type="submit" class="speed-bar-btn">Delete</button>
-        -->
-        </div>
+        {% if user.is_authenticated %}
+            <a href="{% url 'dashboard' %}" class="speed-bar-btn speed-bar-link">
+        {%else%}
+            <a href="{% url 'index' %}" class="speed-bar-btn speed-bar-link">
+        {% endif %}
+        Back
+        </a>
     </div>
 
     <div class="index-context">
         <section class="index-content-section">
             <ul>
-                <li>To join CommU you should accept and follow CommU <a href="/info/laws"> Laws </a></li>
-                <li>There are some <a href="/info/rules">rules</a> to use CommU</li>
+                <li>To join CommU you should accept and follow CommU <a href="{% url 'info' args='laws' %}"> Laws </a></li>
+                <li>There are some <a href="{% url 'info' args='rules' %}">rules</a> to use CommU</li>
             </ul>
         </section>
     </div>     

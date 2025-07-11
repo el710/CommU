@@ -15,10 +15,10 @@ def get_hash(data: str):
 
 class Persistable(ABC):
     @abstractmethod
-    def get_file_name(self) -> str: pass
+    def file_name(self) -> str: pass
 
     @abstractmethod
-    def get_title(self) -> str: pass
+    def title(self) -> str: pass
 
     def sign(self, user) -> None: pass
 
@@ -26,16 +26,50 @@ class Persistable(ABC):
 
 class UObject(Persistable):
     def __init__(self, name: str=None):
-        self.name = name
+        self._name = name
         self.public = False
-
-        ## closed
+        
         self.author = None
         self.geosocium = None
+
+        ## private
         self._create_datetime = None        
         self._state = TEMPLATE_UTEM
         self._parent = None
 
+
+    @property
+    def name(self):
+        return self._name
+    
+    @name.setter
+    def name(self, name):
+        self._name = name
+
+    def sign(self, user):
+        self.author = user.commu_id
+        self.geosocium = user.geosocium
+        self._create_datetime = datetime.now()
+
+    def is_signed(self):
+        if self.author and self.geosocium and self._create_datetime: return True
+        return False
+
+    @property
+    def state(self):
+        return self._state
+    
+    @state.setter
+    def state(self, state):
+        self._state = state
+
+    @property
+    def parent(self):
+        return self._parent
+
+    @parent.setter   
+    def parent(self, parent_id):
+        self._parent = parent_id
 
     def set_attributes(self, **kwargs):
         for key, value in kwargs.items():
@@ -46,37 +80,22 @@ class UObject(Persistable):
                 except:
                     setattr(self, key, 0)
 
-
-    def sign(self, user):
-        self.author = user.commu_id
-        self.geosocium = user.geosocium
-        self._create_datetime = datetime.now()
-
-    def set_state(self, state):
-        self._state = state
-    
-    def set_parent(self, parent_id):
-        self._parent = parent_id
-
-
-    def get_name(self):
-        return self.name
-    
-    def get_token(self):
+    @property
+    def token(self):
         str = f"{self.name}:{self.author}:{self._create_datetime}:{self.geosocium}"
         return f"{get_hash(str)}".lower()
     
-    def get_state(self):
-        return self._state
-    
-    def get_classname(self):
+    @property
+    def classname(self):
         return f"{self.__class__.__name__}"
 
-    def make_link(self):
-        return f"/{self.get_classname()}/{self.get_token()}".lower()
+    @property
+    def link(self):
+        return f"/{self.classname}/{self.token}".lower()
     
-    def get_file_name(self):
-        return f"{self.get_token()}".lower()
+    @property
+    def file_name(self):
+        return f"{self.token}".lower()
 
     def to_dict(self):
         data = self.__dict__.copy()
@@ -91,18 +110,13 @@ class UObject(Persistable):
         self.set_attributes(**data)
 
     def __str__(self):
-        return f"{self.get_classname()}({self.name})"
+        return f"{self.classname}({self.name})"
     
+    @property
     def info(self):
         return f"{self} staff: {vars(self)}\n"
     
-    def get_title(self):
-        return super().get_title()
 
 
-    def is_signed(self):
-        if self.author and self.geosocium and self._create_datetime: return True
-        return False
     
-    def get_parent(self):
-        return self._parent
+    

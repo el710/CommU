@@ -3,7 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 from django.shortcuts import redirect
 
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
 
 from django.contrib.auth.decorators import login_required
@@ -32,20 +32,26 @@ from datetime import datetime, timedelta
 
 WORK_PATH = os.path.join(os.getcwd(), "file_store")
 
-local_user = UUser(GUEST_USER)
-local_user.init_storage(FileStorage(WORK_PATH))
+'''
+    local_user is connection to CommU service
+    It is a global variable for all views
+'''
+# local_user = UUser(GUEST_USER)
+local_user = None
 
 
 def view_index(request):
     global local_user
 
     ## dictionary of args for HTML page
-    def_context = {}
+    def_context = {'user': request.user}
 
-    if local_user.commu_id:
-        def_context.update({"local_user": local_user.nickname})
+    if not request.user.is_authenticated:
+        ## in case we just logged out
+        local_user = None
 
     return render(request, 'index.html', context = def_context)
+
 
 def view_info(request, args=None):
     '''
@@ -53,12 +59,8 @@ def view_info(request, args=None):
         args: 'about', 'terms', 'laws', 'rules'  .html
     '''
     global local_user
-
-    ## dictionary of args for HTML page
-    def_context = {}
     
-    if local_user.commu_id:
-        def_context = {"local_user": local_user.nickname}
+    def_context = {'user': request.user}
    
     if args == 'terms':
         page = 'terms.html'
@@ -77,6 +79,7 @@ def view_signup(request):
     """
     global local_user
 
+
     name = None
     def_context = {}
 
@@ -91,21 +94,21 @@ def view_signup(request):
             user = form.save()
             login(request, user) # Log the user in immediately after registration
             
-            local_user = UUser(name)
-            logging.info(f'new user: {local_user.nickname}')
+            # local_user = UUser(name)
+            # logging.info(f'new user: {local_user.nickname}')
 
-            ## base manager
-            local_user.init_keep_manager( KeepManager( FileStorage(WORK_PATH, f"{local_user.nickname}") ) )
+            # ## base manager
+            # local_user.init_keep_manager( KeepManager( FileStorage(WORK_PATH, f"{local_user.nickname}") ) )
 
-            ## basic project Life for User
-            root=UProject(name="Life", starter_user_id=local_user.commu_id, state=ROOT_PROJECT, my_token=local_user.commu_id)
-            root.sign(local_user)
-            ## root of user tree
-            local_user.root_utem = root
+            # ## basic project Life for User
+            # root=UProject(name="Life", starter_user_id=local_user.commu_id, state=ROOT_PROJECT, my_token=local_user.commu_id)
+            # root.sign(local_user)
+            # ## root of user tree
+            # local_user.root_utem = root
 
-            # local_user.work_utem = root
-            logging.info(f'new user: root - {local_user.root_utem} work - {local_user.work_utem}')
-            local_user.keep_manager.save_utem(root)
+            # # local_user.work_utem = root
+            # logging.info(f'new user: root - {local_user.root_utem} work - {local_user.work_utem}')
+            # local_user.keep_manager.save_utem(root)
                     
             return redirect('/user/')
         else:
@@ -130,15 +133,11 @@ def view_signup(request):
     def_context.update({'form': form})
     return render(request, 'signup.html', context=def_context )
 
-def view_logout(request):
-    global local_user
-
-    logout(request)  # Log the user out
-    logging.info(f"User {local_user.nickname} logged out.")
-    local_user = UUser(GUEST_USER)
-
-    return redirect('/')
-
+@login_required
+def view_profile(request):
+    # Access the current logged-in user with request.user
+    
+    return render(request, 'profile.html', {'user': request.user})
 
 @login_required
 def view_dashboard(request, args=None):
@@ -148,12 +147,27 @@ def view_dashboard(request, args=None):
     '''
     global local_user
 
-    # logging.info(f"Start view dashboard... {local_user.commu_id}")
+    if not local_user or local_user.nickname != request.user.username:
+        ## create new user
+        logging.info(f'new user: {request.user.username}')
 
-    ## if no user
-    if not local_user.commu_id: return redirect("/")
+        local_user = UUser(request.user.username)
+        logging.info(f'new user: {local_user.nickname}')
 
-    if args == 'close': 
+        ## base manager
+        local_user.init_keep_manager( KeepManager( FileStorage(WORK_PATH, f"{local_user.nickname}") ) )
+
+        ## basic project Life for User
+        root=UProject(name="Life", starter_user_id=local_user.commu_id, state=ROOT_PROJECT, my_token=local_user.commu_id)
+        root.sign(local_user)
+        ## root of user tree
+        local_user.root_utem = root
+
+        # local_user.work_utem = root
+        logging.info(f'new user: root - {local_user.root_utem} work - {local_user.work_utem}')
+        local_user.keep_manager.save_utem(root)
+
+    if args == 'close':
         local_user.search = None
         return redirect("/user/")
 
@@ -201,65 +215,7 @@ def view_dashboard(request, args=None):
     
     logging.info(f"Context: {def_context} ")
     return render(request, 'main.html', context=def_context)
-
-
-@login_required
-def view_profile(request):
-    # Access the current logged-in user with request.user
-    
-    return render(request, 'your_app/profile.html', {'user': request.user})
-
-
-def view_login(request):
-    global local_user
-    """
-        This function shows login Web page
-    """
-    logging.info(f"\nlogin(): method {request.method} ")
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)
-            
-        logging.info(f"\nsignup(): valid POST {form.is_valid()} ")
-        logging.info(f'\nsignup(): {form.cleaned_data}')
-
-        if form.is_valid(): ## is_valid also makes cleaned_data
-            name = form.cleaned_data['username']
-            # password = request.POST.get("user_password")
-
-            # print(f"ext_post(): POST: {name} {email} {password} ")
-            
-            # if password == repassword:
-            local_user = UUser(name)
-            ## hash for real user
-            local_user.commu_id = hash(local_user.nickname)
-            '''
-                Save In base user by hash - no passwords
-
-            '''            
-            logging.info(f'new user: {local_user}')
-
-            local_user.init_storage(FileStorage(WORK_PATH))
-            local_user.init_utem_base(UtemBase(user=local_user))
-            
-
-            ## basic project Life for User
-            root=UProject(local_user, "Life")
-            local_user.utem_base.add(root)
-            local_user.utem_tree.add(utem_id=root.get_token())
-
-            return redirect('/user/') 
-            # else:
-            #     def_context.update({'passstate': "... passwords is not equal. Try again."})
-
-    else:
-        form = SignUpForm()  ## form is a html-template that django try to find in html page by name
-        
-    def_context = {'form': form}
-    return render(request, 'login.html', context=def_context )
-
-
-
-       
+      
             
 
 def crud_skill(request, args=None):

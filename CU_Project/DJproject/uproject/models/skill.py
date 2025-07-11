@@ -22,14 +22,16 @@ class USkill(UObject):
         self.amount = 0
         self.event = None
 
-      
-    def get_file_name(self):
-        return f"{super().get_file_name()}.stp"
+    @property  
+    def file_name(self):
+        return f"{super().file_name()}.stp"
 
-    def get_slug_name(self):
+    @property
+    def slug_name(self):
         return slugify(self.name)
 
-    def get_event(self):
+    @property
+    def event(self):
         return self.event
     
     def set_event(self, event):
@@ -38,8 +40,8 @@ class USkill(UObject):
     def set_executor(self, user):
         self._executor = user.commu_id
         
-
-    def get_title(self):
+    @property
+    def title(self):
         time_moment = self.get_event()['start_time'] if self.get_event() else 'in plan'
         return f"{time_moment} '{self.name}'"
 

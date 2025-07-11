@@ -4,15 +4,18 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
-    path('', view_index, name ='index'),
+    path('', view_index, name ='index'), # it can be used in html templates like {% url 'index' %}
 
     path('info/', view_info),
-    path('info/<str:args>', view_info),
+    path('info/<str:args>', view_info, name='info'),
 
-    path('signup/', view_signup),
-    path('logout/', view_logout),
+    path('signup/', view_signup, name='signup'),
+    # path('logout/', view_logout),
+
+    path('profile/', view_profile, name='profile'),
     
-    path('user/', view_dashboard),
+    path('user/', view_dashboard, name='dashboard'),
+    # for search results
     path('user/<str:args>', view_dashboard, name='dashboard'),
 
     ## CRUD template skills

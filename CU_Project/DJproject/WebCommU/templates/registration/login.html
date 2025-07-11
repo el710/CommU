@@ -63,14 +63,14 @@
 
 {% block authorization %}
     <div class="auth-buttons">
-        <a href="/signup/" class="index-btn index-btn-login">Sign Up</a>
+        <a href="{% url 'signup' %}" class="index-btn index-btn-login">Sign Up</a>
     </div>
 {% endblock %} <!-- authorization -->
 
 
 {% block workplace %}
     <div class="speed-bar">
-        <a href="/" class="speed-bar-btn speed-bar-link">Back</a>
+        <a href="{% url 'index' %}" class="speed-bar-btn speed-bar-link">Back</a>
     </div>
 
     <div class="login-context">
@@ -83,19 +83,22 @@
                 </div>
                 <div>
                     <label for="id_name">Username</label>                                      
-                    <input type="text" name="username" maxlength="100" id="id_name" placeholder="type your ID"> <!-- 'required' means we can't pass it-->
+                    <input type="text" name="username" maxlength="100" id="id_name" placeholder="type your ID" required> <!-- 'required' means we can't pass it-->
                 </div>
                 <div class="login-warning">
                     {{ passstate }}
                 </div>
                 <div>
                     <label for="id_pass">Password</label>
-                    <input type="password" name="user_password" minlength="8" id="id_pass">
+                    <input type="password" name="password" minlength="8" id="id_pass" required placeholder="type your password">
                 </div>
     
                 <button class="login-button" type="submit">Enter</button>
 
             </section>
+
+            <!-- {{ form.as_p }} -->
+
         </form>
     </div>     
 {% endblock %} <!-- workplace -->

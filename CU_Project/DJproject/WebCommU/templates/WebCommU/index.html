@@ -275,7 +275,7 @@
     <header class="index-header">
         <div class="index-header-title"> <!--"logo"-->
             <img class="icon" src="{% static 'CommU.png' %}" alt="Icon">
-            <a href="/">CommU</a>
+            <a href="{% url 'index' %}">CommU</a>
         </div>
 
 	    {% block application %}
@@ -285,14 +285,24 @@
 
         {% block authorization %}
             <div class="auth-buttons">
-                {% if local_user %}
+                {% if user.is_authenticated %}
                     <div class="exit-bar">
-                        <div> <a href="/user/">{{local_user}}</a> </div>
-                        <a href="/logout/"><img src="{% static 'logout.png' %}" alt="log out"></a>
+                        <div> <a href="{% url 'dashboard' %}">{{user.username}}</a> </div>
+                        <!-- <a href="/logout/"><img src="{% static 'logout.png' %}" alt="log out"></a> -->
+                        <!-- <a href="{% url 'logout' %}"><img src="{% static 'logout.png' %}" alt="log out"></a> -->
+                    
+                        <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" style="background:none; border:none; padding:0; cursor:pointer;">
+                                <img src="{% static 'logout.png' %}" alt="log out" title="Log out" style="height:25px;">
+                            </button>   
+                        </form>
+                    
+                    
                     </div>
                 {% else %}
-                    <a href="/login/" class="index-btn index-btn-login">Log In</a>
-                    <a href="/signup/" class="index-btn index-btn-login">Sign Up</a> 
+                    <a href="{% url 'login' %}" class="index-btn index-btn-login">Log In</a>
+                    <a href="{% url 'signup' %}" class="index-btn index-btn-login">Sign Up</a> 
                 {% endif %}
             </div>
         {% endblock %} <!-- authorization -->
@@ -386,8 +396,8 @@
         <div class="footer-bar"> <!-- Самая нижняя полоса -->
             <div class="copyright">&copy; 2024 CommU</div>
             <div class="footer-links">
-                <a href="/info/about">About</a>
-                <a href="/info/terms">Terms</a>
+                <a href="{% url 'info' args='about' %}">About</a>
+                <a href="{% url 'info' args='terms' %}">Terms</a>
             </div>
         </div>
     </footer>

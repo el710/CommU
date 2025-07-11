@@ -34,13 +34,13 @@
 
 {% block authorization %}
     <div class="auth-buttons">
-        <a href="/login/" class="index-btn index-btn-login">Sign In</a>
+       <a href="{% url 'login' %}" class="index-btn index-btn-login">Log In</a>
     </div>
 {% endblock %} <!-- authorization -->
 
 {% block workplace %}
     <div class="speed-bar">
-        <a href="/" class="speed-bar-btn speed-bar-link">Back</a>
+        <a href="{% url 'index' %}" class="speed-bar-btn speed-bar-link">Back</a>
     </div>
 
 <form method="post" >

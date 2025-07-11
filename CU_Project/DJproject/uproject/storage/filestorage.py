@@ -43,7 +43,7 @@ class FileStorage:
 
     def save(self, obj, overwrite: bool = False) -> bool:
         # logging.info(f"save obj: {obj.get_token()}")
-        filename = obj.get_file_name()
+        filename = obj.file_name
         # logging.info(f"save file: {filename}\n")
 
         path = os.path.join(self.base_path, filename)
@@ -57,7 +57,7 @@ class FileStorage:
 
     def load(self, obj, filename:str=None) -> bool:
         # logging.info(f"load {obj}")
-        if filename == None: filename = obj.get_file_name()
+        if filename == None: filename = obj.file_name
         path = os.path.join(self.base_path, filename)
 
         try:

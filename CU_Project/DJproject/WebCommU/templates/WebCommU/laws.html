@@ -11,7 +11,13 @@
 
 {% block workplace %}
     <div class="speed-bar">
-        <a href="/" class="speed-bar-btn speed-bar-back">Back</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'dashboard' %}" class="speed-bar-btn speed-bar-link">
+        {%else%}
+            <a href="{% url 'index' %}" class="speed-bar-btn speed-bar-link">
+        {% endif %}
+        Back
+        </a>
     </div>
 
     <section class="index-content-section">
@@ -89,6 +95,12 @@
 
 
     <div class="speed-bar">
-        <a href="/" class="speed-bar-btn speed-bar-link">Back</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'dashboard' %}" class="speed-bar-btn speed-bar-link">
+        {%else%}
+            <a href="{% url 'index' %}" class="speed-bar-btn speed-bar-link">
+        {% endif %}
+        Back
+        </a>
     </div>
 {% endblock %} <!-- workplace -->

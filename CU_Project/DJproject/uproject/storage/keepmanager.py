@@ -37,7 +37,7 @@ class KeepManager(UtemBase, FileStorage):
 
     def delete_utem(self, utem):
         self.storage.delete(utem)
-        self.base.delete(utem.get_token())
+        self.base.delete(utem.token)
 
 
     def upload_base(self, utem_patterns=['Uproject']):
@@ -91,20 +91,20 @@ class KeepManager(UtemBase, FileStorage):
         
         for item in self.base:
             utem = item['utem']
-            if utem.get_state() == state or not state:
-                if utem.get_classname() == 'USkill':
+            if utem.state == state or not state:
+                if utem.classname == 'USkill':
                     _list = skill_list
-                elif utem.get_classname() == 'UContract':
+                elif utem.classname == 'UContract':
                     _list = contract_list
-                elif utem.get_classname() == 'UProject':
+                elif utem.classname == 'UProject':
                     _list = project_list
                 else:
                     _list = None
                 
                 try:
-                    _list.append({"name":utem.name, "link":f"{utem.make_link()}"})
+                    _list.append({"name":utem.name, "link":f"{utem.link}"})
                 except:
-                    logging.info(f"wrong utem  {utem.get_classname()}\n")
+                    logging.info(f"wrong utem  {utem.classname}\n")
 
         return {f"{state}_skills": skill_list,
                 f"{state}_contracts": contract_list,
@@ -115,9 +115,9 @@ class KeepManager(UtemBase, FileStorage):
         context = {}
 
         for item in self.base:
-            if name == item['utem'].get_name():
+            if name == item['utem'].name:
                 label = f"find_{item['type']}"
-                context[label] = {"name": item['utem'].get_name(), "link": item['utem'].make_link()}
+                context[label] = {"name": item['utem'].name, "link": item['utem'].link}
                 
         # for cls, label in [(USkill, "find_skill"), (UContract, "find_contract"), (UProject, "find_project")]:
         #     utem = cls(name=name)
@@ -132,7 +132,7 @@ class KeepManager(UtemBase, FileStorage):
     def get_tree(self, user):
         logging.info(f"root {user.root_utem}")
 
-        root_path = [{"name": user.root_utem.name, "link": user.root_utem.make_link()}, ]
+        root_path = [{"name": user.root_utem.name, "link": user.root_utem.link}, ]
         
         context = {"root_path": root_path }
         context.update(self.walk_by_tree(user))
@@ -146,28 +146,28 @@ class KeepManager(UtemBase, FileStorage):
 
         if isinstance(root, UProject):
             if len(root.projects) > 0:
-                sub_pro = []
+                sub_projects = []
                 for item in root.projects:
                     obj = base.read(item)
-                    sub_pro.append({"name": obj.name, "link": obj.make_link})
+                    sub_projects.append({"name": obj.name, "link": obj.link})
             else:
-                sub_pro = None
+                sub_projects = None
         
             if len(root.contracts) > 0:
-                sub_con = []
+                sub_contracts = []
                 for item in root.contracts:
                     obj = base.read(item)
-                    sub_con.append({"name": obj.name, "link": obj.make_link})
+                    sub_contracts.append({"name": obj.name, "link": obj.link})
             else:
-                sub_con = None
+                sub_contracts = None
 
             if len(root.events) > 0:
-                sub_ev = []
+                sub_events = []
                 for item in root.events:
                     obj = base.read(item)
-                    sub_ev.append({"name": obj.name, "link": obj.make_link})
+                    sub_events.append({"name": obj.name, "link": obj.link})
             else:
-                sub_ev = None
+                sub_events = None
 
         elif isinstance(root, UContract):
             if user.commu_id == root.holder_id:
@@ -178,34 +178,34 @@ class KeepManager(UtemBase, FileStorage):
                 debet_worker = None
             
             if len(root.credit_events) > 0:
-                sub_credit_ev = []
+                sub_credit_events = []
                 for item in root.credit_events:
                     obj = base.read(item)
-                    sub_credit_ev.append({"name": obj.name, "worker": credit_worker, "link": obj.make_link})
+                    sub_credit_events.append({"name": obj.name, "worker": credit_worker, "link": obj.link})
             else:
-                sub_credit_ev = None
+                sub_credit_events = None
 
             if len(root.debet_events) > 0:
-                sub_debet_ev = []
+                sub_debet_events = []
                 for item in root.debet_events:
                     obj = base.read(item)
-                    sub_debet_ev.append({"name": obj.name, "worker": debet_worker, "link": obj.make_link})
+                    sub_debet_events.append({"name": obj.name, "worker": debet_worker, "link": obj.link})
             else:
-                sub_debet_ev = None
+                sub_debet_events = None
             
-            sub_ev = sub_credit_ev + sub_debet_ev
-            sub_pro = None
-            sub_con = None
+            sub_events = sub_credit_events + sub_debet_events
+            sub_projects = None
+            sub_contracts = None
 
         elif isinstance(root, USkill):
-            sub_pro = None
-            sub_con = None
-            sub_ev = None
+            sub_projects = None
+            sub_contracts = None
+            sub_events= None
     
-        context = { "name": root.get_title(), "link": root.make_link(),
-                    "projects": sub_pro, ## [context, context, ...]
-                    "contracts": sub_con, ## [context, context, ...]
-                    "events": sub_ev  ## [context, context, ...]
+        context = { "name": root.title, "link": root.link,
+                    "projects": sub_projects, ## [context, context, ...]
+                    "contracts": sub_contracts, ## [context, context, ...]
+                    "events": sub_events  ## [context, context, ...]
                 }
         
         return context
