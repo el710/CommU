@@ -30,12 +30,11 @@
   + local_user staff init in dashboard view
   !!! after reload server local_user disapperes and request.user stays
       need to base local_user.init on request.user
-
-
-
   + UI signup
+  
+
   - make DataBase for users
-  - add checkout users files - find user_id.ptp at signup & login
+  - add checkout users files - find user_id.ptp at dashboard init
   
 - check out existance of utems in projects and contracts accorded with files
 - only project can be root - choosen project becomes root

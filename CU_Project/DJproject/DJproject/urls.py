@@ -25,8 +25,8 @@ urlpatterns = [
     
     path('accounts/', include('django.contrib.auth.urls')),
         # This automatically provides views and URLs for:
-        # /accounts/login/ (login)
-        # /accounts/logout/ (logout)
+        # + /accounts/login/ (login)  
+        # + /accounts/logout/ (logout)
         # /accounts/password_change/ (password change)
         # /accounts/password_change/done/
         # /accounts/password_reset/ (password reset)

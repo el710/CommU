@@ -5,7 +5,17 @@
     {{ block.super}}
 
     <style>
-      
+        .signup-context {
+            display: flex;
+            flex-wrap: nowrap;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            /* font-style: normal; */
+            /* font-size: 16px; */
+            margin-top: 40px;
+        }
+
         .signup-warning {
             color: red;
             font-style: italic;
@@ -14,7 +24,7 @@
         }
 
         .result-button {
-            width: 60%;
+            width: 90%;
         }
 
         input[type="checkbox"] {
@@ -23,7 +33,11 @@
             margin-right: 5px;
         }
 
-
+        input[type="text"] {
+            /* width: auto; */
+            display: inline-block;
+            margin-right: 5px;
+        }
 
     </style>
 {% endblock %}
@@ -43,10 +57,11 @@
         <a href="{% url 'index' %}" class="speed-bar-btn speed-bar-link">Back</a>
     </div>
 
-<form method="post" >
-   {% csrf_token %}
-       
-    <div class="page-container">
+    <div class="signup-context">
+        <form method="post" >
+        {% csrf_token %}
+
+        <div class="page-container">
         <div class="page-form-row">
             <div class="page-form-col">
                 <div class="signup-warning"> {{ user_state }}  </div>
@@ -90,7 +105,8 @@
         </center>
         
 
-    </div> <!-- page-container -->
+        </div> <!-- page-container -->
+    </div> <!-- signup-context -->
 
 </form>
 

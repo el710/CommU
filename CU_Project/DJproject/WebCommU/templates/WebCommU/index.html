@@ -1,24 +1,24 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-<head>
-    {% block meta %}
-    	<meta charset="UTF-8" />
+    <head>
+        {% block meta %}
+        <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% endblock %}
+        {% endblock %}
 
-    {% block title %}
-	<title>CommU</title>
-    {% endblock %}
-	
-    {% block relation %}
-	<link rel="icon" type="icon"  href="{% static 'favicon.ico' %}">
-	<!-- <link rel="stylesheet" href="{% static 'index.css' %}"> -->
-    {% endblock %}
-</head>
+        {% block title %}
+        <title>CommU</title>
+        {% endblock %}
 
-{% block style %}
-<style>
+        {% block relation %}
+        <link rel="icon" type="icon" href="{% static 'favicon.ico' %}">
+        <!-- <link rel="stylesheet" href="{% static 'index.css' %}"> -->
+        {% endblock %}
+    </head>
+
+    {% block style %}
+    <style>
     * {
         margin: 0px;
         padding: 0;
@@ -268,142 +268,166 @@
     }
 
 </style>
-{% endblock %}
+    {% endblock %}
 
-<body>
-    <!-- Top Row - Fixed Header -->
-    <header class="index-header">
-        <div class="index-header-title"> <!--"logo"-->
-            <img class="icon" src="{% static 'CommU.png' %}" alt="Icon">
-            <a href="{% url 'index' %}">CommU</a>
-        </div>
-
-	    {% block application %}
-            <h2>Welcome to Our Site</h2>
-        {% endblock %}
-        
-
-        {% block authorization %}
-            <div class="auth-buttons">
+    <body>
+        <!-- Top Row - Fixed Header -->
+        <header class="index-header">
+            <div class="index-header-title"> <!--"logo"-->
+                <img class="icon" src="{% static 'CommU.png' %}" alt="Icon">
                 {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}">
+                    {%else%}
+                    <a href="{% url 'index' %}">
+                        {%endif%}
+                        CommU
+                    </a>
+                </div>
+
+                {% block application %}
+                <h2>Welcome to Our Site</h2>
+                {% endblock %}
+
+                {% block authorization %}
+                <div class="auth-buttons">
+                    {% if user.is_authenticated %}
                     <div class="exit-bar">
-                        <div> <a href="{% url 'dashboard' %}">{{user.username}}</a> </div>
-                        <!-- <a href="/logout/"><img src="{% static 'logout.png' %}" alt="log out"></a> -->
-                        <!-- <a href="{% url 'logout' %}"><img src="{% static 'logout.png' %}" alt="log out"></a> -->
-                    
-                        <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                        <div> <a
+                                href="{% url 'profile' %}">{{user.username}}</a>
+                        </div>
+
+                        <form action="{% url 'logout' %}" method="post"
+                            style="display:inline;">
                             {% csrf_token %}
-                            <button type="submit" style="background:none; border:none; padding:0; cursor:pointer;">
-                                <img src="{% static 'logout.png' %}" alt="log out" title="Log out" style="height:25px;">
-                            </button>   
+                            <button type="submit"
+                                style="background:none; border:none; padding:0; cursor:pointer;">
+                                <img src="{% static 'logout.png' %}"
+                                    alt="log out"
+                                    title="Log out" style="height:25px;">
+                            </button>
                         </form>
-                    
-                    
                     </div>
-                {% else %}
-                    <a href="{% url 'login' %}" class="index-btn index-btn-login">Log In</a>
-                    <a href="{% url 'signup' %}" class="index-btn index-btn-login">Sign Up</a> 
-                {% endif %}
-            </div>
-        {% endblock %} <!-- authorization -->
-    </header>
+                    {% else %}
+                    <a href="{% url 'login' %}"
+                        class="index-btn index-btn-login">Log In</a>
+                    <a href="{% url 'signup' %}"
+                        class="index-btn index-btn-login">Sign Up</a>
+                    {% endif %}
+                </div>
+                {% endblock %} <!-- authorization -->
+            </header>
 
+            <!-- Middle Row - Scrollable Content -->
+            <main class="index-content">
+                {% block workplace %}
 
-    <!-- Middle Row - Scrollable Content -->
-    <main class="index-content">
-        {% block workplace %}
+                <section class="index-content-section">
+                    <h2>Make your dreams come true by yourself. We'll help</h2>
+                </section>
 
-        <section class="index-content-section">
-            <h2>Make your dreams come true by yourself. We'll help</h2>
-        </section>
+                <section class="index-content-section">
+                    <h2>Help Bring Our Vision to Life – Support Our App
+                        Development!</h2>
 
-        <section class="index-content-section">
-            <h2>Help Bring Our Vision to Life – Support Our App Development!</h2>
+                    <p>
+                        <h3>Dear Human,</h3>
+                        I hope this message finds you well! I’m reaching out
+                        because
+                        I’m working on an exciting new app that
+                        simplifies task management for your life.
+                        This project has the potential to save time for people,
+                        but
+                        to turn this vision into reality, I need your support.
+                    </p>
+                    <p>
+                        <h3>Why Your Donation Matters</h3>
+                        Developing a high-quality app requires resources—server
+                        costs, design tools, developer time, and more. With your
+                        help, we can:
+                        <ul>
+                            <li>✅ Launch a polished, user-friendly product</li>
+                            <li>✅ Offer free/discounted access to those who need
+                                it</li>
+                            <li>✅ Continuously improve the app with updates</li>
+                        </ul>
+                    </p>
 
-            <p>
-                <h3>Dear Human,</h3>
-                I hope this message finds you well! I’m reaching out because I’m working on an exciting new app that 
-                simplifies task management for your life. 
-                This project has the potential to save time for people, but to turn this vision into reality, I need your support.
-            </p>
-            <p>
-                <h3>Why Your Donation Matters</h3>
-                Developing a high-quality app requires resources—server costs, design tools, developer time, and more. With your help, we can:
-                <ul>
-                <li>✅ Launch a polished, user-friendly product</li>
-                <li>✅ Offer free/discounted access to those who need it</li>
-                <li>✅ Continuously improve the app with updates</li>
-                </ul>
-            </p>
+                    <p>
+                        <h3>How You Can Help</h3>
+                        Every contribution, big or small, brings us closer to
+                        our
+                        goal:
+                        <ul>
+                            <li> $10 – Helps cover a month of hosting</li>
+                            <li> $25 – Funds an hour of development</li>
+                            <li> $50+ – Supports marketing to reach more
+                                users</li>
+                        </ul>
 
-            <p>
-             <h3>How You Can Help</h3>
-             Every contribution, big or small, brings us closer to our goal:
-             <ul>
-                <li> $10 – Helps cover a month of hosting</li>
-                <li> $25 – Funds an hour of development</li>
-                <li> $50+ – Supports marketing to reach more users</li>
-             </ul>
+                    </p>
+                    <p>
 
-        </p>
-        <p>
+                        🔗 **[Donate Now](#)** (Link to your crowdfunding page,
+                        PayPal, etc.)
+                    </p>
+                    <p>
+                        <h3>Other Ways to Support</h3>
+                        - **Share this campaign** with friends or on social
+                        media
+                        - **Provide feedback** on our beta version (reply by
+                        email!)
+                        - **Join our early-access list** to test the app first
+                    </p>
+                    <p>
+                        This project means a lot to me, and with your
+                        generosity, we
+                        can make a real difference.
+                        Thank you for considering support—let’s build something
+                        amazing together!
 
-             🔗 **[Donate Now](#)** (Link to your crowdfunding page, PayPal, etc.) 
-        </p>
-        <p>  
-             <h3>Other Ways to Support</h3>
-             - **Share this campaign** with friends or on social media 
-             - **Provide feedback** on our beta version (reply by email!)
-             - **Join our early-access list** to test the app first
-        </p>
-        <p> 
-             This project means a lot to me, and with your generosity, we can make a real difference. 
-             Thank you for considering support—let’s build something amazing together!
-             
-             **With gratitude,**
-             Kim Oleg
-             App developer
+                        **With gratitude,**
+                        Kim Oleg
+                        App developer
 
-            ---  
-            *P.S. Questions? Reply by email — I’d love to chat!*
-        </p>
+                        ---
+                        *P.S. Questions? Reply by email — I’d love to chat!*
+                    </p>
 
-        </section>
-  
-        <section class="index-content-section">
-            <h2>Additional Information</h2>
-            <p></p>
-        </section>
-    
-        <section class="index-content-section">
-            <h2>Contact Us</h2>
-            <p>Theel710@gmail.com</p>
-            [Website/Crowdfunding Link]  
-        </section>
-        
-        {% endblock %} <!-- workplace -->
-    </main>
+                </section>
 
+                <section class="index-content-section">
+                    <h2>Additional Information</h2>
+                    <p></p>
+                </section>
 
-    <!-- Bottom Row - Fixed Footer -->
-    <footer class="footer"> <!-- bottom -->
-        <div class="pos-bar"> <!-- Первая нижняя полоса -->
-            <div id="geoposition">Loading...</div>
-            <div id="geosocium">Loading...</div>
-            <div id="datetime">Loading...</div>
-        </div>
+                <section class="index-content-section">
+                    <h2>Contact Us</h2>
+                    <p>Theel710@gmail.com</p>
+                    [Website/Crowdfunding Link]
+                </section>
 
-        <div class="footer-bar"> <!-- Самая нижняя полоса -->
-            <div class="copyright">&copy; 2024 CommU</div>
-            <div class="footer-links">
-                <a href="{% url 'info' args='about' %}">About</a>
-                <a href="{% url 'info' args='terms' %}">Terms</a>
-            </div>
-        </div>
-    </footer>
+                {% endblock %} <!-- workplace -->
+            </main>
 
-    {% block JavaScript %}
-    <script>
+            <!-- Bottom Row - Fixed Footer -->
+            <footer class="footer"> <!-- bottom -->
+                <div class="pos-bar"> <!-- Первая нижняя полоса -->
+                    <div id="geoposition">Loading...</div>
+                    <div id="geosocium">Loading...</div>
+                    <div id="datetime">Loading...</div>
+                </div>
+
+                <div class="footer-bar"> <!-- Самая нижняя полоса -->
+                    <div class="copyright">&copy; 2024 CommU</div>
+                    <div class="footer-links">
+                        <a href="{% url 'info' args='about' %}">About</a>
+                        <a href="{% url 'info' args='terms' %}">Terms</a>
+                    </div>
+                </div>
+            </footer>
+
+            {% block JavaScript %}
+            <script>
     
         // Скрипт для отображения текущей даты, времени, часового пояса
         function updateDateTime() {
@@ -436,7 +460,7 @@
         updateGeoPosition();
         
     </script>
-    {% endblock %} <!-- JavaScript -->
+            {% endblock %} <!-- JavaScript -->
 
-</body>
-</html>
+        </body>
+    </html>

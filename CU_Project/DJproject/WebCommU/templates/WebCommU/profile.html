@@ -1,0 +1,43 @@
+{% extends "index.html" %}
+{% load static %}
+
+{% block title %}
+<title></title>
+{% endblock %}
+
+{% block style %}
+{{block.super}}
+{% endblock %}
+
+{% block workplace %}
+
+<div class="speed-bar">
+    {% if user.is_authenticated %}
+    <a href="{% url 'dashboard' %}" class="speed-bar-btn speed-bar-link">
+        {%else%}
+        <a href="{% url 'index' %}" class="speed-bar-btn speed-bar-link">
+            {% endif %}
+            Back
+        </a>
+
+        <div>
+            <a href="{% url 'password_change' %}"
+                class="speed-bar-btn speed-bar-link"> Change password </a>
+            <!-- <a href="{% url 'password_reset' %}"
+                class="speed-bar-btn speed-bar-link"> Reset password </a> -->
+        </div>
+    </div>
+
+    <div class="page-container">
+        <div class="page-form-row">
+            <div class="page-form-col">
+
+                {% if user.is_authenticated %}
+                {{ user.username }} cabinet
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+
+    {% endblock %}
