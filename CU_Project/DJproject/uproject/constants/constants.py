@@ -9,6 +9,11 @@ GUEST_USER = 'Guest'
 
 DEFAULT_GEOSOCIUM = "Earth"
 
+MAIN_PROJECT = "LIFE"
+
+DEFAULT_DIRECTORY = "file_store"
+
+
 '''
     States of Utems
 '''

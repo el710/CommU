@@ -4,26 +4,102 @@
 import os
 import logging
 
+from ..constants import DEFAULT_DIRECTORY
+
 from .bases import UtemBase
 from .filestorage import FileStorage
+from ..database.db import *
+
+from ..models.uobject import get_hash
 
 from ..models.skill import USkill
 from ..models.contract import UContract
 from ..models.project import UProject
 
+class UserProfile():
+    def __init__(self, owner, **kwargs):
+        self.file_name = f"{owner}.utp"
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+    
+    def to_dict(self):
+        return self.__dict__.copy()
 
 class KeepManager(UtemBase, FileStorage):
     '''
         Manager for sinchronize UtemBase & Storage
         UtemBase - RAM data
-        Storage: files or DataBase
+        Storage: files & DataBase
 
     '''
-    
-    def __init__(self, storage):
-        self.base = UtemBase()
-        self.storage = storage
+    _work_path = None
 
+    @classmethod
+    def get_work_path(cls):
+        """
+            Get default working directory for file storage
+            Returns:
+                path to directory
+        """
+        if cls._work_path is None:
+            return os.path.join(os.getcwd(), DEFAULT_DIRECTORY)
+        return cls._work_path
+
+    @classmethod
+    def set_work_path(cls, value):
+        """
+            Set default working directory for file storage
+            Args:
+                value - path to directory
+        """
+        cls._work_path = value
+        logging.info(f"Set work directory: {cls._work_path}")
+ 
+
+
+    def __init__(self, owner):
+        '''
+            find owner in database
+        '''
+        temp_storage = FileStorage(KeepManager.get_work_path(), f"{owner}")
+
+        # if there is user:
+        #     self._conection = True
+        # else:
+        self._conection = False
+        
+        self.base = UtemBase()
+
+
+    def init_base(self, owner):
+        self.storage = FileStorage(KeepManager.get_work_path(), f"{owner}")
+        self._conection = True
+
+
+    @property
+    def connection(self):
+        return self._conection
+        
+
+    def save_user(self, user_id, profile):
+        '''
+            Save user profile to storage
+            Args:
+                PROFILE - dict with user data
+        '''
+        if not self._conection:
+            logging.info("No connection to storage")
+            return False
+        
+        user_profile = UserProfile(user_id, **profile)
+        logging.info(f"Save user: {user_profile}")
+
+        return self.storage.save(user_profile, overwrite=True)
+
+    def read_user(self, user_id):
+        pass
+
+############  Utems CRUD
     def save_utem(self, utem):
         self.base.add(utem)
         return self.storage.save(utem, overwrite = True)

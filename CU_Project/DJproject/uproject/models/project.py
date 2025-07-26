@@ -30,7 +30,10 @@ class UProject(UObject):
             name = "New Project"
         super().__init__(name)
 
-        self.partners = [starter_user_id]
+        if starter_user_id:
+            self.partners = [starter_user_id]
+        else:
+            self.partners = []
 
         self._state = state
         ## constant token = user_id

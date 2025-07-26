@@ -4,7 +4,7 @@
 import logging
 class UtemBase():
     '''
-        Operative base of utems for user
+        RAMemory base of utems for user
     '''
     def __init__(self):
         self._base = []

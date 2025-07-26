@@ -17,9 +17,6 @@ from uproject.models.skill import USkill
 
 from uproject.models.user import *
 
-from uproject.storage.filestorage import FileStorage
-from uproject.storage.bases import UtemBase
-
 from uproject.storage.keepmanager import KeepManager
 
 import logging
@@ -31,6 +28,7 @@ from datetime import datetime, timedelta
 ## There is always a user - by define 'Guest'
 
 WORK_PATH = os.path.join(os.getcwd(), "file_store")
+KeepManager.set_work_path(WORK_PATH)
 
 '''
     local_user is connection to CommU service
@@ -38,7 +36,6 @@ WORK_PATH = os.path.join(os.getcwd(), "file_store")
 '''
 # local_user = UUser(GUEST_USER)
 local_user = None
-
 
 def view_index(request):
     global local_user
@@ -93,22 +90,6 @@ def view_signup(request):
         if form.is_valid():
             user = form.save()
             login(request, user) # Log the user in immediately after registration
-            
-            # local_user = UUser(name)
-            # logging.info(f'new user: {local_user.nickname}')
-
-            # ## base manager
-            # local_user.init_keep_manager( KeepManager( FileStorage(WORK_PATH, f"{local_user.nickname}") ) )
-
-            # ## basic project Life for User
-            # root=UProject(name="Life", starter_user_id=local_user.commu_id, state=ROOT_PROJECT, my_token=local_user.commu_id)
-            # root.sign(local_user)
-            # ## root of user tree
-            # local_user.root_utem = root
-
-            # # local_user.work_utem = root
-            # logging.info(f'new user: root - {local_user.root_utem} work - {local_user.work_utem}')
-            # local_user.keep_manager.save_utem(root)
                     
             return redirect('/user/')
         else:
@@ -133,11 +114,13 @@ def view_signup(request):
     def_context.update({'form': form})
     return render(request, 'signup.html', context=def_context )
 
+
 @login_required
 def view_profile(request):
     # Access the current logged-in user with request.user
     
     return render(request, 'profile.html', {'user': request.user})
+
 
 @login_required
 def view_dashboard(request, args=None):
@@ -146,26 +129,19 @@ def view_dashboard(request, args=None):
         args: Utem has taken from list to view info {skill, contract, project}
     '''
     global local_user
+    global manager
 
-    if not local_user or local_user.nickname != request.user.username:
-        ## create new user
+
+    if local_user is None or local_user.nickname != request.user.username:
+        ## open new user
         logging.info(f'new user: {request.user.username}')
 
         local_user = UUser(request.user.username)
+        
         logging.info(f'new user: {local_user.nickname}')
 
-        ## base manager
-        local_user.init_keep_manager( KeepManager( FileStorage(WORK_PATH, f"{local_user.nickname}") ) )
 
-        ## basic project Life for User
-        root=UProject(name="Life", starter_user_id=local_user.commu_id, state=ROOT_PROJECT, my_token=local_user.commu_id)
-        root.sign(local_user)
-        ## root of user tree
-        local_user.root_utem = root
 
-        # local_user.work_utem = root
-        logging.info(f'new user: root - {local_user.root_utem} work - {local_user.work_utem}')
-        local_user.keep_manager.save_utem(root)
 
     if args == 'close':
         local_user.search = None
@@ -229,7 +205,8 @@ def crud_skill(request, args=None):
     logging.info(f'local user: {local_user}')
     logging.info(f'open skill: {args}\n')
     
-    if not local_user.commu_id: return redirect("/")
+    if not local_user or not local_user.commu_id: 
+        return redirect("/")
 
     def_context = {}      
     
@@ -309,15 +286,15 @@ def crud_skill(request, args=None):
         def_context.update({"saved": local_user.work_utem.is_signed()})
 
         if local_user.work_utem.get_state() == TEMPLATE_UTEM:
-            def_context.update({"root": local_user.root_utem.get_title()})
+            def_context.update({"root": local_user.root_utem.title})
         else:
             parent = local_user.keep_manager.read_utem(local_user.work_utem.get_parent())
             if not parent:
-                def_context.update({"root": local_user.root_utem.get_title()})
+                def_context.update({"root": local_user.root_utem.title})
             else:
-                def_context.update({"context": parent.get_title(), "context_link": parent.make_link()})
+                def_context.update({"context": parent.title, "context_link": parent.make_link()})
     else:
-        def_context.update({"root": local_user.root_utem.get_title()})
+        def_context.update({"root": local_user.root_utem.title})
 
     def_context.update({"form": form,
                         "local_user": local_user.nickname

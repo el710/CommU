@@ -10,26 +10,17 @@ class Base(DeclarativeBase):
     pass
 
 class UserModel(Base):
-    __tablename__ = "users_table"
+    __tablename__ = "Key_table"
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String)
-    firstname = Column(String)
-    lastname = Column(String)
-    slugname = Column(String, unique=True, index=True)
-    email = Column(String)
-    language = Column(String)
-    is_human = Column(Boolean)
-    telegram_id = Column(Integer, unique=True, index=True)
-    tasks_link = relationship(argument="EventModel", back_populates="owner_link")
+    commu = Column(String)
+    
+    data_link = relationship(argument="DataModel", back_populates="commu_link")
 
-class EventModel(Base):
-    __tablename__ = "events_table"
+class DataModel(Base):
+    __tablename__ = "Data_table"
     id = Column(Integer, primary_key=True, index=True)
-    task = Column(String, index=True)
-    date = Column(String)
-    time = Column(String)
-    owner_link = relationship(argument="UserModel", back_populates="tasks_link")
-    owner_id = Column(Integer, ForeignKey("users_table.id")) 
-    dealer = Column(String)
+    data = Column(String)
+
+    commu_link = relationship(argument="UserModel", back_populates="data_link")
     
     
