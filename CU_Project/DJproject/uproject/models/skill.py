@@ -20,11 +20,11 @@ class USkill(UObject):
         super().__init__(name)
         self.description = description
         self.amount = 0
-        self.event = None
+        self.s_event = None
 
     @property  
     def file_name(self):
-        return f"{super().file_name()}.stp"
+        return f"{super().file_name}.stp"
 
     @property
     def slug_name(self):
@@ -32,16 +32,17 @@ class USkill(UObject):
 
     @property
     def event(self):
-        return self.event
+        return self.s_event
     
-    def set_event(self, event):
-        self.event = event   
+    @event.setter
+    def event(self, new_event):
+        self.s_event = new_event   
     
     def set_executor(self, user):
         self._executor = user.commu_id
         
     @property
     def title(self):
-        time_moment = self.get_event()['start_time'] if self.get_event() else 'in plan'
+        time_moment = self.event['start_time'] if self.event else 'in plan'
         return f"{time_moment} '{self.name}'"
 

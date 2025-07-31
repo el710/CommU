@@ -34,8 +34,7 @@
   
   >+ dash board just make a UUser
   >+ user.init: make keep_manager
-  >- keep_manager.init: find is the user exists
-  >+ if keep_manager didn't connect to data then make new user's base
+  >- deploy read_user
  
 
   - make DataBase for users

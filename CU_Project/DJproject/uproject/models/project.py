@@ -3,9 +3,11 @@
 """
 
 from slugify import slugify
+
 from .uobject import UObject
 from .skill import USkill
 from .contract import UContract
+
 from ..constants.constants import *
 
 class UProject(UObject):
@@ -24,20 +26,20 @@ class UProject(UObject):
         User can have many Projects, 
         but there is always main default project - "Life" project
     """    
-    def __init__(self, name=None, starter_user_id=None, state:str=TEMPLATE_UTEM, my_token:str=None):
+    def __init__(self, name=None, author_id=None, state:str=TEMPLATE_UTEM, hard_sign=None):
         
         if not name:
             name = "New Project"
         super().__init__(name)
 
-        if starter_user_id:
-            self.partners = [starter_user_id]
+        if author_id:
+            self.partners = [author_id]
         else:
             self.partners = []
 
         self._state = state
         ## constant token = user_id
-        self.hard_token = my_token
+        self.hard_token = hard_sign
 
         self.target = "Project's point"
         ## 'Do not" laws

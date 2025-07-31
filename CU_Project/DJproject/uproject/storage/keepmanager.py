@@ -56,48 +56,31 @@ class KeepManager(UtemBase, FileStorage):
         logging.info(f"Set work directory: {cls._work_path}")
  
 
-
-    def __init__(self, owner):
+    def __init__(self, user_id):
         '''
             find owner in database
         '''
-        temp_storage = FileStorage(KeepManager.get_work_path(), f"{owner}")
+        new_user = True
 
-        # if there is user:
-        #     self._conection = True
-        # else:
-        self._conection = False
-        
+        self.storage = FileStorage(KeepManager.get_work_path(), f"{user_id}")
         self.base = UtemBase()
 
-
-    def init_base(self, owner):
-        self.storage = FileStorage(KeepManager.get_work_path(), f"{owner}")
-        self._conection = True
-
-
-    @property
-    def connection(self):
-        return self._conection
         
-
     def save_user(self, user_id, profile):
         '''
             Save user profile to storage
             Args:
                 PROFILE - dict with user data
-        '''
-        if not self._conection:
-            logging.info("No connection to storage")
-            return False
-        
+        '''      
         user_profile = UserProfile(user_id, **profile)
         logging.info(f"Save user: {user_profile}")
 
         return self.storage.save(user_profile, overwrite=True)
 
+
     def read_user(self, user_id):
         pass
+
 
 ############  Utems CRUD
     def save_utem(self, utem):
@@ -105,7 +88,14 @@ class KeepManager(UtemBase, FileStorage):
         return self.storage.save(utem, overwrite = True)
 
     def read_utem(self, utem_id):
-        return self.base.read(utem_id)
+
+        ## try to find in base
+        utem = self.base.read(utem_id)
+
+        ## try to find in storage
+
+        return utem
+
 
     def edit_utem(self, utem_id, new_utem):
         self.base.edit(id_hash=utem_id, new_utem=new_utem)
@@ -133,7 +123,7 @@ class KeepManager(UtemBase, FileStorage):
             elif obj == 'USkill':
               file_list.extend(self.storage.find_all("*.stp"))
         
-        if len(file_list) == 0: return
+        if len(file_list) == 0: return 0
 
         # logging.info(f"Load base from list: {file_list}\n")
 
@@ -154,7 +144,11 @@ class KeepManager(UtemBase, FileStorage):
             ## Load data of <utem> from file
             if self.storage.load(utem, file):
                 self.base.add(utem)
+        
+        return self.base.len()
+
     
+
     def find_by_state(self, state=None):
         '''
             Make list of utems with state == pattern

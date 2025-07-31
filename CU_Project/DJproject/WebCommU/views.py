@@ -135,13 +135,8 @@ def view_dashboard(request, args=None):
     if local_user is None or local_user.nickname != request.user.username:
         ## open new user
         logging.info(f'new user: {request.user.username}')
-
         local_user = UUser(request.user.username)
-        
         logging.info(f'new user: {local_user.nickname}')
-
-
-
 
     if args == 'close':
         local_user.search = None
@@ -238,11 +233,11 @@ def crud_skill(request, args=None):
 
             if request.POST.get('save'):
                 ## if sign data hasn't change
-                if local_user.work_utem.get_token() == local_user.origin_utem_id:
+                if local_user.work_utem.token == local_user.origin_utem_id:
                     local_user.keep_manager.edit_utem(local_user.origin_utem_id, local_user.work_utem)
                 else:
                     ## it's a new utem or old utem became new
-                    local_user.work_utem.sign(local_user)
+                    local_user.work_utem.sign(local_user.commu_id, local_user.geosocium)
                     local_user.keep_manager.save_utem(local_user.work_utem)
             
             ## add to root

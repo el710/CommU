@@ -4,7 +4,6 @@
 
 from abc import ABC, abstractmethod
 from datetime import datetime
-from slugify import slugify
 
 import hashlib
 
@@ -23,7 +22,6 @@ class Persistable(ABC):
     def sign(self, user) -> None: pass
 
 
-
 class UObject(Persistable):
     def __init__(self, name: str=None):
         self._name = name
@@ -31,7 +29,7 @@ class UObject(Persistable):
         
         self.author = None
         self.geosocium = None
-
+        
         ## private
         self._create_datetime = None        
         self._state = TEMPLATE_UTEM
@@ -46,9 +44,13 @@ class UObject(Persistable):
     def name(self, name):
         self._name = name
 
-    def sign(self, user):
-        self.author = user.commu_id
-        self.geosocium = user.geosocium
+
+    '''
+        For public utems
+    '''
+    def sign(self, author_id, geosocium):
+        self.author = author_id
+        self.geosocium = geosocium
         self._create_datetime = datetime.now()
 
     def is_signed(self):

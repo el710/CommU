@@ -55,6 +55,7 @@ class FileStorage:
             json.dump(obj.to_dict(), f)
         return True
 
+
     def load(self, obj, filename:str=None) -> bool:
         # logging.info(f"load {obj}")
         if filename == None: filename = obj.file_name
