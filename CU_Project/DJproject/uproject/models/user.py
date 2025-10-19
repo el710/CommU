@@ -41,7 +41,8 @@ class UUser():
 
         ## utem that we opened for editing
         ## for checking if it was changed
-        self.origin_utem_id = None
+        ## token is like a check sum of data
+        self.origin_utem_token = None
 
         ## pointer to work project or contract
         self.root_utem = None

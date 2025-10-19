@@ -2,26 +2,25 @@
 {% load static %}
 
 {% block title %}
-    <title>Skill</title>
+<title>Skill</title>
 {% endblock %}
 
 {% block application %}
-    {% if not context %}
-        Template
-    {%endif%}
+{% if not context %}
+Template
+{%endif%}
 
-    {% if name %}
-        Skill "{{name}}"
-    {% else %}
-        New skill
-    {%endif%}
+{% if name %}
+Skill "{{name}}"
+{% else %}
+New skill
+{%endif%}
 {% endblock %}
 
-
 {% block style %}
-    {{ block.super }}
+{{ block.super }}
 
-    <style>
+<style>
         .link-row{
             padding-top: 11px;
         }
@@ -35,92 +34,106 @@
     </style>
 {% endblock %}
 
-
 {% block workplace %}
-    <form method="POST" >
+<form method="POST">
     {% csrf_token %}
 
-        <div class="speed-bar">
-            <a href="/user/" class="speed-bar-btn speed-bar-link">Back</a>
-            <div>
-                <!-- {% if root %}
+    <div class="speed-bar">
+        <a href="/user/" class="speed-bar-btn speed-bar-link">Back</a>
+        <div>
+            <!-- {% if root %}
                     <button type="submit" class="speed-bar-btn" name="add" value="add">Add to {{root}} </button>
                 {%endif%} -->
-                <button type="submit" class="speed-bar-btn" name="save" value="save">Save</button> <!-- {'name': value} will append to request.POST -->
-                {% if saved %}
-                    <button type="submit" class="speed-bar-btn" name="delete" value="delete"  onclick="return confirm('Are you sure?')">Delete</button>
-                {% endif %}
-            </div> 
+            <button type="submit" class="speed-bar-btn" name="save"
+                value="save">Save</button>
+            <!-- {'name': value} will append to request.POST -->
+            {% if saved %}
+            <button type="submit" class="speed-bar-btn" name="delete"
+                value="delete"
+                onclick="return confirm('Are you sure?')">Delete</button>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="page-container">
+        <div class="page-form-row">
+            <div class="page-form-col">
+                <div class="page-form-group">
+                    <label for="name">Skill</label>
+                    <input type="text" name="name" maxlength="100"
+                        value="{{s_name}}" placeholder="wake up" required>
+                </div>
+            </div>
+
+            <div class="page-form-col">
+                <div class="page-form-group">
+
+                    <label for="event">Event</label>
+                    <button type="submit" class="speed-bar-btn" name="event"
+                        value="event">
+                        {% if s_event %}
+                        {{s_event.event_string}}
+                        {% else %}
+                        Add Event
+                        {%endif%}
+                    </button>
+
+                </div>
+            </div>
         </div>
 
-        <div class="page-container">
-            <div class="page-form-row">
-                <div class="page-form-col">
-                    <div class="page-form-group">
-                        <label for="name">Skill</label>
-                        <input type="text" name="name" maxlength="100" value="{{name}}" placeholder="wake up" required>
-                    </div>
+        <div class="page-form-group">
+            <label for="description">Description</label>
+            <textarea name="description" maxlength="1000"
+                placeholder="details">{{description}}</textarea>
+        </div>
+
+        <div class="page-form-row">
+            <div class="page-form-col">
+                <div class="page-form-group">
+                    <label for="amount">Amount</label>
+
+                    <!-- <input inputmode="numeric" pattern="[0-9]*" name="amount" maxlength="100" {%if amount %} value="{{amount}}" {% else %} value="0" {%endif%}> -->
+
+                    <input type="number" name="amount" maxlength="100" {%if amount %} value="{{amount}}" {% else %} value="0.00" {% endif %} step="1">
                 </div>
-
-                <div class="page-form-col">
-                    <div class="page-form-group">
-
-                        <label for="event">Event</label>
-                        <button type="submit" class="speed-bar-btn" name="event" value="event">
-                            {% if event %}
-                                {{event.event_string}}
+            </div>
+            <div class="page-form-col">
+                <div class="page-form-group">
+                    <label for="root-context">Context</label>
+                    {% if context %}
+                    <div>
+                        {%if context_link %}
+                        <a href="{{context_link}}"
+                            class="speed-bar-btn speed-bar-link"
+                            name="root-context">
                             {% else %}
-                                Add Event
-                            {%endif%}
-                        </button>
-                        
-                    </div>
-                </div>
-            </div>
-
-            <div class="page-form-group">
-                <label for="description">Description</label>
-                <textarea name="description" maxlength="1000" placeholder="details">{{description}}</textarea>
-            </div>
-            
-            <div class="page-form-row">
-                <div class="page-form-col">
-                    <div class="page-form-group">
-                        <label for="amount">Amount</label>
-                        <!-- <input inputmode="numeric" pattern="[0-9]*" name="amount" maxlength="100" {%if amount %} value="{{amount}}" {% else %} value="0" {%endif%}> -->
-                        <input type="number" name="amount" maxlength="100" {%if amount %} value="{{amount}}" {% else %} value="0.00" {%endif%} step="1">
-                    </div>
-                </div>
-                <div class="page-form-col">
-                    <div class="page-form-group">
-                        <label for="root-context">Context</label>
-                        {% if context %}
-                            <div>
-                                {%if context_link %}
-                                    <a href="{{context_link}}" class="speed-bar-btn speed-bar-link" name="root-context">
-                                {% else %}
-                                    <a href="/" class="speed-bar-btn speed-bar-link" name="root-context">
+                            <a href="/" class="speed-bar-btn speed-bar-link"
+                                name="root-context">
                                 {% endif %}
                                 {{context}} </a>
-                                <button type="submit" class="speed-bar-btn" name="savetemp" value="savetemp">Save as template</button>
-                            </div>
+                            <button type="submit" class="speed-bar-btn"
+                                name="savetemp" value="savetemp">Save as
+                                template</button>
+                        </div>
                         {% else %}
-                            {% if root %}
-                                <button type="submit" class="speed-bar-btn" name="add" value="add">Add to {{root}} </button>
-                            {% endif %}
+                        {% if root %}
+                        <button type="submit" class="speed-bar-btn" name="add"
+                            value="add">Add to {{root}} </button>
+                        {% endif %}
                         {% endif %}
                     </div>
                 </div>
             </div>
 
-            <label><input type="checkbox" name="public" {% if public == True %} checked {%endif%} >Public - share it with humans</label>
+            <label><input type="checkbox" name="public" {% if public == True %}
+                    checked {%endif%}>Public - share it with humans</label>
 
-        </div> <!-- page-container -->        
+        </div> <!-- page-container -->
     </form> <!-- post -->
 
-{% endblock %}
+    {% endblock %}
 
-
-{% block JavaScript %}
+    {% block JavaScript %}
     {{ block.super }}
-{% endblock %}
+    {% endblock %}

@@ -24,7 +24,7 @@ class Persistable(ABC):
 
 class UObject(Persistable):
     def __init__(self, name: str=None):
-        self._name = name
+        self.s_name = name
         self.public = False
         
         self.author = None
@@ -38,17 +38,17 @@ class UObject(Persistable):
 
     @property
     def name(self):
-        return self._name
+        return self.s_name
     
     @name.setter
     def name(self, name):
-        self._name = name
+        self.s_name = name
 
 
     '''
         For public utems
     '''
-    def sign(self, author_id, geosocium):
+    def sign(self, author_id, geosocium=None):
         self.author = author_id
         self.geosocium = geosocium
         self._create_datetime = datetime.now()

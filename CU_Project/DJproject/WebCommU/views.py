@@ -21,7 +21,11 @@ from uproject.storage.keepmanager import KeepManager
 
 import logging
 import os
+import copy
+
+
 from datetime import datetime, timedelta
+
 
 
 """ Operating Data"""
@@ -244,16 +248,16 @@ def crud_skill(request, args=None):
             if request.POST.get('add'):
         
                 ## it's always new utem - not template
-                local_user.work_utem.set_executor(local_user)
-                local_user.work_utem.set_state(WORKING_UTEM)
+                local_user.work_utem.state = WORKING_UTEM
+                local_user.work_utem.parent = local_user.root_utem.token
                 local_user.work_utem.sign(local_user)
-                local_user.work_utem.set_parent(local_user.root_utem.get_token())
+                local_user.work_utem.set_executor(local_user)
                 local_user.keep_manager.save_utem(local_user.work_utem)
 
                 logging.info(f"add to root {local_user.root_utem.get_classname()}")
                 ## Add id to root list
                 if local_user.root_utem.get_classname() == 'UProject':
-                    local_user.root_utem.add_event(local_user.work_utem.get_token())
+                    local_user.root_utem.add_event(local_user.work_utem.token)
                 elif local_user.root_utem.get_classname() == 'UContract':
                     pass
 
@@ -269,25 +273,32 @@ def crud_skill(request, args=None):
     ## POST    
     else:
         form = SkillForm(request)
-
+    
     if args:
-        ## in case when we came from user page !!! not from event page
+        ## args - are link to existed skill
+
+        ## load skill from storage
         local_user.set_work_utem(copy.deepcopy(local_user.keep_manager.read_utem(args)))
+
         if local_user.work_utem:
-            local_user.origin_utem_id = local_user.work_utem.get_token()
+            ## save origin id to check up changes
+            local_user.origin_utem_token = local_user.work_utem.token
 
     if local_user.work_utem:
+        logging.info(f"utem data {local_user.work_utem.to_dict()}")
+
         def_context.update(local_user.work_utem.to_dict())
+
         def_context.update({"saved": local_user.work_utem.is_signed()})
 
-        if local_user.work_utem.get_state() == TEMPLATE_UTEM:
+        if local_user.work_utem.state == TEMPLATE_UTEM:
             def_context.update({"root": local_user.root_utem.title})
         else:
-            parent = local_user.keep_manager.read_utem(local_user.work_utem.get_parent())
+            parent = local_user.keep_manager.read_utem(local_user.work_utem.parent)
             if not parent:
                 def_context.update({"root": local_user.root_utem.title})
             else:
-                def_context.update({"context": parent.title, "context_link": parent.make_link()})
+                def_context.update({"context": parent.title, "context_link": parent.link})
     else:
         def_context.update({"root": local_user.root_utem.title})
 
@@ -317,16 +328,16 @@ def crud_event(request, args=None):
 
         if form.is_valid(): ## is_valid also makes cleaned_data
             if request.POST.get('save'):
-                local_user.work_utem.set_event(form.cleaned_data)
+                local_user.work_utem.event = form.cleaned_data
                 
                 logging.info(f'exit by save\n')
 
             elif request.POST.get('delete'):
-                local_user.work_utem.set_event(None)
+                local_user.work_utem.event(None)
                                 
                 logging.info(f'exit by delete\n')
                 
-            return redirect(local_user.work_utem.make_link())    
+            return redirect(local_user.work_utem.link)    
     else:
        form = EventForm()
 
@@ -337,28 +348,28 @@ def crud_event(request, args=None):
                    "local_user": local_user.nickname
                   }
     
-    def_context.update({"back_link": local_user.work_utem.make_link()})
+    def_context.update({"back_link": local_user.work_utem.link})
             
     ## create(add) event
-    if local_user.work_utem.get_event() == None:
+    if local_user.work_utem.event == None:
         logging.info(f'create event\n')
         now = datetime.now(tz=local_user.timezone)
 
         def_context.update({"event": {"start_date": now.date().isoformat(),
                                       "start_time": now.strftime("%H:%M"),
                                       "once": True,
-                                      "name": local_user.work_utem.get_name()
+                                      "name": local_user.work_utem.name
                                      },
                             "event_create": True
                         })
     ## read & edit event
     else:
-        def_context.update({"event": local_user.work_utem.get_event(),
+        def_context.update({"event": local_user.work_utem.event,
                             "event_edit": True
                         })
 
         
-    def_context.update({"user_root": local_user.root_utem.get_title() })    
+    def_context.update({"user_root": local_user.root_utem.title })    
         
     logging.info(f"Event CRUD context {def_context} \n")
 
