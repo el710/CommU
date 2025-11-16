@@ -49,7 +49,7 @@ Human! Protect the Flame of Prometheus from the darkness of ignorance.
 
 ## How it works
 
-To use utems you need to be a Human and register.
+To use utems you need to be a Human and registered.
 
 Here are some utems:
 

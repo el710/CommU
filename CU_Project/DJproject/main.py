@@ -18,18 +18,15 @@ from threading import Thread
 
 import queue
 
-
 from django.core.management import execute_from_command_line
 
 # from telegram.utelebot import telebot_start
 # from database.base_dispatcher import start_base_dispatcher
 
 
-
-
 def run_thread_agent(target_function, *args, add_link=False):
     """
-        Function runs <func> as daemon thread.
+        Function runs <func> thread as daemon.
         if add_link set in True it makes up 
         conection by two queues: "in" thread & "out" thread
         Return: in/out queues or None
@@ -79,10 +76,11 @@ if __name__ == '__main__':
     
     # run_thread_agent(start_base_dispatcher, *telegram_link)
 
+    """
+        Run Django server with WebCommU application
+    """
     args = ['manage.py', 'runserver']
     execute_from_command_line(args)
-
-    # input("wait...\n")
 
     logging.info("exit CommU")
     

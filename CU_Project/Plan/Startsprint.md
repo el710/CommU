@@ -34,20 +34,5 @@
   
   >+ dash board just make a UUser
   >+ user.init: make keep_manager
-  >- deploy read_user
- 
 
-  - make DataBase for users
-  - add checkout users files - find user_id.ptp at dashboard init
-  
-- check out existance of utems in projects and contracts accorded with files
-- only project can be root - choosen project becomes root
-
-- finish event functionality
-
-- different between template and work utems
-    status devides temp & work, all links are saved as names as the same
-
-Next sprint
-- contruct CRUD
-  - switch credit/debit in contract
+STOP: can't JSON skill at adding to project

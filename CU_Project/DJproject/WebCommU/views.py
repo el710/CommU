@@ -312,8 +312,12 @@ def crud_skill(request, args=None):
 
 
 def crud_event(request, args=None):
+    """
+        Perform action at Event Web Page (Event.html)
+    """
     global local_user
 
+    ## Wrong way: User undefined or user didn't get utem to work with
     if local_user.commu_id == None or local_user.work_utem == None:
         return redirect("/")
 
@@ -321,33 +325,44 @@ def crud_event(request, args=None):
 
     logging.info(f"request.method {request.method} \n")
     if request.method == "POST":
+        """
+            Here was pushed some of buttons:
+                save - add event to skill
+                delete - remove event from skill
+                back - return to skill page 
+        """
         form = EventForm(request.POST)
 
         logging.info(f"valid POST {form.is_valid()} \n")
         logging.info(f'data: {form.cleaned_data}\n')
 
         if form.is_valid(): ## is_valid also makes cleaned_data
+            ## all data at form are good
+
             if request.POST.get('save'):
                 local_user.work_utem.event = form.cleaned_data
                 
                 logging.info(f'exit by save\n')
 
             elif request.POST.get('delete'):
-                local_user.work_utem.event(None)
+                ## Here delete event from Utem (skill)
+                local_user.work_utem.event = None
                                 
                 logging.info(f'exit by delete\n')
                 
+            ## return to skill page
             return redirect(local_user.work_utem.link)    
     else:
        form = EventForm()
 
     '''
-        def_context has parameters to show end form to change parameters
+        def_context has parameters to show and form to change parameters
     '''
     def_context = {"form": form,
                    "local_user": local_user.nickname
                   }
     
+    ## set where to back by "back"  button
     def_context.update({"back_link": local_user.work_utem.link})
             
     ## create(add) event

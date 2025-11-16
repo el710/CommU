@@ -1,4 +1,35 @@
-# Product backlog 
+
+# Passed
+Sprint init.md
+Start [sprint.md](./Startsprint.md)
+
+
+
+
+
+STOP: can't JSON skill at adding to project
+
+  >- deploy read_user
+ 
+
+  - make DataBase for users
+  - add checkout users files - find user_id.ptp at dashboard init
+  
+- check out existance of utems in projects and contracts accorded with files
+- only project can be root - choosen project becomes root
+
+- finish event functionality
+
+- different between template and work utems
+    status devides temp & work, all links are saved as names as the same
+
+
+- contruct CRUD
+  - switch credit/debit in contract
+
+
+
+# Product future
 
 - utem functionality - CRUD
   - contract
